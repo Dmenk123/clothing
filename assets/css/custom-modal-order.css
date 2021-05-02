@@ -1,0 +1,122 @@
+.big-box h2 {
+    text-align: center;
+    width: 100%;
+    font-size: 1.8em;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor:pointer;
+}
+.modal-dialog {
+    /*width: 700px;*/
+    width: 1000px;
+    height: auto;
+    padding: 0;
+    margin:30px auto;
+}
+.modal-content {
+    height: 100%;
+    border-radius: 0;
+    color:#333;
+    overflow:auto;
+}
+.modal-title {
+    font-size: 2em;
+    font-weight: 50;
+    margin: 0 0 10px 0;
+}
+
+.close {
+    color:black ! important;
+    opacity:1.0;
+}
+
+/*==============================================================*/
+#form_nama_produk_order{
+       width: 300px;
+}
+
+#form_nama_satuan_order{
+     width: 60px;
+}
+
+#form_jumlah_produk_order{
+      width: 50px;
+}
+
+#form_harga_prev_order{
+      width: 110px;
+}
+
+#form_harga_sat_order{
+      width: 110px;
+}
+
+#form_harga_tot_order{
+      width: 110px;
+}
+
+#form_size_produk_order{
+      width: 60px;
+}
+/*===============================================================*/
+#field_nama_produk_order{
+       width: 300px;
+}
+
+#field_nama_satuan_order{
+     width: 60px;
+}
+
+#field_jumlah_produk_order{
+      width: 50px;
+}
+
+#field_harga_prev_order{
+     width: 110px;
+}
+
+#field_harga_sat_order{
+      width: 110px;
+}
+
+#field_harga_tot_order{
+      width: 110px;
+}
+
+#field_size_produk_order{
+      width: 60px;
+}
+/*=================================================================*/
+#edit_nama_barang_beli{
+       width: 220px;
+}
+
+#edit_nama_satuan_beli{
+     width: 60px;
+}
+
+#edit_jumlah_barang_beli{
+      width: 60px;
+}
+
+.table {
+  border: 0.5px solid #000000;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+   border: 0.5px solid #000000;
+}
+ 
+.tdIsi .form-group {
+  padding: 0px;
+  margin: 0px;
+}
+
+ul.ui-autocomplete {
+    z-index: 1100;
+}

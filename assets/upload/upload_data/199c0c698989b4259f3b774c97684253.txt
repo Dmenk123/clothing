@@ -1,0 +1,16 @@
+-event scheduler
+ set status in tbl checkout from aktif to nonaktif, in every 4 days
+
+-trigger checkout detail after update
+ event add stock sisa
+
+-trigger checkout detail after insert
+ event kurang stock sisa
+
+-trigger checkout after update (case = update status based on event scheduler from aktif to nonaktif)
+ event insert table log
+ event set status in checkout detail to "nonaktif"
+
+
+**** don't make change row value in tbl checkout and tbl checkout detail directly
+     except make change in program, cause that action make value in another table (tbl stok) will change to ****

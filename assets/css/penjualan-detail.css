@@ -1,0 +1,25 @@
+.gbrDetailPenjualan 
+{
+  border: 2px solid;
+  border-color: black ;
+  width: 75px;
+  height: 75px;
+  padding: 2px;
+  margin-right: 20px; 
+}
+
+.gbrDetailPenjualanModal{
+  border: 2px solid;
+  border-color: black ;
+  width: 700px;
+  height: 500px;
+  padding: 2px; 
+}
+
+.modal-dialog {
+    /*width: 700px;*/
+    width: 750px;
+    height: auto;
+    padding: 0;
+    margin:30px auto;
+}

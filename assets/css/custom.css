@@ -1,0 +1,65 @@
+/** Your theme modifications here **/
+
+div.error {
+  color: #ff0000;
+}
+
+span.error {
+  color: #ff0000;
+}
+
+span.errMsg {
+	color:#FF0000;  /* red */
+}
+
+div.divHarga{ 
+	float:right; 
+}
+
+/*datatable*/
+.dataTables_filter{
+	float:right;
+}
+/* end datatable*/
+
+/*notifikasi*/
+.navbar-static-top {
+  margin-bottom: 19px;
+}
+ 
+.badge-danger {
+  background-color: #d43f3a;
+  width: auto;
+    height: auto;
+    margin: 0;
+    border-radius: 50%;
+    position:absolute;
+    top:10px;
+    right:-1px;
+    padding:5px;
+}
+ 
+.badge-warning {
+background-color: #d58512;
+}
+ 
+.badge-success {
+background-color: #398439;
+}
+ 
+.badge-info {
+background-color: #269abc;
+}
+ 
+.badge-inverse {
+background-color: #333333;
+}
+ 
+.strip1 {
+    background-color: #fefefe;
+}
+ 
+.strip2 {
+    background-color: #ededed;
+}
+/*end notifikasi*/

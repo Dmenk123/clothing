@@ -1,0 +1,96 @@
+.big-box h2 {
+    text-align: center;
+    width: 100%;
+    font-size: 1.8em;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor:pointer;
+}
+.modal-dialog {
+    /*width: 700px;*/
+    width: 750px;
+    height: auto;
+    padding: 0;
+    margin:30px auto;
+}
+.modal-content {
+    height: 100%;
+    border-radius: 0;
+    color:#333;
+    overflow:auto;
+}
+.modal-title {
+    font-size: 2em;
+    font-weight: 50;
+    margin: 0 0 10px 0;
+}
+
+.close {
+    color:black ! important;
+    opacity:1.0;
+}
+
+#field_nama_barang_retur_masuk{
+       width: 250px;
+}
+
+#field_jumlah_barang_retur_masuk{
+     width: 55px;
+}
+
+#field_nama_satuan_retur_masuk{
+      width: 60px;
+}
+
+#field_keterangan_barang_retur_masuk{
+     width: 210px;
+}
+
+/*--------------------------------------------------*/
+.thBarang {
+       width: 250px;
+       height: 37px;
+}
+
+.thQty {
+     width: 72px;
+     height: 37px;
+}
+
+.thSatuan {
+      width: 72px;
+      height: 37px;
+}
+
+.thKeterangan {
+       width: 240px;
+       height: 37px;
+}
+
+.thAksi {
+       width: 60px;
+       height: 37px;
+}
+
+.lbl-modal{
+      width: 100px;
+      margin-left: 30px;
+      margin-bottom: 20px;
+}
+
+.table {
+  border: 0.5px solid #000000;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+   border: 0.5px solid #000000;
+}
+
+ul.ui-autocomplete {
+    z-index: 1100;
+}

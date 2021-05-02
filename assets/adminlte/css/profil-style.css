@@ -1,0 +1,8 @@
+.thumbImg  {
+    width: 80%;
+    height: 80%;
+    color:#070707;
+    border-color: #070707;
+    border: 4px solid #070707;
+    cursor:pointer;
+}

@@ -1,0 +1,129 @@
+.big-box h2 {
+    text-align: center;
+    width: 100%;
+    font-size: 1.8em;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor:pointer;
+}
+.modal-dialog {
+    /*width: 700px;*/
+    width: 750px;
+    height: auto;
+    padding: 0;
+    margin:30px auto;
+}
+.modal-content {
+    height: 100%;
+    border-radius: 0;
+    color:#333;
+    overflow:auto;
+}
+.modal-title {
+    font-size: 2em;
+    font-weight: 50;
+    margin: 0 0 10px 0;
+}
+
+.close {
+    color:black ! important;
+    opacity:1.0;
+}
+
+#form_nama_barang_beli{
+       width: 220px;
+}
+
+#form_jumlah_barang_beli{
+     width: 50px;
+}
+
+#form_nama_satuan_beli{
+      width: 50px;
+}
+
+#field_nama_barang_beli{
+       width: 220px;
+}
+
+#field_jumlah_barang_beli{
+     width: 55px;
+}
+
+#field_jumlah_barang_acc_beli{
+     width: 55px;
+}
+
+#field_nama_satuan_beli{
+      width: 50px;
+}
+
+#fieldKeteranganBarangBeli{
+     width: 210px;
+}
+
+#edit_nama_barang_beli{
+       width: 220px;
+}
+
+#edit_nama_satuan_beli{
+     width: 60px;
+}
+
+#edit_jumlah_barang_beli{
+      width: 60px;
+}
+
+/*--------------------------------------------------*/
+.thBarang {
+       width: 237px;
+       height: 37px;
+}
+
+.thQty {
+     width: 72px;
+     height: 37px;
+}
+
+.thQtyAcc {
+     width: 72px;
+     height: 37px;
+}
+
+.thSatuan {
+      width: 67px;
+      height: 37px;
+}
+
+.thKeterangan {
+       width: 220px;
+       height: 37px;
+}
+
+.thAksi {
+       width: 220px;
+       height: 37px;
+}
+
+.lbl-modal{
+      width: 100px;
+      margin-left: 30px;
+      margin-bottom: 20px;
+}
+
+.table {
+  border: 0.5px solid #000000;
+}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+   border: 0.5px solid #000000;
+}
+
+ul.ui-autocomplete {
+    z-index: 1100;
+}
