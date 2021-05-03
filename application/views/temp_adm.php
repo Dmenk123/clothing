@@ -4,18 +4,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Dmenk Clothing e-shop">
-    <meta name="author" content="Rizki Yuanda | rizkiyuandaa@gmail.com">
-    <meta name="dmenk-toko-online-ecommerce" content="">
+    <meta name="description" content="Crazy Property Tycoon">
+    <meta name="author" content="CPT | Crazy Property Tycoon">
+    <meta name="Crazy-Property-Tycoon-ecommerce" content="">
 
     <title>
-        Dmenk Clothing E-Shop
+        Crazy Property Tycoon
     </title>
 
-    <meta name="dmenk-toko-online-ecommerce" content="">
+    <meta name="Crazy-Property-Tycoon-ecommerce" content="">
 
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
-    <link rel="shortcut icon" href="<?php echo config_item('assets'); ?>img/logo.png" />
+    <link rel="shortcut icon" href="<?php echo config_item('assets'); ?>img/loggo.png" />
     
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

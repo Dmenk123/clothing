@@ -10,61 +10,59 @@
    <div class="col-md-12">
       <div class="box" id="contact">
          <h2>FAQ <span style="font-style: italic; ">(Frequently Ask Question)</span></h2>
-         <p class="lead">Dmenk Clothing E-shop merupakan salah satu dari karya portfolio yang dibuat oleh Rizki Yuanda di surabaya</p>
-         <h4>Berikut pertanyaan yang yang sering ditanyakan terhadap aplikasi ini</h4>
+         <p class="lead">Crazy Property Tycoon merupakan salah satu Komunitas yang dibuat oleh Aily Kwan di surabaya</p>
+         <h4>Berikut pertanyaan yang yang sering ditanyakan terhadap Crazy Property Tycoon ini</h4>
          <br>
          <p>
-            <strong>Q : Apakah Dmenk Clothing E-shop ini benar adanya ?</strong>
+            <strong>Q : Apakah Crazy Property Tycoon ini benar adanya ?</strong>
             <br>
-            A : Mohon Maaf, Dmenk clothing E-shop merupakan toko online fiktif yang ditujukan sebagai salah satu portofolio dari si pembuat.
+            A : Iya benar, Crazy Property Tycoon merupakan sebuah Komunitas yang ditujukan agar pemilik rumah dengan harga 75 Milyar dapat berkumpul di sini.
             <br><br>
-            <strong>Q : Produk apa saja yang terdapat di web ini ?</strong>
+            <strong>Q : Tujuannya apa ?</strong>
             <br>
-            A : Produk berupa pakaian, celana, sepatu dan aksesoris. akan tetapi semua produk dalam web ini hanya fiktif belaka.
+            A : Tujuannya agar bisa saling support dan menjadi kolega.
             <br><br>
-            <strong>Q : Darimana Anda mendapatkan gambar yang terdapat di web ini ?</strong>
+            <strong>Q : Darimana Anda mendapatkan daftar komunitas ini ?</strong>
             <br>
-            A : Gambar 100% didapatkan dari internet, sebagian gambar telah disertai link sumber gambar berasal, mohon maaf apabila ada penggunaan gambar yang tidak disebutkan sumbernya.
+            A : Dari hasil Promosi dan Group - group Media Sosial.
             <br><br>
             <strong>Q : Apakah informasi Alamat dan nomor telp yang terdapat di web merupakan milik anda ?</strong>
             <br>
-            A : Informasi yang terdapat di web merupakan milik saya (rizki yuanda), akan tetapi jangan pernah melakukan transfer pemesanan karena toko online ini fiktif.
+            A : Iya, Semua informasi di Web ini benar dan milik Aily Kwan.
             <br><br>
             <strong>Q : Apakah Yang terjadi apabila saya melakukan pemesanan ?</strong>
             <br>
-            A : Segala pemesanan tidak akan diproses, dan jangan pernah sekalipun melakukan transfer pada no rekening yang terdapat dalam web.
+            A : Segala pemesanan akan diproses secara profesional dan terpercaya.
             <br><br>
             <strong>Q : Apakah Template Web ini buatan/milik anda ?</strong>
             <br>
             A :Template saya dapatkan secara free di <a href="https://bootstrapious.com/e-commerce-templates">sini</a> dan dengan sedikit tambahan modifikasi, sumber saya letakkan pada footer web.
             <br><br>
-            <strong>Q : Saya ingin memiliki sebuah toko online, apa saya bisa menghubungi anda ?</strong>
+            <strong>Q : Saya ingin masuk komunitas Crazy Property Tycoon, apa syaratnya ?</strong>
             <br>
-            A : Dengan senang hati, informasi tentang kontak terdapat pada halaman kontak.
+            A : Dengan membeli produk kami, maka anda bisa masuk ke dalam komunitas Crazy Property Tycoon.
          </p>
          <hr>
-         <p class="lead">Untuk pertanyaan lebih lanjut, dapat mengubungi dibawah ini : </p>
+         <p class="lead">Untuk pertanyaan lebih lanjut, dapat mengubungi di bawah ini : </p>
          <div class="row">
             <div class="col-sm-4">
-               <h3><i class="fa fa-map-marker"></i> Alamat kami</h3>
-                  <p>Jalan Ngagel tirto Gg II-B no 6
-                     <br>Kelurahan Ngagel Rejo
-                     <br>Kecamatan Wonokromo
+               <h3><i class="fa fa-map-marker"></i> Crazy Property Tycoon</h3>
+                  <p>Pakuwon City
                      <br>Surabaya - Jawa Timur
-                     <br>60245
+                     <br>61122
                      <br>
                      <strong>Indonesia</strong>
                   </p>
             </div><!-- /.col-sm-4 -->
             <div class="col-sm-4">
                <h3><i class="fa fa-phone"></i> Call / Whatsapp</h3>
-               <p class="text-muted">Anda dapat menghubungi / chat via Whatsapp pada nomor dibawah ini : </p>
-               <p><strong>+6281-703-403-470</strong></p>
+               <p class="text-muted">Menghubungi dengan via Whatsapp pada nomor di bawah ini : </p>
+               <p><strong>+6281-123-456-789</strong></p>
             </div><!-- /.col-sm-4 -->
             <div class="col-sm-4">
                <h3><i class="fa fa-envelope"></i> Email</h3>
-               <p class="text-muted">Anda dapat menghubungi kami pada email dibawah ini : </p>
-               <p><strong><a href="mailto:">rizkiyuandaa@gmail.com</a></strong></p>
+               <p class="text-muted">Menghubungi kami dengan via email di bawah ini : </p>
+               <p><strong><a href="mailto:">admincoba@gmail.com</a></strong></p>
             </div><!-- /.col-sm-4 -->
          </div><!-- /.row -->         
       </div>

@@ -217,7 +217,7 @@
             //jika metode transfer
             if (metode == "transfer") {
                 $('#step3_area').append('<div class="form-group col-md-12" id="content_field"></div>');
-                $('#content_field').append('<p style="text-align: center;"><strong>Step 3: Pilih Jasa Ekspedisi</strong></p>');
+                $('#content_field').append('<p style="text-align: center;"><strong>Pilih Jasa Pengiriman</strong></p>');
                 
                 $('#content_field').append('<div class="form-group">'
                     +'<label for="lblProvTujuan" class="lblKotaErr">Provinsi Tujuan</label>'

@@ -31,7 +31,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 </div>
 
                                 <h3><a href="#">Jaminan 100% uang kembali</a></h3>
-                                <p>Gratis 100% uang kembali apabila barang yang anda dapat terdapat kerusakan.</p>
+                                <p>Gratis 100% uang kembali apabila barang yang anda terima dapat terdapat kerusakan.</p>
                             </div>
                         </div>
                     </div>

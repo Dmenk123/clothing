@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 	<div id="copyright">
             <div class="container">
                 <div class="col-md-6">
-                    <p class="pull-left">© 2017 - <?php echo date('Y'); ?> Rizki Yuanda | rizkiyuandaa@gmail.com.</p>
+                    <p class="pull-left">© 2020 - <?php echo date('Y'); ?> Crazy Property Tycoon | admincoba@gmail.com.</p>
 
                 </div>
                 <div class="col-md-6">

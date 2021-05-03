@@ -8,12 +8,12 @@
    </div>
    <div class="col-md-12" id="checkout">
       <div class="box">
-            <h2>Tahap 1 : Alamat tujuan serta metode pembayaran dan pengiriman</h2>
+            <h2>Alamat tujuan serta metode pembayaran dan pengiriman</h2>
             <div class="content">
                <div class="row">
                   <!-- alamat penagihan -->
                   <div class="col-sm-6" style="border:1px solid #ddd; padding:10px;">  
-                        <p style="text-align: center;"><strong>Step 1: Tentukan Alamat Pengiriman</strong></p>
+                        <p style="text-align: center;"><strong>Alamat Pengiriman</strong></p>
                         <?php foreach ($data_user as $value) { ?>
                            <p style="text-align: center;">
                               <span id="krmIdusr" class="hidden"><?php echo $value->id_user;?></span>
@@ -49,13 +49,13 @@
                   </div>
                   <!-- Metode pengiriman -->
                   <div class="col-sm-6" style="border:1px solid #ddd; padding:10px;">
-                     <p style="text-align: center;"><strong>Step 2: Tentukan Metode Pembayaran</strong></p>
+                     <p style="text-align: center;"><strong>Pilih Metode Pembayaran</strong></p>
                      <div class="form-group col-md-12">
                         <label for="labelMetodeBayar">Pilih Metode Bayar</label>
                         <select class="form-control" id="checkout2_byr" name="checkout2Byr" style="width: 100%;" required>
                            <option value="">-- Mohon Pilih Metode Pembayaran --</option>
                            <option value="cod">COD (Cash On Delivery - Hanya Lokasi SURABAYA)</option>
-                           <option value="transfer">Transfer BNI - a/n Rizki Yuanda ( 045-075-0200 )</option>
+                           <option value="transfer">Transfer BNI - a/n Crazy Property Tycoon ( 123-456-78912 )</option>
                         </select> 
                      </div>
                   </div>

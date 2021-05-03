@@ -4,7 +4,7 @@
             <div class="col-sm-6 col-sm-offset-3">
                 <div class="box">
                     <p class="text-center">
-                        <img src="<?php echo config_item('assets'); ?>img/logo.png" alt="dmenk e-shop logo" class="hidden-xs">
+                        <img src="<?php echo config_item('assets'); ?>img/loogo.png" alt="dmenk e-shop logo" class="hidden-xs">
                     </p>
                     <h3>Mohon Maaf - Halaman ini tidak dapat diakses</h3>
                     <h4 class="text-muted">Error 404 - Halaman tidak ditemukan</h4>

@@ -49,7 +49,7 @@
         <div class="row same-height-row">
             <div class="col-md-3 col-sm-6">
                 <div class="box same-height">
-                    <h3>You may also like these products</h3>
+                    <h3>Anda mungkin juga menyukai Produk ini</h3>
                 </div>
             </div>
 
@@ -73,8 +73,8 @@
                         <img src="img/product2.jpg" alt="" class="img-responsive">
                     </a>
                     <div class="text">
-                        <h3>Fur coat</h3>
-                            <p class="price">$143</p>
+                        <h3>Mantel Bulu</h3>
+                            <p class="price">Rp. 150.000</p>
                     </div>
                 </div><!-- /.product -->
             </div>

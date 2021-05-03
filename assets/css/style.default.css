@@ -1077,7 +1077,7 @@ h1 {
 .navbar {
   font-family: "Roboto", Helvetica, Arial, sans-serif;
   min-height: 70px;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
   border: none;
   border-bottom: 1px solid transparent;
 }

@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <ul>
                             <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
                             </li>
-                            <li><a href="register.html">Regiter</a>
+                            <li><a href="register.html">Register</a>
                             </li>
                         </ul>
 
@@ -70,10 +70,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                         <h4>Where to find us</h4>
 
-                        <p><strong>Toko Klambi Dodolan.</strong>
-                            <br>Ngagel Tirto IIB
+                        <p><strong>Crazy Property Tycoon</strong>
+                            <br>Pakuwon CIty
                             <br>Surabaya
-                            <br>60421
+                            <br>61122
                             <br>Jawa Timur
                             <br>
                             <strong>Indonesia</strong>
@@ -90,9 +90,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     <div class="col-md-3 col-sm-6">
 
-                        <h4>Get the news</h4>
+                        <h4>Dapatkan berita menarik</h4>
 
-                        <p class="text-muted">Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.</p>
+                        <p class="text-muted">Silakan subscribe dengan memasukkan email anda, agar bisa mendapatkan informasi penawaran menarik dari Crazy Property Tycoon</p>
 
                         <form>
                             <div class="input-group">

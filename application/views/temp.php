@@ -5,18 +5,18 @@
     <meta name="robots" content="all,follow">
     <meta name="googlebot" content="index,follow,snippet,archive">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Dmenk Clothing e-shop">
-    <meta name="author" content="Rizki Yuanda | rizkiyuandaa@gmail.com">
-    <meta name="dmenk-toko-online-ecommerce" content="">
+    <meta name="description" content="CPT - Crazy Property Tycoon">
+    <meta name="author" content="CPT | Crazy Property Tycoon">
+    <meta name="crazy-property-tycoon-ecommerce" content="">
 
     <title>
-        Dmenk Clothing E-Shop
+        Crazy Property Tycoon
     </title>
 
-    <meta name="dmenk-toko-online-ecommerce" content="">
+    <meta name="CRazy-Property-Tycoon-ecommerce" content="">
 
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
-    <link rel="shortcut icon" href="<?php echo config_item('assets'); ?>img/logo.png" />
+    <link rel="shortcut icon" href="<?php echo config_item('assets'); ?>img/loggo.png" />
     <!-- styles -->
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo config_item('assets'); ?>css/bootstrap.min.css">
     <!-- font awesome -->
@@ -139,12 +139,12 @@
                     <p class="text-center text-muted">
                         <a href="<?php echo site_url('register'); ?>">
                             <strong>Daftar Sekarang </strong>
-                        </a>! Caranya cukup mudah hanya 1&nbsp;menit dan banyak penawaran yang akan kami berikan !
+                        </a>! Caranya cukup mudah hanya 1&nbsp;menit dan dapatkan penawaran menarik yang akan kami berikan !
                     </p>
                     <p class="text-center text-muted">Atau Klik 
                         <a href="#" data-toggle="modal" data-target="#modal_forgot_pass">
                             <strong>disini</strong>
-                        </a> apabila anda lupa password anda
+                        </a> apabila anda lupa password
                     </p>
                 </div>
             </div>
@@ -167,7 +167,7 @@
                         </div>
                     </form>
                     <p class="text-center text-muted">
-                        Mohon Masukkan email anda sesuai dengan yang anda daftarkan pada D-menk Clothing E-shop, Kami akan mengirim link token pada email anda. Terima kasih
+                        Mohon Masukkan email anda sesuai dengan yang anda daftarkan pada Crazy Property Tycoon, Kami akan mengirim link token pada email anda. Terima kasih
                     </p>
                     <p class="text-center" style="padding-top: 20px;">
                         <button class="btn btn-primary" onclick="forgotPassProc()"><i class="fa fa-check"></i> Ok</button>

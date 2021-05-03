@@ -89,7 +89,7 @@
                             <?php }else { ?>
                             <tr>
                                 <th colspan="3">Metode Pembayaran</th>
-                                <td colspan="6"><strong>TRANSFER BNI a/n RIZKI YUANDA | No: 5264-2201-4152-9366</strong></td>
+                                <td colspan="6"><strong>TRANSFER BNI a/n Crazy Property Tycoon | No: 123-456-78912</strong></td>
                             </tr>
                             <tr>
                                 <th colspan="3">Kode Refrensi Transaksi (Kode ini digunakan saat konfirmasi pembayaran)</th>
@@ -172,7 +172,7 @@
         <div class="row same-height-row">
             <div class="col-md-3 col-sm-6">
                 <div class="box same-height">
-                    <h3>You may also like these products</h3>
+                    <h3>Anda mungkin juga menyukai produk ini</h3>
                 </div>
             </div>
 
@@ -196,8 +196,8 @@
                         <img src="img/product2.jpg" alt="" class="img-responsive">
                     </a>
                     <div class="text">
-                        <h3>Fur coat</h3>
-                            <p class="price">$143</p>
+                        <h3>Mantel Bulu</h3>
+                            <p class="price">Rp. 150.000</p>
                     </div>
                 </div><!-- /.product -->
             </div>

@@ -15,25 +15,23 @@
          <hr>
          <div class="row">
             <div class="col-sm-4">
-               <h3><i class="fa fa-map-marker"></i> Alamat kami</h3>
-                  <p>Jalan Ngagel tirto Gg II-B no 6
-                     <br>Kelurahan Ngagel Rejo
-                     <br>Kecamatan Wonokromo
+               <h3><i class="fa fa-map-marker"></i> Crazy Property Tycoon</h3>
+                  <p>Pakuwon City
                      <br>Surabaya - Jawa Timur
-                     <br>60245
+                     <br>61122
                      <br>
                      <strong>Indonesia</strong>
                   </p>
             </div><!-- /.col-sm-4 -->
             <div class="col-sm-4">
-               <h3><i class="fa fa-phone"></i> Call / Whatsapp</h3>
-               <p class="text-muted">Anda dapat menghubungi / chat via Whatsapp pada nomor dibawah ini : </p>
-               <p><strong>+6281-703-403-470</strong></p>
+               <h3><i class="fa fa-phone"></i> Whatsapp</h3>
+               <p class="text-muted">Menghubungi kami via Whatsapp pada nomor di bawah ini : </p>
+               <p><strong>+6281-123-456-789</strong></p>
             </div><!-- /.col-sm-4 -->
             <div class="col-sm-4">
                <h3><i class="fa fa-envelope"></i> Email</h3>
-               <p class="text-muted">Anda dapat menghubungi kami pada email dibawah ini : </p>
-               <p><strong><a href="mailto:">rizkiyuandaa@gmail.com</a></strong></p>
+               <p class="text-muted">Menghubungi kami via email di bawah ini : </p>
+               <p><strong><a href="mailto:">admincoba@gmail.com</a></strong></p>
             </div><!-- /.col-sm-4 -->
          </div><!-- /.row -->
          <hr>
@@ -43,7 +41,7 @@
          
          <hr>
          <h2>Form Kritik / Saran</h2>
-         <p class="text-muted">Silahkan beri masukan ataupun terdapat masalah pada produk kami pada form dibawah, kami akan membalas masukkan anda pada email anda.</p>
+         <p class="text-muted">Silahkan beri masukan ataupun terdapat masalah pada produk kami pada form di bawah, kami akan membalas masukkan anda pada email anda.</p>
          <div class="row">
             <form id="form_kontak" name="formPesan" action="#">
                <div class="col-sm-12">
