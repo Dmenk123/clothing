@@ -9,9 +9,9 @@ class Checkout extends CI_Controller {
 		$this->load->library('cart');
 		$this->load->model('homepage/mod_homepage','mod_hpg');
 		$this->load->model('mod_checkout','m_ckt');
-		if ($this->session->userdata('logged_in') == false ) {
-			redirect('register');
-		}
+		// if ($this->session->userdata('logged_in') == false ) {
+		// 	redirect('register');
+		// }
 	}
 	
 	public function index()

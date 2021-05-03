@@ -56,38 +56,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                         <?php } ?>
                                     </div>
                                 </div>
-                                <!-- /.yamm-content -->
                             </li>
                         </ul>
                     </li>
+					
                     <!-- Kontak -->
                     <li class="" id="li_nav_kontak"><a href="<?php echo site_url('kontak'); ?>">Kontak Kami</a></li>
                     <!-- faq -->
                     <li class="" id="li_nav_faq"><a href="<?php echo site_url('faq'); ?>">FAQ</a></li>
-                    <!-- login, register, user set -->
-                    <?php $nama_sesi = $this->session->userdata('fname_user');
-                    if (isset($nama_sesi)) { ?>
-                        <li>
-                            <a href="javascript:void(0);" onclick="logout_proc()">Logout</a>
-                        </li>
-                        <li id="li_nav_sesi">
-                            <a href="<?php echo site_url('profil'); ?>"><?php echo $nama_sesi; ?>
-                                <?php if (isset($notif_count)) { ?>
-                                    <?php if ($notif_count > 0) { ?>
-                                        <span class="badge badge-danger" id="load_row"><?php echo $notif_count; ?></span>
-                                    <?php } ?>
-                                <?php } ?>  
-                            </a>
-                        
-                        </li>
-                    <?php }else { ?>
-                        <li>
-                            <a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
-                        </li>
-                        <li id="li_nav_register">
-                            <a href="<?php echo site_url('register'); ?>">Register</a>
-                        </li>
-                    <?php } ?> 
                 </ul>
             </div>
             <!--/.nav-collapse -->

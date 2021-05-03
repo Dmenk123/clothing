@@ -40,7 +40,11 @@
 
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo config_item('assets'); ?>icon/favicon.png">
 
-
+	<style>
+		tr.cart {
+			font-size: 12px;
+		}
+	</style>
 </head>
 
 <body>

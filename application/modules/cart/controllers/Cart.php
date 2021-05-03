@@ -88,12 +88,12 @@ class Cart extends CI_Controller {
         foreach ($this->cart->contents() as $items) {
         	$link_img = $items['options']['Gambar_produk'];
             $output .='
-                <tr>
+                <tr class ="cart">
                 	<td><img src="'.site_url("assets/img/produk/$link_img").'"></td>
                     <td>'.$items['name'].'</td>
                     <td>'.$items['options']['Size_produk'].'</td>
                     <td> 
-	            		<select style="width:40px;" id="'.$items['rowid'].'" class="cart_qty">';
+	            		<select class="form-control form-control-sm" style="width:60px;" id="'.$items['rowid'].'" class="cart_qty">';
 	            			for ($i=1; $i <= $items['options']['Stok_produk']; $i++) {
 	            				if ($i == $items['qty']) {
 	            					$output .='<option value="'.$i.'" selected>'.$i.'</option>';
