@@ -24,6 +24,7 @@ class Cart extends CI_Controller {
 		$menu_select_search = $this->mod_hpg->get_menu_search();
 
 		$results =$this->mod_cart->get_all_data();
+		$produk_terlaris = $this->mod_produk->get_produk_random();
 
 		$data = array(
 			'content' => 'cart/view_list_cart',
@@ -33,6 +34,7 @@ class Cart extends CI_Controller {
 			'results' => $results,
 			'js' => 'cart/jsCart',
 			'menu_select_search' => $menu_select_search,
+			'produk_terlaris' => $produk_terlaris
 		);
 
         $this->load->view('temp',$data);

@@ -19,8 +19,7 @@
                             <label><strong>Size : </strong></label>
                         </div>
                         <div class="col-sm-8" style="padding-bottom: 10px;">
-                            <?php $id_produk = $this->uri->segment(4); ?>
-                            <input type="hidden" name="txt_id_produk" class="txtIdProduk" value="<?php echo $id_produk; ?>">
+                            <input type="hidden" name="txt_id_produk" class="txtIdProduk" value="<?php echo $val->id_produk; ?>">
                             <select class="form-control selectSize"  id="size_<?php echo $val->id_produk;?>" name="select_size" required>
                                 <option value="">Pilih Ukuran Produk</option>
                             </select>
@@ -83,7 +82,7 @@
     <div class="box">
         <div class="container">
             <div class="col-md-12">
-                <h2 class="text-center">Produk terlaris kami</h2>
+                <h2 class="text-center">Produk Rekomendasi</h2>
             </div>
         </div>
     </div>
@@ -97,12 +96,12 @@
                         <div class="flip-container">
                             <div class="flipper">
                                 <div class="front">
-                                    <a href="<?php echo site_url('produk/produk_detail/').$val->id_sub_kategori."/".$val->id_produk; ?>">
+                                    <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
                                         <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
                                     </a>
                                 </div>
                                 <div class="back">
-                                    <a href="<?php echo site_url('produk/produk_detail/').$val->id_sub_kategori."/".$val->id_produk; ?>">
+                                    <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
                                         <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
                                     </a>
                                 </div>
@@ -113,11 +112,14 @@
                         </a>
                         <div class="text">
                             <h3>
-                                <a href="<?php echo site_url('produk/produk_detail/').$val->id_sub_kategori."/".$val->id_produk; ?>">
+                                <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
                                     <?php echo $val->nama_produk; ?>
                                 </a>
                             </h3>
-                           <p class="price">Rp. <?php echo number_format($val->harga,0,",","."); ?></p>
+						   <p class="price"><strong>Rp. <?php echo number_format($val->harga,0,",","."); ?></strong></p>
+							<p class="buttons">
+								<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" class="btn btn-primary">Beli Sekarang</a>
+							</p>
                         </div>
                     </div><!-- /.product -->
                 </div>                

@@ -18,6 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             tbl_produk.id_sub_kategori,
                             tbl_produk.nama_produk,
                             tbl_produk.harga,
+							tbl_produk.slug,
                             tbl_gambar_produk.nama_gambar
                         ');
                         $this->db->from('tbl_gambar_produk');
@@ -34,12 +35,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     <div class="flip-container">
                                         <div class="flipper">
                                             <div class="front">
-                                                <a href="<?php echo site_url('produk/produk_detail/').$val->id_sub_kategori."/".$val->id_produk; ?>">
+                                                <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
                                                     <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
                                                 </a>
                                             </div>
                                             <div class="back">
-                                                <a href="<?php echo site_url('produk/produk_detail/').$val->id_sub_kategori."/".$val->id_produk; ?>">
+                                                <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
                                                     <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
                                                 </a>
                                             </div>
@@ -50,10 +51,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                     </a>
                                     <div class="text">
                                         <h3>
-                                            <a href="<?php echo site_url('produk/produk_detail/').$val->id_sub_kategori."/".$val->id_produk; ?>">
+                                            <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
                                             <?php echo $val->nama_produk; ?></a>
                                         </h3>
                                         <p class="price">Rp. <?php echo number_format($val->harga,0,",","."); ?></p>
+										<p class="buttons">
+											<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" class="btn btn-primary">Beli Sekarang</a>
+										</p>
                                     </div>
                                     <!-- /.text -->
 

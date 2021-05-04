@@ -47,37 +47,51 @@
         </div><!-- /.box -->
                     
         <div class="row same-height-row">
-            <div class="col-md-3 col-sm-6">
-                <div class="box same-height">
-                    <h3>Anda mungkin juga menyukai Produk ini</h3>
-                </div>
-            </div>
+			<!-- <div class="box" style="padding-top: 0px;padding-bottom: 0px;margin-bottom: 20px;">
+				<div class="container">
+					<div class="col-md-9">
+						<h4>Rekomendasi Untuk Anda</h4>
+					</div>
+				</div>
+			</div> -->
+			<?php foreach ($produk_terlaris as $key => $val): ?>
+				<?php if($key == count($produk_terlaris)-1) {
+					break;
+				}?>
 
-            <div class="col-md-3 col-sm-6">
-                <div class="product same-height">
-                    <div class="flip-container">
-                        <div class="flipper">
-                            <div class="front">
-                                <a href="detail.html">
-                                    <img src="img/product2.jpg" alt="" class="img-responsive">
+				<div class="col-md-3 col-sm-6">
+					<div class="product same-height">
+						<div class="flip-container">
+							<div class="flipper">
+								<div class="front">
+									<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
+										<img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
+									</a>
+								</div>
+								<div class="back">
+									<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
+										<img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
+									</a>
+								</div>
+							</div>
+						</div>
+						<a href="detail.html" class="invisible">
+							<img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
+						</a>
+						<div class="text">
+							<h3>
+                                <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
+                                    <?php echo $val->nama_produk; ?>
                                 </a>
-                            </div>
-                            <div class="back">
-                                <a href="detail.html">
-                                    <img src="img/product2_2.jpg" alt="" class="img-responsive">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="detail.html" class="invisible">
-                        <img src="img/product2.jpg" alt="" class="img-responsive">
-                    </a>
-                    <div class="text">
-                        <h3>Mantel Bulu</h3>
-                            <p class="price">Rp. 150.000</p>
-                    </div>
-                </div><!-- /.product -->
-            </div>
+                            </h3>
+							<p class="price"><strong>Rp. <?php echo number_format($val->harga,0,",","."); ?></strong></p>
+							<p class="buttons">
+								<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" class="btn btn-primary">Beli Sekarang</a>
+							</p>
+						</div>
+					</div><!-- /.product -->
+				</div>
+			<?php endforeach ?>
         </div>
     </div><!-- /.col-md-9 -->
                 

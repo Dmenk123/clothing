@@ -202,4 +202,30 @@ class Mod_produk extends CI_Model
 			");
 		return $query->result();    
     }
+
+	public function get_produk_random()
+	{
+		$query = $this->db->query("
+		SELECT * FROM (
+			SELECT
+				tbl_produk.id_produk,
+				tbl_produk.nama_produk,
+				tbl_produk.id_sub_kategori,
+				tbl_produk.harga,
+				tbl_produk.slug,
+				tbl_gambar_produk.nama_gambar 
+			FROM
+				tbl_produk
+				LEFT JOIN tbl_gambar_produk ON tbl_produk.id_produk = tbl_gambar_produk.id_produk 
+			WHERE
+				tbl_gambar_produk.jenis_gambar = 'display' 
+			ORDER BY 
+				rand()
+			LIMIT 5
+		) as t1
+		order by nama_produk
+		");
+
+		return $query->result();    
+	}
 }

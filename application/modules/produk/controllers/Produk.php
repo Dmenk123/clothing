@@ -261,7 +261,8 @@ class Produk extends CI_Controller {
 	{
 		$id_produk = $this->input->post('id_produk');
 		$size = $this->mod_produk->get_data_size_produk($id_produk);
-
+		// echo $this->db->last_query();exit;
+		
 		$data = array(
 			'size' => $size, 
 		);
@@ -316,7 +317,10 @@ class Produk extends CI_Controller {
 		$img_detail_big = $this->mod_produk->get_img_detail_big($id_produk);
 		$detail_produk = $this->mod_produk->get_detail_produk($id_produk);
 		$ukuran_produk = $this->mod_produk->get_ukuran_produk($id_produk);
-		$produk_terlaris = $this->mod_produk->get_produk_terlaris();
+		// $produk_terlaris = $this->mod_produk->get_produk_terlaris();
+		$produk_terlaris = $this->mod_produk->get_produk_random();
+		// echo $this->db->last_query();exit;
+		
 
 		$data = array(
 			'content' => 'produk/view_detail_produk',
