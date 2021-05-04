@@ -31,35 +31,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <ul class="nav navbar-nav navbar-left">
                     <!-- Home -->
                     <li class="" id="li_nav_home"><a href="<?php echo site_url('home'); ?>">Home</a></li>
-                    <!-- list Men -->
-                    <li class="dropdown yamm-fw" id="li_nav_produk">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pilihan Produk <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <div class="yamm-content">
-                                    <div class="row">
-                                        <?php foreach ($menu_navbar as $val) { ?>
-                                        <div class="col-sm-3">
-                                            <h5><?php echo $val->nama_kategori; ?></h5>
-                                            <?php for ($i=1; $i <=$count_kategori; $i++) { ?>
-                                                <?php if ($val->id_kategori == $i) { ?>
-                                                    <?php foreach ($submenu[$i] as $result) { ?>
-                                                        <ul>
-                                                            <li>
-                                                                <a href='<?php echo site_url("produk/sub_kategori/$result->id_sub_kategori"); ?>'><?php echo $result->nama_sub_kategori; ?></a>
-                                                            </li>
-                                                        </ul>
-                                                    <?php } ?>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </div>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </li>
-					
+                    <!-- Katalog -->
+                    <li class="" id="li_nav_kontak"><a href="<?php echo site_url('produk/katalog'); ?>">Katalog</a></li>
                     <!-- Kontak -->
                     <li class="" id="li_nav_kontak"><a href="<?php echo site_url('kontak'); ?>">Kontak Kami</a></li>
                     <!-- faq -->

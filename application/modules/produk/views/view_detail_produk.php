@@ -1,31 +1,11 @@
 <div class="container">
     <div class="col-md-12">
-        <ul class="breadcrumb">
-            <li><a href="<?php echo site_url('home'); ?>">Home </a></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
-    </div>
-
-    <div class="col-md-3">
-        <!-- *** SIDEBAR MENUS AND FILTERS *** -->
-        <?php 
-            if (isset($content_sidebar)) 
-            {
-                $this->load->view($content_sidebar); 
-            } 
-        ?>
-    </div>
-    <!-- *** SIDEBAR MENUS AND FILTERS END *** -->    
-        
-    <div class="col-md-9">
         <div class="row" id="productMain">
             <?php foreach ($img_detail_big as $val) { ?>
             <?php $link_img = $val->nama_gambar; ?>
             <div class="col-sm-6">
                 <div id="mainImage">
-                    <img src="<?php echo site_url('assets/img/produk/img_detail/'.$link_img.''); ?>" alt="" class="img-responsive">
+                    <img src="<?php echo site_url('assets/img/produk/img_detail/'.$link_img.''); ?>" alt="" class="img-responsive" style="width: 100%;">
                 </div>
             </div> <!-- end div.col sm-6 -->
             <?php } ?>

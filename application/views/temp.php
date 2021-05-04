@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>select2/select2-bootstrap.css">
     <!-- Date Picker -->
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>datepicker/datepicker3.css">
+    <link rel="stylesheet" href="<?php echo config_item('assets'); ?>jQueryToastr/build/toastr.min.css">
 
     <script src="<?php echo config_item('assets'); ?>js/respond.min.js"></script>
 
@@ -202,6 +203,7 @@
     <!--  DataTables --> 
     <script src="<?=config_item('assets')?>datatables/jquery.dataTables.min.js"></script>
     <script src="<?=config_item('assets')?>datatables/dataTables.bootstrap.min.js"></script>
+	<script src="<?=config_item('assets')?>jQueryToastr/build/toastr.min.js"></script>
     
     <!-- load js per modul -->
     <?php if(isset($js)) { $this->load->view($js); }?>

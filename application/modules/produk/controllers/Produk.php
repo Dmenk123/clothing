@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Produk extends CI_Controller {
-
+	const ID_SUBKATEGORI = 1;
 	public function __construct()
 	{
 		parent::__construct();
@@ -12,13 +12,21 @@ class Produk extends CI_Controller {
 		$this->load->library('pagination');
 	}
 
-	public function sub_kategori()
+	public function katalog()
 	{ 
-		$sub = $this->uri->segment(3);
+		$sub = self::ID_SUBKATEGORI;
 
+		$key = $this->input->get('key');
+
+		if(isset($key) && $key != '') {
+			$search_key = $key;
+		}else{
+			$search_key = null;
+		}
+		
 		$per_page = $this->input->get('per_page');
 		if (!isset($per_page)) {
-			$per_page = 10; //default per page
+			$per_page = 6; //default per page
 		}
 
 		$sort_by = $this->input->get('sort_by');
@@ -28,8 +36,9 @@ class Produk extends CI_Controller {
 
 		//set array for pagination library
 		$config = array();
-		$total_row = $this->mod_produk->record_count($sub);
-		$config["base_url"] = base_url() . "produk/sub_kategori/".$sub;
+		$total_row = $this->mod_produk->record_count($sub, $search_key);
+		// $config["base_url"] = base_url() . "produk/katalog/".$sub;
+		$config["base_url"] = base_url() . "produk/katalog/";
         $config["total_rows"] = $total_row;
         $config["per_page"] = $per_page;
         //beri tambahan path ketika next page
@@ -45,12 +54,12 @@ class Produk extends CI_Controller {
         $config['prev_link'] = 'Previous';
         $this->pagination->initialize($config);
         
-        $page = $this->uri->segment(5);
+        $page = $this->uri->segment(4);
         $str_links = $this->pagination->create_links();
 		$id_show = $per_page;
 		$id_sort = $sort_by;
 		
-		$get_data_page = $this->mod_produk->get_data_page($sub);
+		$get_data_page = $this->mod_produk->get_data_page($sub, $search_key);
 		$menu_navbar = $this->mod_hpg->get_menu_navbar();
 		//hitung kategori yang terdapat pada submenu (groupby)
 		$count_kategori = $this->mod_hpg->count_kategori();
@@ -64,14 +73,14 @@ class Produk extends CI_Controller {
 		
 		$data = array(
 			'content' => 'produk/view_list_produk',
-			'content_sidebar' => 'temp_content_sidebar',
+			// 'content_sidebar' => 'temp_content_sidebar',
 			'menu_navbar' => $menu_navbar,
 			'count_kategori' => $count_kategori,
 			'submenu' => $submenu,
 			'js' => 'produk/jsProduk',
 			'menu_select_search' => $menu_select_search,
 			'get_data_page' => $get_data_page,
-			'results' => $this->mod_produk->get_list_produk($config["per_page"], $page, $sort_by, $sub),
+			'results' => $this->mod_produk->get_list_produk($config["per_page"], $page, $sort_by, $sub, $search_key),
 			'links' => explode('&nbsp', $str_links),
 			'total_baris' => $total_row,
 			'id_show' => $id_show,
@@ -87,77 +96,152 @@ class Produk extends CI_Controller {
 		$this->load->view('temp', $data);
 	}
 
+	// public function sub_kategori()
+	// { 
+	// 	$sub = $this->uri->segment(3);
 
-	public function cari_produk()
-	{
-		$sub_kategori = $this->input->get('select');
-		$key = $this->input->get('key');
+	// 	$per_page = $this->input->get('per_page');
+	// 	if (!isset($per_page)) {
+	// 		$per_page = 10; //default per page
+	// 	}
 
-		$per_page = $this->input->get('per_page');
-		if (!isset($per_page)) {
-			$per_page = 10; //default per page
-		}
-		$sort_by = $this->input->get('sort_by');
-		if (!isset($sort_by)) {
-			$sort_by = "created"; //default sort
-		}
+	// 	$sort_by = $this->input->get('sort_by');
+	// 	if (!isset($sort_by)) {
+	// 		$sort_by = "created"; //default sort
+	// 	}
 
-		$select_sub = $this->input->get('select');
-		$search_key = $this->input->get('key');
+	// 	//set array for pagination library
+	// 	$config = array();
+	// 	$total_row = $this->mod_produk->record_count($sub);
+	// 	$config["base_url"] = base_url() . "produk/katalog/".$sub;
+    //     $config["total_rows"] = $total_row;
+    //     $config["per_page"] = $per_page;
+    //     //beri tambahan path ketika next page
+    //     $config['prefix'] = '/page/';
+    //     //tampilkan url string pada next page
+    //     $config['reuse_query_string'] = TRUE;
+    //     $config['query_string_segment'] = 'page';
+    //     $config['use_page_numbers'] = TRUE;
+    //     $config['num_links'] = $total_row;
+    //     $config['cur_tag_open'] = '&nbsp <a class="current">';
+    //     $config['cur_tag_close'] = '</a>';
+    //     $config['next_link'] = 'Next';
+    //     $config['prev_link'] = 'Previous';
+    //     $this->pagination->initialize($config);
+        
+    //     $page = $this->uri->segment(5);
+    //     $str_links = $this->pagination->create_links();
+	// 	$id_show = $per_page;
+	// 	$id_sort = $sort_by;
 		
-		//set array for pagination library
-		$config = array();
-		$total_row = $this->mod_produk->record_count($sub_kategori);
-		$config["base_url"] = base_url() . "produk/cari_produk/".$sub_kategori;
-        $config["total_rows"] = $total_row;
-        $config["per_page"] = $per_page;
-        //beri tambahan path ketika next page
-        $config['prefix'] = '/page/';
-        //tampilkan url string pada next page
-        $config['reuse_query_string'] = TRUE;
-        $config['query_string_segment'] = 'page';
-        $config['use_page_numbers'] = TRUE;
-        $config['num_links'] = $total_row;
-        $config['cur_tag_open'] = '&nbsp <a class="current">';
-        $config['cur_tag_close'] = '</a>';
-        $config['next_link'] = 'Next';
-        $config['prev_link'] = 'Previous';
-        $this->pagination->initialize($config);
-
-        $page = $this->uri->segment(5);
-        $str_links = $this->pagination->create_links();
-		$id_show = $per_page;
-		$id_sort = $sort_by;
+	// 	$get_data_page = $this->mod_produk->get_data_page($sub);
+	// 	$menu_navbar = $this->mod_hpg->get_menu_navbar();
+	// 	//hitung kategori yang terdapat pada submenu (groupby)
+	// 	$count_kategori = $this->mod_hpg->count_kategori();
+	// 	$submenu = array();
+	// 	for ($i=1; $i <= $count_kategori; $i++) { 
+	// 		//set array key berdasarkan loop dari angka 1
+	// 		$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
+	// 	}
+	// 	//print_r($submenu);
+	// 	$menu_select_search = $this->mod_hpg->get_menu_search();
 		
-		$get_data_page = $this->mod_produk->get_data_page($sub_kategori);
-		$menu_navbar = $this->mod_hpg->get_menu_navbar();
-		//hitung kategori yang terdapat pada submenu (groupby)
-		$count_kategori = $this->mod_hpg->count_kategori();
-		$submenu = array();
-		for ($i=1; $i <= $count_kategori; $i++) { 
-			//set array key berdasarkan loop dari angka 1
-			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
-		}
-		$menu_select_search = $this->mod_hpg->get_menu_search();
+	// 	$data = array(
+	// 		'content' => 'produk/view_list_produk',
+	// 		'content_sidebar' => 'temp_content_sidebar',
+	// 		'menu_navbar' => $menu_navbar,
+	// 		'count_kategori' => $count_kategori,
+	// 		'submenu' => $submenu,
+	// 		'js' => 'produk/jsProduk',
+	// 		'menu_select_search' => $menu_select_search,
+	// 		'get_data_page' => $get_data_page,
+	// 		'results' => $this->mod_produk->get_list_produk($config["per_page"], $page, $sort_by, $sub),
+	// 		'links' => explode('&nbsp', $str_links),
+	// 		'total_baris' => $total_row,
+	// 		'id_show' => $id_show,
+	// 		'id_sort' => $id_sort
+	// 	);
 
-        $data = array(
-			'content' => 'produk/view_list_produk',
-			'content_sidebar' => 'temp_content_sidebar',
-			'menu_navbar' => $menu_navbar,
-			'count_kategori' => $count_kategori,
-			'submenu' => $submenu,
-			'js' => 'produk/jsProduk',
-			'menu_select_search' => $menu_select_search,
-			'get_data_page' => $get_data_page,
-			'results' => $this->mod_produk->get_list_produk_search($config["per_page"], $page, $sort_by, $select_sub, $search_key),
-			'links' => explode('&nbsp', $str_links),
-			'total_baris' => $total_row,
-			'id_show' => $id_show,
-			'id_sort' => $id_sort
-		);
+	// 	if ($this->session->userdata('id_user') == !null) {
+	// 		$id_user = $this->session->userdata('id_user');
+	// 		$checkout_notif = $this->mod_ckt->notif_count($id_user);
+	// 		$data['notif_count'] = $checkout_notif;
+	// 	}
 
-		$this->load->view('temp', $data);
-	}
+	// 	$this->load->view('temp', $data);
+	// }
+
+
+	// public function cari_produk()
+	// {
+	// 	$sub_kategori = $this->input->get('select');
+	// 	$key = $this->input->get('key');
+
+	// 	$per_page = $this->input->get('per_page');
+	// 	if (!isset($per_page)) {
+	// 		$per_page = 10; //default per page
+	// 	}
+	// 	$sort_by = $this->input->get('sort_by');
+	// 	if (!isset($sort_by)) {
+	// 		$sort_by = "created"; //default sort
+	// 	}
+
+	// 	$select_sub = $this->input->get('select');
+	// 	$search_key = $this->input->get('key');
+		
+	// 	//set array for pagination library
+	// 	$config = array();
+	// 	$total_row = $this->mod_produk->record_count($sub_kategori);
+	// 	$config["base_url"] = base_url() . "produk/cari_produk/".$sub_kategori;
+    //     $config["total_rows"] = $total_row;
+    //     $config["per_page"] = $per_page;
+    //     //beri tambahan path ketika next page
+    //     $config['prefix'] = '/page/';
+    //     //tampilkan url string pada next page
+    //     $config['reuse_query_string'] = TRUE;
+    //     $config['query_string_segment'] = 'page';
+    //     $config['use_page_numbers'] = TRUE;
+    //     $config['num_links'] = $total_row;
+    //     $config['cur_tag_open'] = '&nbsp <a class="current">';
+    //     $config['cur_tag_close'] = '</a>';
+    //     $config['next_link'] = 'Next';
+    //     $config['prev_link'] = 'Previous';
+    //     $this->pagination->initialize($config);
+
+    //     $page = $this->uri->segment(5);
+    //     $str_links = $this->pagination->create_links();
+	// 	$id_show = $per_page;
+	// 	$id_sort = $sort_by;
+		
+	// 	$get_data_page = $this->mod_produk->get_data_page($sub_kategori);
+	// 	$menu_navbar = $this->mod_hpg->get_menu_navbar();
+	// 	//hitung kategori yang terdapat pada submenu (groupby)
+	// 	$count_kategori = $this->mod_hpg->count_kategori();
+	// 	$submenu = array();
+	// 	for ($i=1; $i <= $count_kategori; $i++) { 
+	// 		//set array key berdasarkan loop dari angka 1
+	// 		$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
+	// 	}
+	// 	$menu_select_search = $this->mod_hpg->get_menu_search();
+
+    //     $data = array(
+	// 		'content' => 'produk/view_list_produk',
+	// 		'content_sidebar' => 'temp_content_sidebar',
+	// 		'menu_navbar' => $menu_navbar,
+	// 		'count_kategori' => $count_kategori,
+	// 		'submenu' => $submenu,
+	// 		'js' => 'produk/jsProduk',
+	// 		'menu_select_search' => $menu_select_search,
+	// 		'get_data_page' => $get_data_page,
+	// 		'results' => $this->mod_produk->get_list_produk_search($config["per_page"], $page, $sort_by, $select_sub, $search_key),
+	// 		'links' => explode('&nbsp', $str_links),
+	// 		'total_baris' => $total_row,
+	// 		'id_show' => $id_show,
+	// 		'id_sort' => $id_sort
+	// 	);
+
+	// 	$this->load->view('temp', $data);
+	// }
 
 	public function get_kategori()
 	{
@@ -210,7 +294,13 @@ class Produk extends CI_Controller {
 
 	public function produk_detail()
 	{
-		$id_produk = $this->uri->segment(4);
+		$slug = trim($this->uri->segment(3));
+		$q_produk = $this->mod_produk->get_data_row( 'tbl_produk', ['slug'=>$slug]);
+		if($q_produk) {
+			$id_produk = $q_produk->id_produk;
+		}else{
+			return $this->katalog();	
+		}
 
 		$menu_navbar = $this->mod_hpg->get_menu_navbar();
 		//hitung kategori yang terdapat pada submenu (groupby)
@@ -230,7 +320,7 @@ class Produk extends CI_Controller {
 
 		$data = array(
 			'content' => 'produk/view_detail_produk',
-			'content_sidebar' => 'temp_content_sidebar',
+			// 'content_sidebar' => 'temp_content_sidebar',
 			'menu_navbar' => $menu_navbar,
 			'count_kategori' => $count_kategori,
 			'submenu' => $submenu,

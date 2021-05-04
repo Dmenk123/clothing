@@ -10,39 +10,29 @@ $(document).ready(function() {
 	$('#li_nav_login').removeClass('active');
 	$('#li_nav_produk').addClass('active');
 	
-	//set active class to sidebar
-	let i;
-	key = 1;
-	let segment = $('#segment').text();
-	$.ajax({
-		url: baseUrl+'produk/get_kategori',
-		type: "POST",
-		dataType: "JSON",
-		async : false,
-        data : { segment : segment },
-		success : function(data) {
-			for (i = 1; i <= data.count_kategori; i++) { 
-				if (i == data.kategori[key-1].id_kategori) {
-					$('.li_submenu'+data.kategori[key-1].id_kategori+'').addClass('active');
-				}
-			}
-		}
-	});
+	// //set active class to sidebar
+	// let i;
+	// key = 1;
+	// let segment = $('#segment').text();
+	// $.ajax({
+	// 	url: baseUrl+'produk/get_kategori',
+	// 	type: "POST",
+	// 	dataType: "JSON",
+	// 	async : false,
+    //     data : { segment : segment },
+	// 	success : function(data) {
+	// 		for (i = 1; i <= data.count_kategori; i++) { 
+	// 			if (i == data.kategori[key-1].id_kategori) {
+	// 				$('.li_submenu'+data.kategori[key-1].id_kategori+'').addClass('active');
+	// 			}
+	// 		}
+	// 	}
+	// });
 		
 	//sort per page
 	$('#select_show').change(function() {
 		let num_show = $(this).val();
-		let satu = 10;
-		let dualima = 25;
-		let limapuluh = 50;
-		
-		if (num_show == satu) {
-			setParam('per_page', satu);
-		}else if (num_show == dualima) {
-			setParam('per_page', dualima);
-		}else if (num_show == limapuluh) {
-			setParam('per_page', limapuluh);
-		}
+		setParam('per_page', num_show);
 	});
 
 	//sort kategori tampil

@@ -9,23 +9,42 @@ class Mod_produk extends CI_Model
 		$this->load->database();
 	}
 
-
-	public function get_list_produk($limit, $start ,$sort, $id_sub)
+	public function get_data_row($table, $where)
 	{
+		$this->db->select('*');
+		$this->db->from($table);
+		$this->db->where($where);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+
+	public function get_list_produk($limit, $start ,$sort, $id_sub, $key)
+	{
+		if($start != null) {
+			$offset = ((int)$start - 1) * $limit;
+		}else{
+			$offset = null;
+		}
+
 		$this->db->select('tbl_produk.id_produk,
 						   tbl_produk.id_sub_kategori,
 						   tbl_produk.nama_produk,
 						   tbl_produk.harga,
+						   tbl_produk.slug,
 						   tbl_gambar_produk.nama_gambar');	
 		$this->db->from('tbl_produk');
 		$this->db->join('tbl_gambar_produk', 'tbl_produk.id_produk = tbl_gambar_produk.id_produk', 'left');
 		$this->db->where('tbl_produk.id_sub_kategori', $id_sub);
 		$this->db->where('tbl_gambar_produk.jenis_gambar', "display");
 		$this->db->where('tbl_produk.status', '1');
+		$this->db->like('tbl_produk.nama_produk', $key);
 		$this->db->order_by('tbl_produk.'.$sort, 'asc');
-		$this->db->limit($limit, $start);
+		$this->db->limit($limit, $offset);
 
 		$query = $this->db->get();
+		// echo $this->db->last_query();exit;
+		
 		return $query->result();
 	}
 
@@ -123,13 +142,13 @@ class Mod_produk extends CI_Model
 	}
 
 	
-	public function record_count($subKategori)
+	public function record_count($subKategori, $key)
 	{
 		$this->db->select('*');
 		$this->db->from('tbl_produk');
 		$this->db->where('id_sub_kategori', $subKategori);
 		$this->db->where('status', '1');
-		//$query = $this->db->get_where('tbl_produk', array('id_sub_kategori' => $subKategori));
+		$this->db->like('nama_produk', $key);
 		$query = $this->db->get();
 		return $query->num_rows();
 	}
@@ -149,12 +168,13 @@ class Mod_produk extends CI_Model
         return false;
    }
 
-   public function get_data_page($id)
+   public function get_data_page($id, $key)
     {	
-    	$this->db->select('*');
+    	$this->db->select('tbl_sub_kategori_produk.*');
     	$this->db->from('tbl_sub_kategori_produk');
-    	$this->db->where('id_sub_kategori', $id);
-
+		$this->db->join('tbl_produk', 'tbl_sub_kategori_produk.id_sub_kategori = tbl_produk.id_sub_kategori', 'right');
+    	$this->db->where('tbl_sub_kategori_produk.id_sub_kategori', $id);
+		$this->db->like('tbl_produk.nama_produk', $key);
     	$query = $this->db->get();
 		return $query->result();
     }
