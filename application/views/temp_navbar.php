@@ -34,9 +34,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <!-- Katalog -->
                     <li class="" id="li_nav_kontak"><a href="<?php echo site_url('produk/katalog'); ?>">Katalog</a></li>
                     <!-- Kontak -->
-                    <li class="" id="li_nav_kontak"><a href="<?php echo site_url('kontak'); ?>">Kontak Kami</a></li>
+                    <!-- <li class="" id="li_nav_kontak"><a href="<?php echo site_url('kontak'); ?>">Kontak Kami</a></li> -->
                     <!-- faq -->
-                    <li class="" id="li_nav_faq"><a href="<?php echo site_url('faq'); ?>">FAQ</a></li>
+                    <!-- <li class="" id="li_nav_faq"><a href="<?php echo site_url('faq'); ?>">FAQ</a></li> -->
                 </ul>
             </div>
             <!--/.nav-collapse -->

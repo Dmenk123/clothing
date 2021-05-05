@@ -65,7 +65,7 @@
 
     <div id="all">
 
-        <div id="content">
+        <div id="content" >
             <!-- main-slider -->
             <?php 
                 if (isset($content_slider)) 
