@@ -36,12 +36,16 @@
     <!-- Date Picker -->
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>datepicker/datepicker3.css">
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>jQueryToastr/build/toastr.min.css">
+	<link rel="stylesheet" href="<?php echo config_item('assets'); ?>sweetalert/sweetalert.css">
 
     <script src="<?php echo config_item('assets'); ?>js/respond.min.js"></script>
 
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo config_item('assets'); ?>icon/favicon.png">
 
 	<style>
+		/* .select2-choice { background-color: #e8f0fe; } */
+		.select2-selection__rendered { background-color: #e8f0fe; }
+		/* .select2-search input { background-color: #e8f0fe; } */
 		tr.cart {
 			font-size: 12px;
 		}
@@ -204,6 +208,12 @@
     <script src="<?=config_item('assets')?>datatables/jquery.dataTables.min.js"></script>
     <script src="<?=config_item('assets')?>datatables/dataTables.bootstrap.min.js"></script>
 	<script src="<?=config_item('assets')?>jQueryToastr/build/toastr.min.js"></script>
+	<script src="<?=config_item('assets')?>sweetalert/sweetalert.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$('.select2').select2();
+		});
+	</script>
     
     <!-- load js per modul -->
     <?php if(isset($js)) { $this->load->view($js); }?>

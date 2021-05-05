@@ -9,9 +9,6 @@ class Checkout extends CI_Controller {
 		$this->load->library('cart');
 		$this->load->model('homepage/mod_homepage','mod_hpg');
 		$this->load->model('mod_checkout','m_ckt');
-		// if ($this->session->userdata('logged_in') == false ) {
-		// 	redirect('register');
-		// }
 	}
 	
 	public function index()
@@ -26,9 +23,14 @@ class Checkout extends CI_Controller {
 		}
 		$menu_select_search = $this->mod_hpg->get_menu_search();
 		$data_user = $this->m_ckt->get_data_user($id_user);
+		
+		// echo "<pre>";
+		// print_r ($this->cart->contents());
+		// echo "</pre>";
+		// exit;
 
 		$data = array(
-			'content' => 'checkout/view_checkout',
+			'content' => 'checkout/view_checkout_1',
 			'modal' => 'checkout/modal_checkout',
 			'count_kategori' => $count_kategori,
 			'submenu' => $submenu,
@@ -40,6 +42,318 @@ class Checkout extends CI_Controller {
 
         $this->load->view('temp',$data);
 	}
+
+	public function step2()
+	{
+		$id_user = $this->session->userdata('id_user');
+		$menu_navbar = $this->mod_hpg->get_menu_navbar();
+		$count_kategori = $this->mod_hpg->count_kategori();
+		$submenu = array();
+		for ($i=1; $i <= $count_kategori; $i++) { 
+			//set array key berdasarkan loop dari angka 1
+			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
+		}
+		$menu_select_search = $this->mod_hpg->get_menu_search();
+		$data_user = $this->m_ckt->get_data_user($id_user);
+		
+		// echo "<pre>";
+		// print_r ($this->cart->contents());
+		// echo "</pre>";
+		// exit;
+
+		$data = array(
+			'content' => 'checkout/view_checkout_1',
+			'modal' => 'checkout/modal_checkout',
+			'count_kategori' => $count_kategori,
+			'submenu' => $submenu,
+			'menu_navbar' => $menu_navbar,
+			'js' => 'checkout/jsCheckout',
+			'menu_select_search' => $menu_select_search,
+			'data_user' => $data_user,
+		);
+
+        $this->load->view('temp',$data);
+	}
+
+	public function suggest_provinsi()
+	{
+		$provinsi = [];
+		if(!empty($this->input->get("term"))){
+			$key = $_GET['term'];
+			$query = $this->m_ckt->lookup_data_provinsi($key);
+		}else{
+			$query = $this->m_ckt->lookup_data_provinsi();
+		}
+		
+		foreach ($query as $row) {
+			$provinsi[] = array(
+						'id' => $row->id_provinsi,
+						'text' => $row->nama_provinsi,
+					);
+		}
+		echo json_encode($provinsi);
+	}
+
+	public function suggest_kotakabupaten()
+	{
+		// get data from ajax object (uri)
+		$id_provinsi = $this->uri->segment(3);
+		$kotkab = [];
+		if(!empty($this->input->get("term"))){
+			$key = $_GET['term'];
+			$query = $this->m_ckt->lookup_data_kotakabupaten($key, $id_provinsi);
+		}else{
+			$key = "";
+			$query = $this->m_ckt->lookup_data_kotakabupaten($key, $id_provinsi);
+		}
+		
+		foreach ($query as $row) {
+			$kotkab[] = array(
+						'id' => $row->id_kota,
+						'text' => $row->nama_kota,
+					);
+		}
+		echo json_encode($kotkab);
+	}
+
+	public function suggest_kecamatan()
+	{
+		// get data from ajax object (uri)
+		$id_kota = $this->uri->segment(3);
+		$kecamatan = [];
+		if(!empty($this->input->get("term"))){
+			$key = $_GET['term'];
+			$query = $this->m_ckt->lookup_data_kecamatan($key, $id_kota);
+		}else{
+			$key = "";
+			$query = $this->m_ckt->lookup_data_kecamatan($key, $id_kota);
+		}
+		
+		foreach ($query as $row) {
+			$kecamatan[] = array(
+						'id' => $row->id_kecamatan,
+						'text' => $row->nama_kecamatan,
+					);
+		}
+		echo json_encode($kecamatan);
+	}
+
+	public function suggest_kelurahan()
+	{
+		// get data from ajax object (uri)
+		$id_kecamatan = $this->uri->segment(3);
+		$kelurahan = [];
+		if(!empty($this->input->get("term"))){
+			$key = $_GET['term'];
+			$query = $this->m_ckt->lookup_data_kelurahan($key, $id_kecamatan);
+		}else{
+			$key = "";
+			$query = $this->m_ckt->lookup_data_kelurahan($key, $id_kecamatan);
+		}
+		
+		foreach ($query as $row) {
+			$kelurahan[] = array(
+						'id' => $row->id_kelurahan,
+						'text' => $row->nama_kelurahan,
+					);
+		}
+		echo json_encode($kelurahan);
+	}
+
+	public function simpan_step1()
+	{
+		$obj_date = new DateTime();
+		$date = $obj_date->format('Y-m-d');
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$arr_valid = $this->rule_validasi_step1();
+		
+		if ($arr_valid['status'] == FALSE) {
+			echo json_encode($arr_valid);
+			return;
+		}
+		
+		$id_header = gen_uuid();
+		$email = $this->input->post('email');
+		$hp = $this->input->post('hp');
+		$nama = $this->input->post('nama');
+		$provinsi = $this->input->post('provinsi');
+		$kota = $this->input->post('kota');
+		$kecamatan = $this->input->post('kecamatan');
+		$kelurahan = $this->input->post('kelurahan');
+		$alamat = $this->input->post('alamat');
+
+		if(count($this->cart->contents()) >= 1) {
+			$row_id_concat = '';
+			$harga_total = 0;
+			$arr_data_det = [];
+			foreach ($this->cart->contents() as $key => $value) {
+				$harga_total += (float)$value['price'];
+				$row_id_concat .= $value['rowid'];
+
+				$arr_data_det[] = [
+					'id_checkout' => $id_header,
+					'id_produk' => $value['id'],
+					'id_satuan' => $value['options']['Id_satuan_produk'],
+					'id_stok' => $value['options']['Id_stok_produk'],
+					'sess_row_id' => $value['rowid'],
+					'harga_satuan' => $value['price']
+				];
+			}
+
+			//cek di checkout apakah ada transaksi dengan rowid concat diatas
+			$cek_tbl = $this->m_ckt->single_row('tbl_checkout', ['row_id_concat' => $row_id_concat, 'deleted_at' => null]);
+			if($cek_tbl) {
+				$flag_trans = 'update';
+			}else{
+				$flag_trans = 'insert';
+			}
+		}else{
+			$retval['status'] = false;
+			$retval['pesan'] = 'Data keranjang belanja kosong';
+			echo json_encode($retval);
+			return;
+		}
+
+		$this->db->trans_begin();
+		
+
+		if($flag_trans == 'insert') {
+			$arr_data = [
+				'id_checkout' => $id_header,
+				'tgl_checkout' => $date,
+				'status' => 1,
+				'harga_total_produk' => $harga_total,
+				'nama' => $nama,
+				'alamat' => $alamat,
+				'id_kel' => $kelurahan,
+				'id_kec' => $kecamatan,
+				'id_kota' => $kota,
+				'id_prov' => $provinsi,
+				'email' => trim($email),
+				'telp' => trim($hp),
+				'row_id_concat' => $row_id_concat,
+				'created_at' => $timestamp
+			];
+
+			$ins = $this->m_ckt->insert_data('tbl_checkout', $arr_data);
+
+			foreach ($arr_data_det as $k => $v) {
+				$data_det = [
+					'id_checkout' => $v['id_checkout'],
+					'id_produk' => $v['id_produk'],
+					'id_satuan' => $v['id_satuan'],
+					'id_stok' => $v['id_stok'],
+					'sess_row_id' => $v['sess_row_id'],
+					'harga_satuan' => $v['harga_satuan'],
+					'created_at' => $timestamp
+				];
+				$this->m_ckt->insert_data('tbl_checkout_detail', $data_det);
+			}
+		}else{
+			$arr_data = [
+				'tgl_checkout' => $date,
+				'harga_total_produk' => $harga_total,
+				'nama' => $nama,
+				'alamat' => $alamat,
+				'id_kel' => $kelurahan,
+				'id_kec' => $kecamatan,
+				'id_kota' => $kota,
+				'id_prov' => $provinsi,
+				'email' => trim($email),
+				'telp' => trim($hp),
+				'row_id_concat' => $row_id_concat,
+				'updated_at' => $timestamp
+			];
+
+			$upd = $this->m_ckt->update_data('tbl_checkout', $arr_data, ['id_checkout' => $cek_tbl->id_checkout]);
+
+			foreach ($arr_data_det as $k => $v) {
+				$data_det = [
+					'id_produk' => $v['id_produk'],
+					'id_satuan' => $v['id_satuan'],
+					'id_stok' => $v['id_stok'],
+					'sess_row_id' => $v['sess_row_id'],
+					'harga_satuan' => $v['harga_satuan'],
+					'updated_at' => $timestamp
+				];
+				$this->m_ckt->update_data('tbl_checkout_detail', $data_det, ['id' => $v['id_checkout']]);
+			}
+		}
+		
+		if ($this->db->trans_status() === FALSE){
+			$this->db->trans_rollback();
+			$retval['status'] = false;
+			$retval['pesan'] = 'Gagal proses data';
+		}else{
+			$this->db->trans_commit();
+			$retval['status'] = true;
+			$retval['pesan'] = 'Sukses proses data';
+		}
+
+		echo json_encode($retval);
+	}
+
+	private function rule_validasi_step1()
+	{
+		$data = array();
+		$data['error_string'] = array();
+		$data['inputerror'] = array();
+		$data['status'] = TRUE;
+
+		if ($this->input->post('email') == '') {
+			$data['inputerror'][] = 'email';
+			$data['error_string'][] = 'Wajib mengisi email';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('hp') == '') {
+			$data['inputerror'][] = 'hp';
+			$data['error_string'][] = 'Wajib mengisi hp';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('nama') == '') {
+			$data['inputerror'][] = 'nama';
+			$data['error_string'][] = 'Wajib mengisi nama';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('provinsi') == '') {
+			$data['inputerror'][] = 'provinsi';
+			$data['error_string'][] = 'Wajib mengisi provinsi';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('kota') == '') {
+			$data['inputerror'][] = 'kota';
+			$data['error_string'][] = 'Wajib mengisi kota';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('kecamatan') == '') {
+			$data['inputerror'][] = 'kecamatan';
+			$data['error_string'][] = 'Wajib mengisi kecamatan';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('kelurahan') == '') {
+			$data['inputerror'][] = 'kelurahan';
+			$data['error_string'][] = 'Wajib mengisi kelurahan';
+			$data['status'] = FALSE;
+		}
+
+		if ($this->input->post('alamat') == '') {
+			$data['inputerror'][] = 'alamat';
+			$data['error_string'][] = 'Wajib mengisi alamat';
+			$data['status'] = FALSE;
+		}
+	
+
+        return $data;
+	}
+
+
+	/////////////////////////////////////////////////////////
 
 	public function add_alamat_kirim()
 	{
@@ -148,90 +462,7 @@ class Checkout extends CI_Controller {
 		return json_decode($provinces, true);
 	}
 	
-	public function suggest_provinsi()
-	{
-		$provinsi = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->m_ckt->lookup_data_provinsi($key);
-		}else{
-			$query = $this->m_ckt->lookup_data_provinsi();
-		}
-		
-		foreach ($query as $row) {
-			$provinsi[] = array(
-						'id' => $row->id_provinsi,
-						'text' => $row->nama_provinsi,
-					);
-		}
-		echo json_encode($provinsi);
-	}
-
-	public function suggest_kotakabupaten()
-	{
-		// get data from ajax object (uri)
-		$id_provinsi = $this->uri->segment(3);
-		$kotkab = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->m_ckt->lookup_data_kotakabupaten($key, $id_provinsi);
-		}else{
-			$key = "";
-			$query = $this->m_ckt->lookup_data_kotakabupaten($key, $id_provinsi);
-		}
-		
-		foreach ($query as $row) {
-			$kotkab[] = array(
-						'id' => $row->id_kota,
-						'text' => $row->nama_kota,
-					);
-		}
-		echo json_encode($kotkab);
-	}
-
-	public function suggest_kecamatan()
-	{
-		// get data from ajax object (uri)
-		$id_kota = $this->uri->segment(3);
-		$kecamatan = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->m_ckt->lookup_data_kecamatan($key, $id_kota);
-		}else{
-			$key = "";
-			$query = $this->m_ckt->lookup_data_kecamatan($key, $id_kota);
-		}
-		
-		foreach ($query as $row) {
-			$kecamatan[] = array(
-						'id' => $row->id_kecamatan,
-						'text' => $row->nama_kecamatan,
-					);
-		}
-		echo json_encode($kecamatan);
-	}
-
-	public function suggest_kelurahan()
-	{
-		// get data from ajax object (uri)
-		$id_kecamatan = $this->uri->segment(3);
-		$kelurahan = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->m_ckt->lookup_data_kelurahan($key, $id_kecamatan);
-		}else{
-			$key = "";
-			$query = $this->m_ckt->lookup_data_kelurahan($key, $id_kecamatan);
-		}
-		
-		foreach ($query as $row) {
-			$kelurahan[] = array(
-						'id' => $row->id_kelurahan,
-						'text' => $row->nama_kelurahan,
-					);
-		}
-		echo json_encode($kelurahan);
-	}
+	
 
 	public function suggest_provinsi_tujuan()
 	{

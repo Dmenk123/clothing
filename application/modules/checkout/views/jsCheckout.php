@@ -16,57 +16,7 @@
             return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
         });
 
-        //validasi form edit alamat tagih
-        $("form[name='formCheckout1']").validate({
-            // Specify validation rules
-            errorElement: 'span',
-            /*errorLabelContainer: '.errMsg',*/
-            errorPlacement: function(error, element) {
-                if (element.attr("name") == "checkout1Fname") {
-                    error.insertAfter(".lblFnameErr");
-                } else if (element.attr("name") == "checkout1Alamat") {
-                    error.insertAfter(".lblAlmtErr");
-                } else if (element.attr("name") == "checkout1Telp") {
-                    error.insertAfter(".lblTelpErr");
-                } else if (element.attr("name") == "checkout1Kdpos") {
-                    error.insertAfter(".lblKdpsErr");
-                } else {
-                    error.insertAfter(element);
-                }
-            },
-            rules:{
-                checkout1Fname: "required",
-                checkout1Provinsi: "required",
-                checkout1Kota: "required",
-                checkout1Kecamatan: "required",
-                checkout1Kelurahan: "required",
-                checkout1Alamat: "required",
-                checkout1Kdpos: {
-                    required: true,
-                    minlength: 5
-                },
-                checkout1Telp: "required"
-            },
-            // Specify validation error messages
-            messages: {
-                checkout1Fname: " (Harus diisi !!)",
-                checkout1Provinsi: " (Harus diisi !!)",
-                checkout1Kota: " (Harus diisi !!)",
-                checkout1Kecamatan: " (Harus diisi !!)",
-                checkout1Kelurahan: " (Harus diisi !!)",
-                checkout1Alamat: " (Harus diisi !!)",
-                checkout1Kdpos: {
-                    required: " (Harus diisi !!)",
-                    minlength: " (Kode pos anda setidaknya minimal 5 karakter !!)"
-                },
-                checkout1Telp: " (Harus diisi !!)"
-            },
-            submitHandler: function(form) {
-              form.submit();
-            }
-        });
-
-        $("#checkout1_prov").select2({
+		$("#provinsi").select2({
             ajax: {
                 url: '<?php echo site_url('checkout/suggest_provinsi'); ?>',
                 dataType: 'json',
@@ -91,22 +41,13 @@
             }, 
         });
 
-        $( "#checkout1_kota" ).select2({
-        });
-              
-        $( "#checkout1_kec" ).select2({
-        });
-
-        $( "#checkout1_kel" ).select2({
-        });
-
-        // event onchange to modify select2 kota content
-        $('#checkout1_prov').change(function(){
-            $('#checkout1_kota').empty();
-            $( "#checkout1_kec" ).empty();
-            $( "#checkout1_kel" ).empty(); 
-            var idProvinsi = $('#checkout1_prov').val();
-            $( "#checkout1_kota" ).select2({
+		// event onchange to modify select2 kota content
+        $('#provinsi').change(function(){
+            $('#kota').empty();
+            $("#kecamatan").empty();
+            $("#kelurahan").empty(); 
+            var idProvinsi = $('#provinsi').val();
+            $( "#kota" ).select2({
                 ajax: {
                     url: '<?php echo site_url('checkout/suggest_kotakabupaten'); ?>/'+ idProvinsi,
                     dataType: 'json',
@@ -132,12 +73,12 @@
             });
         });
 
-        // event onchange to modify select2 kecamatan content
-        $('#checkout1_kota').change(function(){
-            $('#checkout1_kec').empty();
-            $( "#checkout1_kel" ).empty();  
-            var idKota = $('#checkout1_kota').val();
-            $( "#checkout1_kec" ).select2({ 
+		// event onchange to modify select2 kecamatan content
+        $('#kota').change(function(){
+            $('#kecamatan').empty();
+            $( "#kelurahan" ).empty();  
+            var idKota = $('#kota').val();
+            $( "#kecamatan" ).select2({ 
                 ajax: {
                     url: '<?php echo site_url('checkout/suggest_kecamatan'); ?>/'+ idKota,
                     dataType: 'json',
@@ -164,10 +105,10 @@
         });
 
         // event onchange to modify select2 kelurahan content
-        $('#checkout1_kec').change(function(){
-            $('#checkout1_kel').empty(); 
-            var idKecamatan = $('#checkout1_kec').val();
-            $( "#checkout1_kel" ).select2({ 
+        $('#kecamatan').change(function(){
+            $('#kelurahan').empty(); 
+            var idKecamatan = $('#kecamatan').val();
+            $( "#kelurahan" ).select2({ 
                 ajax: {
                     url: '<?php echo site_url('checkout/suggest_kelurahan'); ?>/'+ idKecamatan,
                     dataType: 'json',
@@ -192,6 +133,88 @@
                 },
             });
         });
+
+		$('#form_step1').submit(function (e) { 
+			e.preventDefault();
+			var form = $('#form_step1')[0];
+			var data = new FormData(form);
+
+			// swal({
+			// title: "Looks like you're from " + countName + ". ",
+			// text: "Go to our International Store? ",
+			// imageUrl: 'https://www.countryflags.io/' + countCode + '/flat/64.png',
+			// imageWidth: 128,
+			// imageHeight: 128,
+			// showCancelButton: true,
+			// showConfirmButton: true,
+			// confirmButtonText: 'Yes take me there',
+			// cancelButtonText: 'Stay on U.S.A Site',
+			// imageAlt: 'Custom image',
+			// dangerMode: false,
+			// }, function () {
+			// // Your code
+			// });
+
+			swal({
+				title: "Yakin Lanjutkan ?",
+				text: "Anda akan melanjutkan ke tahap selanjutnya !",
+				// icon: "warning",
+				showCancelButton: true,
+				showConfirmButton: true,
+				confirmButtonText: 'Ya, Lanjutkan',
+				cancelButtonText: 'Tidak, Batalkan',
+				dangerMode: false,
+			}, () => {
+				$.ajax({
+					type: "POST",
+					enctype: 'multipart/form-data',
+					url: '<?php echo site_url('checkout/simpan_step1'); ?>',
+					data: data,
+					dataType: "JSON",
+					processData: false, // false, it prevent jQuery form transforming the data into a query string
+					contentType: false, 
+					cache: false,
+					timeout: 600000,
+					success: function (data) {
+						if(data.status) {
+							swal("Sukses!!! Lanjut ke tahap selanjutnya.", {
+								icon: "success",
+							}).then(() => {
+								location.href="<?php echo site_url('checkout/step2'); ?>";
+							});
+							
+							// $("#btnSave").prop("disabled", false);
+							// $('#btnSave').text('Simpan');
+						}else {
+							for (var i = 0; i < data.inputerror.length; i++) 
+							{
+								if (data.inputerror[i] != 'jabatans') {
+									$('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+									$('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback'); //select span help-block class set text error string
+								}else{
+									$($('#jabatans').data('select2').$container).addClass('has-error');
+								}
+							}
+			
+							// $("#btnSave").prop("disabled", false);
+							// $('#btnSave').text('Simpan');
+						}
+					},
+					error: function (e) {
+						console.log("ERROR : ", e);
+						// $("#btnSave").prop("disabled", false);
+						// $('#btnSave').text('Simpan');
+					}
+				});
+			});
+		});
+
+		/////////////////////////////////////////////////////
+       
+
+        
+
+        
 
         // select class modal whenever bs.modal hidden
         $(".modal").on("hidden.bs.modal", function(){

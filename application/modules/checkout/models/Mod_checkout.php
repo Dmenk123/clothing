@@ -173,5 +173,26 @@ class Mod_checkout extends CI_Model
         $query = $this->db->get();
         return $query->num_rows();
     }
-	
+
+	public function single_row($table, $where)
+	{
+		$this->db->select('*');
+		$this->db->from($table);
+        $this->db->where($where);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function insert_data($table, $data)
+	{
+		$this->db->insert($table, $data);
+		return $this->db->insert_id();
+	}
+
+	public function update_data($table=NULL, $data=NULL, $array_where=NULL){
+        $this->db->where($array_where);
+        $this->db->update($table, $data);
+        return $this->db->affected_rows();
+    }
+
 }
