@@ -12,29 +12,29 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </li>
                             <li><a href="text.html">Syarat dan Ketentuan</a>
                             </li>
-                            <li><a href="faq.html">FAQ</a>
+                            <li><a href="http://majangdapatuang.com/clothing.majangdapatuang.com/faq">FAQ</a>
                             </li>
-                            <li><a href="contact.html">Kontak Kami</a>
+                            <li><a href="http://majangdapatuang.com/clothing.majangdapatuang.com/kontak">Kontak Kami</a>
                             </li>
                         </ul>
 
                         <hr>
 
-                        <h4>User section</h4>
+                        <!--<h4>User section</h4>-->
 
-                        <ul>
+                        <!--<ul>
                             <li><a href="#" data-toggle="modal" data-target="#login-modal">Login</a>
                             </li>
                             <li><a href="register.html">Register</a>
                             </li>
-                        </ul>
+                        </ul>-->
 
                         <hr class="hidden-md hidden-lg hidden-sm">
 
                     </div>
                     <!-- /.col-md-3 -->
 
-                    <div class="col-md-3 col-sm-6">
+                    <!--<div class="col-md-3 col-sm-6">
 
                         <h4>Top categories</h4>
 
@@ -63,7 +63,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                         <hr class="hidden-md hidden-lg">
 
-                    </div>
+                    </div>-->
                     <!-- /.col-md-3 -->
 
                     <div class="col-md-3 col-sm-6">

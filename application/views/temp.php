@@ -77,10 +77,10 @@
 <!--  __________________ _______________________________________ -->
             <!-- *** ADVANTAGES HOMEPAGE *** -->
             <?php 
-                if (isset($content_advantage)) 
-                {
-                    $this->load->view($content_advantage); 
-                } 
+                // if (isset($content_advantage)) 
+                // {
+                //     $this->load->view($content_advantage); 
+                // } 
              ?>
             <!-- /#advantages -->
             <!-- *** ADVANTAGES END *** -->
