@@ -26,6 +26,7 @@ class Home extends CI_Controller {
 			'content_slider' => 'homepage/view_homepage_slider',
 			'content_advantage' => 'homepage/view_homepage_advantage',
 			'content_hot' => 'homepage/view_homepage_hot',
+			'content_banner' => 'homepage/view_homepage_banner',
 			'js' => 'homepage/jsHomepage',
 			'count_kategori' => $count_kategori,
 			'menu_navbar' => $menu_navbar,

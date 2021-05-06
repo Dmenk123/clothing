@@ -92,6 +92,13 @@
                     $this->load->view($content_hot); 
                 } 
              ?>
+
+            <?php 
+                if (isset($content_banner)) 
+                {
+                    $this->load->view($content_banner); 
+                } 
+             ?>
             <!-- /#hot -->
             <!-- *** HOT END *** -->
 <!--  _________________________________________________________ -->
