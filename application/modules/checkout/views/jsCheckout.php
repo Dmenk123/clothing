@@ -2,6 +2,65 @@
 <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyANNc1-MZMq0duMkVgXAUfNfFHEOi78NeQ"></script>
 <script type="text/javascript">
     var edit_type;
+	const selectKota = () => {
+		$('#kecamatan').empty();
+		$( "#kelurahan" ).empty();  
+		var idKota = $('#kota').val();
+		$( "#kecamatan" ).select2({ 
+			ajax: {
+				url: '<?php echo site_url('checkout/suggest_kecamatan'); ?>/'+ idKota,
+				dataType: 'json',
+				type: "GET",
+				data: function (params) {
+					var queryParameters = {
+						term: params.term
+					}
+					return queryParameters;
+				},
+				processResults: function (data) {
+					return {
+						results: $.map(data, function (item) {
+							return {
+								text: item.text,
+								id: item.id
+							}
+						})
+					};
+				},
+				cache: true
+			},
+		});
+	}
+
+	const selectKec = () => {
+		$('#kelurahan').empty(); 
+		var idKecamatan = $('#kecamatan').val();
+		$( "#kelurahan" ).select2({ 
+			ajax: {
+				url: '<?php echo site_url('checkout/suggest_kelurahan'); ?>/'+ idKecamatan,
+				dataType: 'json',
+				type: "GET",
+				data: function (params) {
+					var queryParameters = {
+						term: params.term
+					}
+					return queryParameters;
+				},
+				processResults: function (data) {
+					return {
+						results: $.map(data, function (item) {
+							return {
+								text: item.text,
+								id: item.id
+							}
+						})
+					};
+				},
+				cache: true
+			},
+		});
+	}
+
 	$(document).ready(function(){
 		//set active class to navbar
 		$('#li_nav_home').removeClass('active');
@@ -41,6 +100,17 @@
             }, 
         });
 
+		<?php 
+		if ($data_cart)  {
+			// var $newOption = $("<option selected='selected'></option>").val("TheID").text("The text")
+ 
+			echo '$("#provinsi").append($("<option selected=\'selected\'></option>").val("'.$data_cart->id_prov.'").text("The text")).trigger(\'change\');';
+			// echo "$('#provinsi').val('$data_cart->id_prov').trigger('change');";
+			echo "\n";
+			echo "selectKota();";
+		}
+		?>
+
 		// event onchange to modify select2 kota content
         $('#provinsi').change(function(){
             $('#kota').empty();
@@ -73,87 +143,11 @@
             });
         });
 
-		// event onchange to modify select2 kecamatan content
-        $('#kota').change(function(){
-            $('#kecamatan').empty();
-            $( "#kelurahan" ).empty();  
-            var idKota = $('#kota').val();
-            $( "#kecamatan" ).select2({ 
-                ajax: {
-                    url: '<?php echo site_url('checkout/suggest_kecamatan'); ?>/'+ idKota,
-                    dataType: 'json',
-                    type: "GET",
-                    data: function (params) {
-                        var queryParameters = {
-                            term: params.term
-                        }
-                        return queryParameters;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.text,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    },
-                    cache: true
-                },
-            });
-        });
-
-        // event onchange to modify select2 kelurahan content
-        $('#kecamatan').change(function(){
-            $('#kelurahan').empty(); 
-            var idKecamatan = $('#kecamatan').val();
-            $( "#kelurahan" ).select2({ 
-                ajax: {
-                    url: '<?php echo site_url('checkout/suggest_kelurahan'); ?>/'+ idKecamatan,
-                    dataType: 'json',
-                    type: "GET",
-                    data: function (params) {
-                        var queryParameters = {
-                            term: params.term
-                        }
-                        return queryParameters;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.text,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    },
-                    cache: true
-                },
-            });
-        });
-
+		
 		$('#form_step1').submit(function (e) { 
 			e.preventDefault();
 			var form = $('#form_step1')[0];
 			var data = new FormData(form);
-
-			// swal({
-			// title: "Looks like you're from " + countName + ". ",
-			// text: "Go to our International Store? ",
-			// imageUrl: 'https://www.countryflags.io/' + countCode + '/flat/64.png',
-			// imageWidth: 128,
-			// imageHeight: 128,
-			// showCancelButton: true,
-			// showConfirmButton: true,
-			// confirmButtonText: 'Yes take me there',
-			// cancelButtonText: 'Stay on U.S.A Site',
-			// imageAlt: 'Custom image',
-			// dangerMode: false,
-			// }, function () {
-			// // Your code
-			// });
 
 			swal({
 				title: "Yakin Lanjutkan ?",
@@ -177,9 +171,16 @@
 					timeout: 600000,
 					success: function (data) {
 						if(data.status) {
-							swal("Sukses!!! Lanjut ke tahap selanjutnya.", {
-								icon: "success",
-							}).then(() => {
+							swal({
+								title: "Sukses !",
+								text: "Pengisian Form Sukses",
+								// icon: "warning",
+								//showCancelButton: true,
+								showConfirmButton: true,
+								confirmButtonText: 'Ya, Lanjutkan',
+								//cancelButtonText: 'Tidak, Batalkan',
+								dangerMode: false,
+							}, () => {
 								location.href="<?php echo site_url('checkout/step2'); ?>";
 							});
 							
@@ -188,11 +189,12 @@
 						}else {
 							for (var i = 0; i < data.inputerror.length; i++) 
 							{
-								if (data.inputerror[i] != 'jabatans') {
+								if (data.inputtipe[i] != 'select2') {
 									$('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
 									$('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback'); //select span help-block class set text error string
 								}else{
-									$($('#jabatans').data('select2').$container).addClass('has-error');
+									$($('[name="'+data.inputerror[i]+'"]').data('select2').$container).addClass('has-error');
+									$($('[name="'+data.inputerror[i]+'"]').data('select2').$container).next().text(data.error_string[i]).addClass('invalid-feedback');
 								}
 							}
 			

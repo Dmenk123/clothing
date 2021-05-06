@@ -27,14 +27,14 @@
 							<div class="col-sm-6">
 									<div class="form-group">
 										<label>Email</label>
-										<input type="email" class="form-control" name="email" id="email"> 
+										<input type="email" class="form-control" name="email" id="email" value="<?php echo ($data_cart) ? $data_cart->email : ''; ?>"> 
 										<span class="help-block"></span>
 									</div>
 							</div>
 							<div class="col-sm-6">
 									<div class="form-group">
 										<label>HP / Telepon</label>
-										<input type="text" class="form-control" id="hp" name="hp">
+										<input type="text" class="form-control" id="hp" name="hp" value="<?php echo ($data_cart) ? $data_cart->telp : ''; ?>">
 										<span class="help-block"></span>
 									</div>
 							</div>
@@ -46,7 +46,7 @@
 							<div class="col-sm-12">
 								<div class="form-group">
 									<label>Nama Lengkap</label>
-									<input type="text" class="form-control" id="nama" name="nama">
+									<input type="text" class="form-control" id="nama" name="nama" value="<?php echo ($data_cart) ? $data_cart->nama : ''; ?>">
 									<span class="help-block"></span>
 								</div>
 							</div>
@@ -64,14 +64,14 @@
 							<div class="col-sm-6 col-md-3">
 								<div class="form-group">
 									<label for="zip">Kabupaten/Kota</label>
-									<select class="form-control select2" id="kota" name="kota"></select>
+									<select class="form-control select2" id="kota" name="kota" onchange="selectKota()"></select>
 									<span class="help-block"></span>
 								</div>
 							</div>
 							<div class="col-sm-6 col-md-3">
 								<div class="form-group">
 									<label for="state">Kecamatan</label>
-									<select class="form-control select2" id="kecamatan" name="kecamatan"></select>
+									<select class="form-control select2" id="kecamatan" name="kecamatan" onchange="selectKec()"></select>
 									<span class="help-block"></span>
 								</div>
 							</div>
@@ -86,7 +86,7 @@
 							<div class="col-sm-12">
 									<div class="form-group">
 										<label for="phone">Alamat</label>
-										<input type="text" class="form-control" id="alamat" name="alamat">
+										<input type="text" class="form-control" id="alamat" name="alamat" value="<?php echo ($data_cart) ? $data_cart->alamat : ''; ?>">
 										<span class="help-block"></span>
 									</div>
 							</div>

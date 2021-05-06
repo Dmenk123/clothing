@@ -44,10 +44,19 @@
 
 	<style>
 		/* .select2-choice { background-color: #e8f0fe; } */
-		.select2-selection__rendered { background-color: #e8f0fe; }
+		/* .select2-selection__rendered { background-color: #e8f0fe; } */
 		/* .select2-search input { background-color: #e8f0fe; } */
 		tr.cart {
 			font-size: 12px;
+		}
+
+		.invalid-feedback{
+			color: red;
+		}
+
+		.is-invalid{
+			border: 1;
+			border-color: red;
 		}
 	</style>
 </head>

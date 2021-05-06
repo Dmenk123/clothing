@@ -17,12 +17,33 @@ class Checkout extends CI_Controller {
 		$menu_navbar = $this->mod_hpg->get_menu_navbar();
 		$count_kategori = $this->mod_hpg->count_kategori();
 		$submenu = array();
+		$row_id_concat = '';
 		for ($i=1; $i <= $count_kategori; $i++) { 
 			//set array key berdasarkan loop dari angka 1
 			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
 		}
 		$menu_select_search = $this->mod_hpg->get_menu_search();
 		$data_user = $this->m_ckt->get_data_user($id_user);
+
+		if(count($this->cart->contents()) >= 1) {
+			foreach ($this->cart->contents() as $key => $value) {
+				$row_id_concat .= $value['rowid'];
+			}
+		}
+
+		$cek_tbl = $this->m_ckt->get_db_cart($row_id_concat);
+		//echo $this->db->last_query();exit;
+		
+		if($cek_tbl) {
+			$data_cart = $cek_tbl;
+		}else{
+			$data_cart = null;
+		}
+
+		echo "<pre>";
+		print_r ($data_cart);
+		echo "</pre>";
+		exit;
 		
 		// echo "<pre>";
 		// print_r ($this->cart->contents());
@@ -33,6 +54,7 @@ class Checkout extends CI_Controller {
 			'content' => 'checkout/view_checkout_1',
 			'modal' => 'checkout/modal_checkout',
 			'count_kategori' => $count_kategori,
+			'data_cart' => $data_cart,
 			'submenu' => $submenu,
 			'menu_navbar' => $menu_navbar,
 			'js' => 'checkout/jsCheckout',
@@ -49,6 +71,7 @@ class Checkout extends CI_Controller {
 		$menu_navbar = $this->mod_hpg->get_menu_navbar();
 		$count_kategori = $this->mod_hpg->count_kategori();
 		$submenu = array();
+		$row_id_concat = '';
 		for ($i=1; $i <= $count_kategori; $i++) { 
 			//set array key berdasarkan loop dari angka 1
 			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
@@ -56,8 +79,21 @@ class Checkout extends CI_Controller {
 		$menu_select_search = $this->mod_hpg->get_menu_search();
 		$data_user = $this->m_ckt->get_data_user($id_user);
 		
+		if(count($this->cart->contents()) >= 1) {
+			foreach ($this->cart->contents() as $key => $value) {
+				$row_id_concat .= $value['rowid'];
+			}
+		}
+
+		$cek_tbl = $this->m_ckt->single_row('tbl_checkout', ['row_id_concat' => $row_id_concat, 'deleted_at' => null]);
+		if($cek_tbl) {
+			$data_cart = $cek_tbl;
+		}else{
+			$data_cart = null;
+		}
+		
 		// echo "<pre>";
-		// print_r ($this->cart->contents());
+		// print_r ($data_cart);
 		// echo "</pre>";
 		// exit;
 
@@ -66,6 +102,7 @@ class Checkout extends CI_Controller {
 			'modal' => 'checkout/modal_checkout',
 			'count_kategori' => $count_kategori,
 			'submenu' => $submenu,
+			'data_cart' => $data_cart,
 			'menu_navbar' => $menu_navbar,
 			'js' => 'checkout/jsCheckout',
 			'menu_select_search' => $menu_select_search,
@@ -301,48 +338,56 @@ class Checkout extends CI_Controller {
 		$data['status'] = TRUE;
 
 		if ($this->input->post('email') == '') {
+			$data['inputtipe'][] = 'text';
 			$data['inputerror'][] = 'email';
 			$data['error_string'][] = 'Wajib mengisi email';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('hp') == '') {
+			$data['inputtipe'][] = 'text';
 			$data['inputerror'][] = 'hp';
 			$data['error_string'][] = 'Wajib mengisi hp';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('nama') == '') {
+			$data['inputtipe'][] = 'text';
 			$data['inputerror'][] = 'nama';
 			$data['error_string'][] = 'Wajib mengisi nama';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('provinsi') == '') {
+			$data['inputtipe'][] = 'select2';
 			$data['inputerror'][] = 'provinsi';
 			$data['error_string'][] = 'Wajib mengisi provinsi';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('kota') == '') {
+			$data['inputtipe'][] = 'select2';
 			$data['inputerror'][] = 'kota';
 			$data['error_string'][] = 'Wajib mengisi kota';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('kecamatan') == '') {
+			$data['inputtipe'][] = 'select2';
 			$data['inputerror'][] = 'kecamatan';
 			$data['error_string'][] = 'Wajib mengisi kecamatan';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('kelurahan') == '') {
+			$data['inputtipe'][] = 'select2';
 			$data['inputerror'][] = 'kelurahan';
 			$data['error_string'][] = 'Wajib mengisi kelurahan';
 			$data['status'] = FALSE;
 		}
 
 		if ($this->input->post('alamat') == '') {
+			$data['inputtipe'][] = 'text';
 			$data['inputerror'][] = 'alamat';
 			$data['error_string'][] = 'Wajib mengisi alamat';
 			$data['status'] = FALSE;
