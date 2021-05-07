@@ -1,43 +1,13 @@
-<!-- load gmaps api -->
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyANNc1-MZMq0duMkVgXAUfNfFHEOi78NeQ"></script>
 <script type="text/javascript">
     var edit_type;
-	const selectKota = () => {
-		$('#kecamatan').empty();
-		$( "#kelurahan" ).empty();  
-		var idKota = $('#kota').val();
-		$( "#kecamatan" ).select2({ 
+	const selectProv = () => {
+		$('#kota').empty();
+		$("#kecamatan").empty();
+		$("#kelurahan").empty(); 
+		var idProvinsi = $('#provinsi').val();
+		$( "#kota" ).select2({
 			ajax: {
-				url: '<?php echo site_url('checkout/suggest_kecamatan'); ?>/'+ idKota,
-				dataType: 'json',
-				type: "GET",
-				data: function (params) {
-					var queryParameters = {
-						term: params.term
-					}
-					return queryParameters;
-				},
-				processResults: function (data) {
-					return {
-						results: $.map(data, function (item) {
-							return {
-								text: item.text,
-								id: item.id
-							}
-						})
-					};
-				},
-				cache: true
-			},
-		});
-	}
-
-	const selectKec = () => {
-		$('#kelurahan').empty(); 
-		var idKecamatan = $('#kecamatan').val();
-		$( "#kelurahan" ).select2({ 
-			ajax: {
-				url: '<?php echo site_url('checkout/suggest_kelurahan'); ?>/'+ idKecamatan,
+				url: '<?php echo site_url('checkout/suggest_kotakabupaten'); ?>/'+ idProvinsi,
 				dataType: 'json',
 				type: "GET",
 				data: function (params) {
@@ -65,10 +35,6 @@
 		//set active class to navbar
 		$('#li_nav_home').removeClass('active');
 		$('#li_nav_kontak').addClass('active');
-		$('#li_nav_faq').removeClass('active');
-		$('#li_nav_login').removeClass('active');
-		$('#li_nav_produk').removeClass('active');
-        $('#li_nav_register').removeClass('active');
 		
         //force integer input in textfield
         $('input.numberinput').bind('keypress', function (e) {
@@ -102,45 +68,12 @@
 
 		<?php 
 		if ($data_cart && $data_cart->id_prov)  {
-			echo '$("#provinsi").append($("<option selected=\'selected\'></option>").val("'.$data_cart->id_prov.'").text("The text")).trigger(\'change\');';
-			// echo "$('#provinsi').val('$data_cart->id_prov').trigger('change');";
-			echo "\n";
-			echo "selectKota();";
+			echo '$("#provinsi").append($("<option selected=\'selected\'></option>").val("'.$data_cart->id_prov.'").text("'.$data_cart->nama_provinsi.'")).trigger(\'change\');';
+			echo "selectProv();";
+			echo '$("#kota").append($("<option selected=\'selected\'></option>").val("'.$data_cart->id_kota.'").text("'.$data_cart->nama_kota.'")).trigger(\'change\');';
 		}
+
 		?>
-
-		// event onchange to modify select2 kota content
-        $('#provinsi').change(function(){
-            $('#kota').empty();
-            $("#kecamatan").empty();
-            $("#kelurahan").empty(); 
-            var idProvinsi = $('#provinsi').val();
-            $( "#kota" ).select2({
-                ajax: {
-                    url: '<?php echo site_url('checkout/suggest_kotakabupaten'); ?>/'+ idProvinsi,
-                    dataType: 'json',
-                    type: "GET",
-                    data: function (params) {
-                        var queryParameters = {
-                            term: params.term
-                        }
-                        return queryParameters;
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.text,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    },
-                    cache: true
-                },
-            });
-        });
-
 		
 		$('#form_step1').submit(function (e) { 
 			e.preventDefault();
@@ -166,22 +99,12 @@
 					processData: false, // false, it prevent jQuery form transforming the data into a query string
 					contentType: false, 
 					cache: false,
-					timeout: 600000,
+					// timeout: 600000,
 					success: function (data) {
 						if(data.status) {
-							swal({
-								title: "Sukses !",
-								text: "Pengisian Form Sukses",
-								// icon: "warning",
-								//showCancelButton: true,
-								showConfirmButton: true,
-								confirmButtonText: 'Ya, Lanjutkan',
-								//cancelButtonText: 'Tidak, Batalkan',
-								dangerMode: false,
-							}, () => {
-								location.href="<?php echo site_url('checkout/step2'); ?>";
-							});
 							
+							location.href="<?php echo site_url('checkout/step2'); ?>";
+														
 							// $("#btnSave").prop("disabled", false);
 							// $('#btnSave').text('Simpan');
 						}else {
@@ -207,6 +130,21 @@
 					}
 				});
 			});
+
+		});
+
+		var radios = document.querySelectorAll('input[type=radio][name="ekspedisi"]');
+
+		function changeHandler(event) {
+		if ( this.value === 'jne' ) {
+			console.log('value', 'jne');
+		} else if ( this.value === 'tiki' ) {
+			console.log('value', 'tiki');
+		}  
+		}
+
+		Array.prototype.forEach.call(radios, function(radio) {
+		radio.addEventListener('change', changeHandler);
 		});
 
 		/////////////////////////////////////////////////////

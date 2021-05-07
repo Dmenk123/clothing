@@ -54,31 +54,17 @@
 						<!-- /.row -->
 
 						<div class="row">
-							<div class="col-sm-6 col-md-3">
+							<div class="col-sm-6 col-md-6">
 								<div class="form-group">
 									<label>Provinsi</label>
-									<select class="form-control select2" id="provinsi" name="provinsi"></select>
+									<select class="form-control select2" id="provinsi" name="provinsi" onchange="selectProv()"></select>
 									<span class="help-block"></span>
 								</div>
 							</div>
-							<div class="col-sm-6 col-md-3">
+							<div class="col-sm-6 col-md-6">
 								<div class="form-group">
 									<label for="zip">Kabupaten/Kota</label>
-									<select class="form-control select2" id="kota" name="kota" onchange="selectKota()"></select>
-									<span class="help-block"></span>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-3">
-								<div class="form-group">
-									<label for="state">Kecamatan</label>
-									<select class="form-control select2" id="kecamatan" name="kecamatan" onchange="selectKec()"></select>
-									<span class="help-block"></span>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-3">
-								<div class="form-group">
-									<label for="country">Kelurahan/Desa</label>
-									<select class="form-control select2" id="kelurahan" name="kelurahan"></select>
+									<select class="form-control select2" id="kota" name="kota"></select>
 									<span class="help-block"></span>
 								</div>
 							</div>

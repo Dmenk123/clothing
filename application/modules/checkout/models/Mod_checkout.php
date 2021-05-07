@@ -17,12 +17,10 @@ class Mod_checkout extends CI_Model
 
 	public function get_db_cart($token)
 	{
-		$this->db->select('tbl_checkout.*, tbl_provinsi.nama_provinsi, tbl_kota.nama_kota, tbl_kecamatan.nama_kecamatan, tbl_kelurahan.nama_kelurahan');
+		$this->db->select('tbl_checkout.*, tbl_provinsi_ongkir.nama_provinsi, tbl_kota_ongkir.nama_kota');
 		$this->db->from('tbl_checkout');
-		$this->db->join('tbl_provinsi', 'tbl_checkout.id_prov = tbl_provinsi.id_provinsi', 'left');
-		$this->db->join('tbl_kota', 'tbl_checkout.id_kota = tbl_kota.id_kota', 'left');
-		$this->db->join('tbl_kecamatan', 'tbl_checkout.id_kec = tbl_kecamatan.id_kecamatan', 'left');
-		$this->db->join('tbl_kelurahan', 'tbl_checkout.id_kel = tbl_kelurahan.id_kelurahan', 'left');
+		$this->db->join('tbl_provinsi_ongkir', 'tbl_checkout.id_prov = tbl_provinsi_ongkir.id_provinsi', 'left');
+		$this->db->join('tbl_kota_ongkir', 'tbl_checkout.id_kota = tbl_kota_ongkir.id_kota', 'left');
 		$this->db->where('tbl_checkout.token', $token);
 		$query = $this->db->get();
 		return $query->row();
@@ -130,7 +128,7 @@ class Mod_checkout extends CI_Model
     public function lookup_data_provinsi($keyword = "")
 	{
 		$this->db->select('id_provinsi, nama_provinsi');
-		$this->db->from('tbl_provinsi');
+		$this->db->from('tbl_provinsi_ongkir');
 		$this->db->like('nama_provinsi',$keyword);
 		//$this->db->limit(25);
 		$this->db->order_by('nama_provinsi', 'ASC');
@@ -142,7 +140,7 @@ class Mod_checkout extends CI_Model
 	public function lookup_data_kotakabupaten($keyword = "", $id_provinsi)
 	{
 		$this->db->select('id_kota, nama_kota');
-		$this->db->from('tbl_kota');
+		$this->db->from('tbl_kota_ongkir');
 		$this->db->where('id_provinsi',$id_provinsi);
 		$this->db->like('nama_kota',$keyword);
 		//$this->db->limit(25);
