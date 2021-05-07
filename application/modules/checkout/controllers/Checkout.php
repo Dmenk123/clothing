@@ -10,6 +10,80 @@ class Checkout extends CI_Controller {
 		$this->load->model('homepage/mod_homepage','mod_hpg');
 		$this->load->model('mod_checkout','m_ckt');
 	}
+
+	private function set_token_checkout()
+	{
+		$obj_date = new DateTime();
+		$date = $obj_date->format('Y-m-d');
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$token = gen_uuid();
+		$data_token = ['token_checkout' => $token];
+		$this->session->set_userdata($data_token);
+
+		if (count($this->cart->contents()) >= 1) {
+			$id_header = gen_uuid();
+			$harga_total = 0;
+			$arr_data_det = [];
+
+			$this->db->trans_begin();
+
+			foreach ($this->cart->contents() as $key => $value) {
+				$harga_total += (float)$value['price'];
+				$arr_data_det[] = [
+					'id_checkout' => $id_header,
+					'id_produk' => $value['id'],
+					'id_satuan' => $value['options']['Id_satuan_produk'],
+					'id_stok' => $value['options']['Id_stok_produk'],
+					'qty' => $value['qty'],
+					'sess_row_id' => $value['rowid'],
+					'harga_satuan' => $value['price']
+				];
+			}
+
+			$arr_data = [
+				'id_checkout' => $id_header,
+				'tgl_checkout' => $date,
+				'status' => 1,
+				'harga_total_produk' => $harga_total,
+				'token' => $token,
+				'created_at' => $timestamp
+			];
+
+			$ins = $this->m_ckt->insert_data('tbl_checkout', $arr_data);
+
+			foreach ($arr_data_det as $k => $v) {
+				$data_det = [
+					'id_checkout' => $v['id_checkout'],
+					'id_produk' => $v['id_produk'],
+					'id_satuan' => $v['id_satuan'],
+					'id_stok' => $v['id_stok'],
+					'qty' => $v['qty'],
+					'sess_row_id' => $v['sess_row_id'],
+					'harga_satuan' => $v['harga_satuan'],
+					'created_at' => $timestamp
+				];
+
+				$this->m_ckt->insert_data('tbl_checkout_detail', $data_det);
+			}
+
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+			} else {
+				$this->db->trans_commit();
+			}
+		}
+	}
+
+	private function check_token_session()
+	{
+		$token = $this->session->userdata('token_checkout');
+		$cek = $this->m_ckt->single_row('tbl_checkout', ['token' => $token, 'status' => 1]);
+		if($cek) {
+			return ['status' => true, 'token' => $token];
+		}else{
+			return ['status' => false, 'token' => null];
+		}
+	}
 	
 	public function index()
 	{
@@ -17,33 +91,36 @@ class Checkout extends CI_Controller {
 		$menu_navbar = $this->mod_hpg->get_menu_navbar();
 		$count_kategori = $this->mod_hpg->count_kategori();
 		$submenu = array();
-		$row_id_concat = '';
+		$data_cart = null;
+		
 		for ($i=1; $i <= $count_kategori; $i++) { 
 			//set array key berdasarkan loop dari angka 1
 			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
 		}
 		$menu_select_search = $this->mod_hpg->get_menu_search();
-		$data_user = $this->m_ckt->get_data_user($id_user);
+		
+		// $data_user = $this->m_ckt->get_data_user($id_user);
 
-		if(count($this->cart->contents()) >= 1) {
-			foreach ($this->cart->contents() as $key => $value) {
-				$row_id_concat .= $value['rowid'];
+		$cek_token = $this->check_token_session();
+		if($cek_token['status']) {
+			$cek_tbl = $this->m_ckt->get_db_cart($cek_token['token']);
+
+			if ($cek_tbl) {
+				$data_cart = $cek_tbl;
 			}
+
+		}else{
+			//set new token
+			$this->set_token_checkout();
 		}
 
-		$cek_tbl = $this->m_ckt->get_db_cart($row_id_concat);
+		
 		//echo $this->db->last_query();exit;
 		
-		if($cek_tbl) {
-			$data_cart = $cek_tbl;
-		}else{
-			$data_cart = null;
-		}
-
-		echo "<pre>";
-		print_r ($data_cart);
-		echo "</pre>";
-		exit;
+		// echo "<pre>";
+		// print_r ($data_cart);
+		// echo "</pre>";
+		// exit;
 		
 		// echo "<pre>";
 		// print_r ($this->cart->contents());
@@ -59,10 +136,143 @@ class Checkout extends CI_Controller {
 			'menu_navbar' => $menu_navbar,
 			'js' => 'checkout/jsCheckout',
 			'menu_select_search' => $menu_select_search,
-			'data_user' => $data_user,
+			// 'data_user' => $data_user,
 		);
 
         $this->load->view('temp',$data);
+	}
+
+	public function simpan_step1()
+	{
+		$obj_date = new DateTime();
+		$date = $obj_date->format('Y-m-d');
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$arr_valid = $this->rule_validasi_step1();
+
+		if ($arr_valid['status'] == FALSE) {
+			echo json_encode($arr_valid);
+			return;
+		}
+
+		$id_header = gen_uuid();
+		$email = $this->input->post('email');
+		$hp = $this->input->post('hp');
+		$nama = $this->input->post('nama');
+		$provinsi = $this->input->post('provinsi');
+		$kota = $this->input->post('kota');
+		$kecamatan = $this->input->post('kecamatan');
+		$kelurahan = $this->input->post('kelurahan');
+		$alamat = $this->input->post('alamat');
+
+		if (count($this->cart->contents()) >= 1) {
+			$row_id_concat = '';
+			$harga_total = 0;
+			$arr_data_det = [];
+			foreach ($this->cart->contents() as $key => $value) {
+				$harga_total += (float)$value['price'];
+				$row_id_concat .= $value['rowid'];
+
+				$arr_data_det[] = [
+					'id_checkout' => $id_header,
+					'id_produk' => $value['id'],
+					'id_satuan' => $value['options']['Id_satuan_produk'],
+					'id_stok' => $value['options']['Id_stok_produk'],
+					'sess_row_id' => $value['rowid'],
+					'harga_satuan' => $value['price']
+				];
+			}
+
+			//cek di checkout apakah ada transaksi dengan rowid concat diatas
+			$cek_tbl = $this->m_ckt->single_row('tbl_checkout', ['row_id_concat' => $row_id_concat, 'deleted_at' => null]);
+			if ($cek_tbl) {
+				$flag_trans = 'update';
+			} else {
+				$flag_trans = 'insert';
+			}
+		} else {
+			$retval['status'] = false;
+			$retval['pesan'] = 'Data keranjang belanja kosong';
+			echo json_encode($retval);
+			return;
+		}
+
+		$this->db->trans_begin();
+
+
+		if ($flag_trans == 'insert') {
+			$arr_data = [
+				'id_checkout' => $id_header,
+				'tgl_checkout' => $date,
+				'status' => 1,
+				'harga_total_produk' => $harga_total,
+				'nama' => $nama,
+				'alamat' => $alamat,
+				'id_kel' => $kelurahan,
+				'id_kec' => $kecamatan,
+				'id_kota' => $kota,
+				'id_prov' => $provinsi,
+				'email' => trim($email),
+				'telp' => trim($hp),
+				'row_id_concat' => $row_id_concat,
+				'created_at' => $timestamp
+			];
+
+			$ins = $this->m_ckt->insert_data('tbl_checkout', $arr_data);
+
+			foreach ($arr_data_det as $k => $v) {
+				$data_det = [
+					'id_checkout' => $v['id_checkout'],
+					'id_produk' => $v['id_produk'],
+					'id_satuan' => $v['id_satuan'],
+					'id_stok' => $v['id_stok'],
+					'sess_row_id' => $v['sess_row_id'],
+					'harga_satuan' => $v['harga_satuan'],
+					'created_at' => $timestamp
+				];
+				$this->m_ckt->insert_data('tbl_checkout_detail', $data_det);
+			}
+		} else {
+			$arr_data = [
+				'tgl_checkout' => $date,
+				'harga_total_produk' => $harga_total,
+				'nama' => $nama,
+				'alamat' => $alamat,
+				'id_kel' => $kelurahan,
+				'id_kec' => $kecamatan,
+				'id_kota' => $kota,
+				'id_prov' => $provinsi,
+				'email' => trim($email),
+				'telp' => trim($hp),
+				'row_id_concat' => $row_id_concat,
+				'updated_at' => $timestamp
+			];
+
+			$upd = $this->m_ckt->update_data('tbl_checkout', $arr_data, ['id_checkout' => $cek_tbl->id_checkout]);
+
+			foreach ($arr_data_det as $k => $v) {
+				$data_det = [
+					'id_produk' => $v['id_produk'],
+					'id_satuan' => $v['id_satuan'],
+					'id_stok' => $v['id_stok'],
+					'sess_row_id' => $v['sess_row_id'],
+					'harga_satuan' => $v['harga_satuan'],
+					'updated_at' => $timestamp
+				];
+				$this->m_ckt->update_data('tbl_checkout_detail', $data_det, ['id' => $v['id_checkout']]);
+			}
+		}
+
+		if ($this->db->trans_status() === FALSE) {
+			$this->db->trans_rollback();
+			$retval['status'] = false;
+			$retval['pesan'] = 'Gagal proses data';
+		} else {
+			$this->db->trans_commit();
+			$retval['status'] = true;
+			$retval['pesan'] = 'Sukses proses data';
+		}
+
+		echo json_encode($retval);
 	}
 
 	public function step2()
@@ -197,138 +407,7 @@ class Checkout extends CI_Controller {
 		echo json_encode($kelurahan);
 	}
 
-	public function simpan_step1()
-	{
-		$obj_date = new DateTime();
-		$date = $obj_date->format('Y-m-d');
-		$timestamp = $obj_date->format('Y-m-d H:i:s');
-		$arr_valid = $this->rule_validasi_step1();
-		
-		if ($arr_valid['status'] == FALSE) {
-			echo json_encode($arr_valid);
-			return;
-		}
-		
-		$id_header = gen_uuid();
-		$email = $this->input->post('email');
-		$hp = $this->input->post('hp');
-		$nama = $this->input->post('nama');
-		$provinsi = $this->input->post('provinsi');
-		$kota = $this->input->post('kota');
-		$kecamatan = $this->input->post('kecamatan');
-		$kelurahan = $this->input->post('kelurahan');
-		$alamat = $this->input->post('alamat');
-
-		if(count($this->cart->contents()) >= 1) {
-			$row_id_concat = '';
-			$harga_total = 0;
-			$arr_data_det = [];
-			foreach ($this->cart->contents() as $key => $value) {
-				$harga_total += (float)$value['price'];
-				$row_id_concat .= $value['rowid'];
-
-				$arr_data_det[] = [
-					'id_checkout' => $id_header,
-					'id_produk' => $value['id'],
-					'id_satuan' => $value['options']['Id_satuan_produk'],
-					'id_stok' => $value['options']['Id_stok_produk'],
-					'sess_row_id' => $value['rowid'],
-					'harga_satuan' => $value['price']
-				];
-			}
-
-			//cek di checkout apakah ada transaksi dengan rowid concat diatas
-			$cek_tbl = $this->m_ckt->single_row('tbl_checkout', ['row_id_concat' => $row_id_concat, 'deleted_at' => null]);
-			if($cek_tbl) {
-				$flag_trans = 'update';
-			}else{
-				$flag_trans = 'insert';
-			}
-		}else{
-			$retval['status'] = false;
-			$retval['pesan'] = 'Data keranjang belanja kosong';
-			echo json_encode($retval);
-			return;
-		}
-
-		$this->db->trans_begin();
-		
-
-		if($flag_trans == 'insert') {
-			$arr_data = [
-				'id_checkout' => $id_header,
-				'tgl_checkout' => $date,
-				'status' => 1,
-				'harga_total_produk' => $harga_total,
-				'nama' => $nama,
-				'alamat' => $alamat,
-				'id_kel' => $kelurahan,
-				'id_kec' => $kecamatan,
-				'id_kota' => $kota,
-				'id_prov' => $provinsi,
-				'email' => trim($email),
-				'telp' => trim($hp),
-				'row_id_concat' => $row_id_concat,
-				'created_at' => $timestamp
-			];
-
-			$ins = $this->m_ckt->insert_data('tbl_checkout', $arr_data);
-
-			foreach ($arr_data_det as $k => $v) {
-				$data_det = [
-					'id_checkout' => $v['id_checkout'],
-					'id_produk' => $v['id_produk'],
-					'id_satuan' => $v['id_satuan'],
-					'id_stok' => $v['id_stok'],
-					'sess_row_id' => $v['sess_row_id'],
-					'harga_satuan' => $v['harga_satuan'],
-					'created_at' => $timestamp
-				];
-				$this->m_ckt->insert_data('tbl_checkout_detail', $data_det);
-			}
-		}else{
-			$arr_data = [
-				'tgl_checkout' => $date,
-				'harga_total_produk' => $harga_total,
-				'nama' => $nama,
-				'alamat' => $alamat,
-				'id_kel' => $kelurahan,
-				'id_kec' => $kecamatan,
-				'id_kota' => $kota,
-				'id_prov' => $provinsi,
-				'email' => trim($email),
-				'telp' => trim($hp),
-				'row_id_concat' => $row_id_concat,
-				'updated_at' => $timestamp
-			];
-
-			$upd = $this->m_ckt->update_data('tbl_checkout', $arr_data, ['id_checkout' => $cek_tbl->id_checkout]);
-
-			foreach ($arr_data_det as $k => $v) {
-				$data_det = [
-					'id_produk' => $v['id_produk'],
-					'id_satuan' => $v['id_satuan'],
-					'id_stok' => $v['id_stok'],
-					'sess_row_id' => $v['sess_row_id'],
-					'harga_satuan' => $v['harga_satuan'],
-					'updated_at' => $timestamp
-				];
-				$this->m_ckt->update_data('tbl_checkout_detail', $data_det, ['id' => $v['id_checkout']]);
-			}
-		}
-		
-		if ($this->db->trans_status() === FALSE){
-			$this->db->trans_rollback();
-			$retval['status'] = false;
-			$retval['pesan'] = 'Gagal proses data';
-		}else{
-			$this->db->trans_commit();
-			$retval['status'] = true;
-			$retval['pesan'] = 'Sukses proses data';
-		}
-
-		echo json_encode($retval);
-	}
+	
 
 	private function rule_validasi_step1()
 	{

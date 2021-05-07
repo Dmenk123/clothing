@@ -15,7 +15,7 @@ class Mod_checkout extends CI_Model
 		return $this->db->insert_id();
 	}
 
-	public function get_db_cart($concat_id_row)
+	public function get_db_cart($token)
 	{
 		$this->db->select('tbl_checkout.*, tbl_provinsi.nama_provinsi, tbl_kota.nama_kota, tbl_kecamatan.nama_kecamatan, tbl_kelurahan.nama_kelurahan');
 		$this->db->from('tbl_checkout');
@@ -23,7 +23,7 @@ class Mod_checkout extends CI_Model
 		$this->db->join('tbl_kota', 'tbl_checkout.id_kota = tbl_kota.id_kota', 'left');
 		$this->db->join('tbl_kecamatan', 'tbl_checkout.id_kec = tbl_kecamatan.id_kecamatan', 'left');
 		$this->db->join('tbl_kelurahan', 'tbl_checkout.id_kel = tbl_kelurahan.id_kelurahan', 'left');
-		$this->db->where('tbl_checkout.row_id_concat', $concat_id_row);
+		$this->db->where('tbl_checkout.token', $token);
 		$query = $this->db->get();
 		return $query->row();
 	}

@@ -101,9 +101,7 @@
         });
 
 		<?php 
-		if ($data_cart)  {
-			// var $newOption = $("<option selected='selected'></option>").val("TheID").text("The text")
- 
+		if ($data_cart && $data_cart->id_prov)  {
 			echo '$("#provinsi").append($("<option selected=\'selected\'></option>").val("'.$data_cart->id_prov.'").text("The text")).trigger(\'change\');';
 			// echo "$('#provinsi').val('$data_cart->id_prov').trigger('change');";
 			echo "\n";
