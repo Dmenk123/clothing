@@ -108,6 +108,20 @@
                     $this->load->view($content_banner); 
                 } 
              ?>
+
+            <?php 
+                if (isset($content_quotes)) 
+                {
+                    $this->load->view($content_quotes); 
+                } 
+             ?>
+
+            <?php 
+                if (isset($content_grid)) 
+                {
+                    $this->load->view($content_grid); 
+                } 
+             ?>
             <!-- /#hot -->
             <!-- *** HOT END *** -->
 <!--  _________________________________________________________ -->

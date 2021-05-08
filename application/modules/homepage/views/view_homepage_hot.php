@@ -49,9 +49,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                             
                         </div>
+                    </div>
 
                         <!-- produk -->
-                        <div class="product-slider">
+                    <div class="product-slider">
                         <?php $this->db->select('
                             tbl_produk.id_produk,
                             tbl_produk.id_sub_kategori,
@@ -67,9 +68,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         $this->db->order_by('tbl_gambar_produk.id_gambar', 'desc');
                         $this->db->limit(5);
                         $query = $this->db->get('');?>
-
+                        <!-- <div class="row col-sm-12"  > -->
+                        <!-- <div class="col-sm-12" > -->
                         <?php foreach ($query->result() as $val) { ?>
-                            <div class="item">
+                            <div class="item row" >
                                 <div class="product">
                                     <div class="flip-container">
                                         <div class="flipper">
@@ -110,57 +112,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <!-- /.product -->
                             </div>
                         <?php } ?>
-
-                        <!-- <div class="item">
-                            <div class="product">
-                                <div class="flip-container">
-                                    <div class="flipper">
-                                        <div class="front">
-                                            <a href="detail.html">
-                                                <img src="<?php echo config_item('assets'); ?>img/product2.jpg" alt="" class="img-responsive">
-                                            </a>
-                                        </div>
-                                        <div class="back">
-                                            <a href="detail.html">
-                                                <img src="<?php echo config_item('assets'); ?>img/product2_2.jpg" alt="" class="img-responsive">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="detail.html" class="invisible">
-                                    <img src="<?php echo config_item('assets'); ?>img/product2.jpg" alt="" class="img-responsive">
-                                </a>
-                                <div class="text">
-                                    <h3><a href="detail.html">White Blouse Armani</a></h3>
-                                    <p class="price"><del>$280</del> $143.00</p>
-                                </div>
-                                /.text
-                        
-                                <div class="ribbon sale">
-                                    <div class="theribbon">SALE</div>
-                                    <div class="ribbon-background"></div>
-                                </div>
-                                /.ribbon
-                        
-                                <div class="ribbon new">
-                                    <div class="theribbon">NEW</div>
-                                    <div class="ribbon-background"></div>
-                                </div>
-                                /.ribbon
-                        
-                                <div class="ribbon gift">
-                                    <div class="theribbon">GIFT</div>
-                                    <div class="ribbon-background"></div>
-                                </div>
-                                /.ribbon
-                            </div>
-                            /.product
-                        </div> -->
+                            <!-- </div> -->
+                            <!-- </div> -->
+                      
 
                     </div>
                         <!-- produk -->
                      
-                    </div>
+                    <!-- </div> -->
                 </div>
 
              
