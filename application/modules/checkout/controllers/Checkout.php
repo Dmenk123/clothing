@@ -2,7 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Checkout extends CI_Controller {
-
+	// KOTA SURABAYA
+	const KOTA_ORIGIN = 444;
 	public function __construct()
 	{
 		parent::__construct();
@@ -23,12 +24,15 @@ class Checkout extends CI_Controller {
 		if (count($this->cart->contents()) >= 1) {
 			$id_header = gen_uuid();
 			$harga_total = 0;
+			$berat_total = 0;
 			$arr_data_det = [];
 
 			$this->db->trans_begin();
 
 			foreach ($this->cart->contents() as $key => $value) {
 				$harga_total += (float)$value['price'];
+				$berat_total += (float)$value['options']['Berat_produk'];
+
 				$arr_data_det[] = [
 					'id_checkout' => $id_header,
 					'id_produk' => $value['id'],
@@ -36,6 +40,7 @@ class Checkout extends CI_Controller {
 					'id_stok' => $value['options']['Id_stok_produk'],
 					'qty' => $value['qty'],
 					'sess_row_id' => $value['rowid'],
+					'berat_satuan' => $value['options']['Berat_produk'],
 					'harga_satuan' => $value['price']
 				];
 			}
@@ -45,6 +50,7 @@ class Checkout extends CI_Controller {
 				'tgl_checkout' => $date,
 				'status' => 1,
 				'harga_total_produk' => $harga_total,
+				'berat_total' => $berat_total,
 				'token' => $token,
 				'created_at' => $timestamp
 			];
@@ -60,6 +66,7 @@ class Checkout extends CI_Controller {
 					'qty' => $v['qty'],
 					'sess_row_id' => $v['sess_row_id'],
 					'harga_satuan' => $v['harga_satuan'],
+					'berat_satuan' => $v['berat_satuan'],
 					'created_at' => $timestamp
 				];
 
@@ -79,9 +86,9 @@ class Checkout extends CI_Controller {
 		$token = $this->session->userdata('token_checkout');
 		$cek = $this->m_ckt->single_row('tbl_checkout', ['token' => $token, 'status' => 1]);
 		if($cek) {
-			return ['status' => true, 'token' => $token];
+			return ['status' => true, 'token' => $token, 'data' => $cek];
 		}else{
-			return ['status' => false, 'token' => null];
+			return ['status' => false, 'token' => null, 'data' => null];
 		}
 	}
 
@@ -267,6 +274,25 @@ class Checkout extends CI_Controller {
 		}
 
 		echo json_encode($retval);
+	}
+
+	public function simpan_step2()
+	{
+		$obj_date = new DateTime();
+		$date = $obj_date->format('Y-m-d');
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		
+		$cek_token = $this->check_token_session();
+		if($cek_token['status'] && $cek_token['data']->jasa_ekspedisi) {
+			$retval['status'] = true;
+			$retval['pesan'] = '';
+		}else{
+			$retval['status'] = false;
+			$retval['pesan'] = 'Wajib Memilih Jasa Kurir Terlebih Dahulu';
+		}
+
+		echo json_encode($retval);
+		return;
 	}
 
 	public function step2()
@@ -462,6 +488,183 @@ class Checkout extends CI_Controller {
 	
 
         return $data;
+	}
+
+	public function get_data_harga()
+	{		
+		$checkout_data = $this->check_token_session();
+		$kurir = $this->input->post('kurir');
+		$html = '';
+
+		if($checkout_data) {
+			$data = $this->ekspedisi_ongkir(self::KOTA_ORIGIN, $checkout_data['data']->id_kota, $checkout_data['data']->berat_total, $kurir);
+			
+
+			if($data) {
+				$retval = [];
+				foreach ($data['rajaongkir']['results'] as $key => $value) {
+					foreach ($value['costs'] as $k => $v) {
+						$arr_data['kurir'] = $value['name'];
+						$arr_data['paket'] = $v['service'].' - '.$v['description'];
+						$arr_data['asal'] = $data['rajaongkir']['origin_details']['type'].' '.$data['rajaongkir']['origin_details']['city_name'].' '.$data['rajaongkir']['origin_details']['province'];
+						$arr_data['tujuan'] = $data['rajaongkir']['destination_details']['type'].' '.$data['rajaongkir']['destination_details']['city_name'].' '.$data['rajaongkir']['destination_details']['province'];
+						$arr_data['harga'] = $v['cost'][0]['value'];
+						$arr_data['estimasi'] = $v['cost'][0]['etd'];
+						$retval[] = $arr_data;
+					}
+				}
+
+				$html = $this->get_tabel_list_ekspedisi($retval);
+				$data = $retval;
+				$status = true;
+			}else{
+				$data = null;
+				$status = false;
+			}
+		}else{
+			$data = null;
+			$status = false;
+		}
+		
+		echo json_encode(['status' => $status, 'data' => $data, 'html' => $html]);
+	}
+
+	private function get_tabel_list_ekspedisi($data)
+	{
+		$html = "
+		<table class='table'>
+			<thead>
+				<tr>
+					<th>Kurir</th>
+					<th>Paket</th>
+					<th>Asal</th>
+					<th>Tujuan</th>
+					<th>Harga</th>
+					<th>Estimasi Hari</th>
+					<th>Pilih</th>
+				</tr>
+			</thead>
+			<tbody>";
+
+
+		foreach ($data as $key => $value) {
+			$strHarga = "<span class='float-left'>Rp. </span><span class='float-right'>".number_format($value['harga'],0,',','.')."</span>";
+			$html .= "
+				<tr>
+					<td data-kurir='".$value['kurir']."'>".$value['kurir']."</td>
+					<td data-paket='".$value['paket']."'>".$value['paket']."</td>
+					<td data-asal='".$value['asal']."'>".$value['asal']."</td>
+					<td data-tujuan='".$value['tujuan']."'>".$value['tujuan']."</td>
+					<td data-harga='".$value['harga']."'>".$strHarga."</td>
+					<td data-estimasi='".$value['estimasi']."'>".$value['estimasi']."</td>
+					<td><button type='button' class='btn btn-sm btn-primary' onclick='pilihKurir($(this))'>Pilih Kurir</button></td>
+				</tr>";
+		}
+
+		$html .= "</tbody></table>";
+		return $html;
+	}
+
+	public function simpan_data_kurir()
+	{
+		$obj_date = new DateTime();
+		$date = $obj_date->format('Y-m-d');
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$html = '';
+
+		$data_input = [
+			'kurir' => $this->input->post('kurir'),
+			'paket' => $this->input->post('paket'),
+			'asal' => $this->input->post('asal'),
+			'tujuan' => $this->input->post('tujuan'),
+			'estimasi' => $this->input->post('estimasi'),
+			'harga' => $this->input->post('harga')
+		];
+		
+
+		$cek_sesi = $this->check_token_session();
+		if($cek_sesi) {
+			// update
+			$data = [
+				'jasa_ekspedisi' => $data_input['kurir'],
+				'pilihan_paket' => $data_input['paket'],
+				'estimasi_datang' => $data_input['estimasi'],
+				'ongkos_kirim' => $data_input['harga'],
+				'ongkos_total' => (float)$data_input['harga'] + (float)$cek_sesi['data']->harga_total_produk,
+				'kota_asal_txt' => $data_input['asal'],
+				'kota_tujuan_txt' => $data_input['tujuan'],
+				'updated_at' => $timestamp
+
+			];
+			$upd = $this->m_ckt->update_data('tbl_checkout', $data, ['token' => $cek_sesi['token']]);
+
+			if($upd) {
+				$html = $this->get_template_kurir_terpilih($data_input);
+				echo json_encode(['status' => true, 'html' => $html]);
+			}else{
+				echo json_encode(['status' => false, 'html' => $html]);
+			}
+		}else{
+			return redirect('checkout');
+		}
+	}
+
+
+	public function get_data_kurir_terpilih()
+	{
+		$cek_sesi = $this->check_token_session();
+		if($cek_sesi && $cek_sesi['data']->jasa_ekspedisi) {
+			$data = [
+				'kurir' => $cek_sesi['data']->jasa_ekspedisi,
+				'paket' => $cek_sesi['data']->pilihan_paket,
+				'asal' => $cek_sesi['data']->kota_asal_txt,
+				'tujuan' => $cek_sesi['data']->kota_tujuan_txt,
+				'estimasi' => $cek_sesi['data']->estimasi_datang,
+				'harga' => $cek_sesi['data']->ongkos_kirim
+			];
+
+			$html = $this->get_template_kurir_terpilih($data);
+			$status = true;
+		}else{
+			$html = '';
+			$status = false;
+		}
+
+		echo json_encode(['status' => $status, 'html' => $html]);
+	}
+
+
+	private function get_template_kurir_terpilih($data)
+	{
+		$html = "
+		<h4>Kurir yang anda pilih : </h4>
+		<table class='table table-bordered'>
+			<thead>
+				<tr style='background-color:#4fbfa8;border-color:#4fbfa8'>
+					<th>Kurir</th>
+					<th>Paket</th>
+					<th>Asal</th>
+					<th>Tujuan</th>
+					<th>Harga</th>
+					<th>Estimasi Hari</th>
+				</tr>
+			</thead>
+			<tbody>";
+
+		$strHarga = "<span class='float-left'>Rp. </span><span class='float-right'>".number_format($data['harga'],0,',','.')."</span>";
+		$html .= "
+			<tr>
+				<td>".$data['kurir']."</td>
+				<td>".$data['paket']."</td>
+				<td>".$data['asal']."</td>
+				<td>".$data['tujuan']."</td>
+				<td>".$strHarga."</td>
+				<td>".$data['estimasi']."</td>
+			</tr>";
+		
+
+		$html .= "</tbody></table>";
+		return $html;
 	}
 
 
