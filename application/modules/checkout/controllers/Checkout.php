@@ -84,6 +84,84 @@ class Checkout extends CI_Controller {
 			return ['status' => false, 'token' => null];
 		}
 	}
+
+	private function kota_ongkir($province_id="", $city_id="")
+	{
+		$this->load->library('rajaongkir');
+		$cities = $this->rajaongkir->city($province_id, $city_id);
+		return json_decode($cities, true);
+	}
+
+	private function prov_ongkir()
+	{
+		$this->load->library('rajaongkir');
+		$provinces = $this->rajaongkir->province();
+		return json_decode($provinces, true);
+	}
+
+	private function ekspedisi_ongkir($origin="", $destination="", $weight="", $courier="")
+	{
+		$this->load->library('rajaongkir');
+		$cities = $this->rajaongkir->cost($origin, $destination, $weight, $courier);
+		return json_decode($cities, true);
+	}
+
+	public function singkron_data_prov_rajaongkir()
+	{
+		// ambil data provinsi api rajaongkir
+		// simpan pada tabel tbl_provinsi_ongkir
+
+		$data_ongkir = $this->prov_ongkir();
+		if($data_ongkir) {
+			$this->db->trans_begin();
+			foreach ($data_ongkir['rajaongkir']['results'] as $key => $value) {
+				$data_ins = [
+					'id_provinsi' => $value['province_id'],
+					'nama' => trim(strtoupper(strtolower($value['province']))),
+				];
+				
+				$this->m_ckt->insert_data('tbl_provinsi_ongkir', $data_ins);
+			}
+
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				echo 'false';
+			} else {
+				$this->db->trans_commit();
+				echo 'true';
+			}
+		}
+	}
+
+	public function singkron_data_kota_rajaongkir()
+	{
+		// ambil data provinsi api rajaongkir
+		// simpan pada tabel tbl_provinsi_ongkir
+
+		$data_ongkir = $this->kota_ongkir();
+		if($data_ongkir) {
+			$this->db->trans_begin();
+			foreach ($data_ongkir['rajaongkir']['results'] as $key => $value) {
+				$data_ins = [
+					'id_kota' => $value['city_id'],
+					'id_provinsi' => $value['province_id'],
+					'tipe_kota' => trim(strtoupper(strtolower($value['type']))),
+					'nama_kota' => trim(strtoupper(strtolower($value['city_name']))),
+					'kode_pos' => trim(strtoupper(strtolower($value['postal_code']))),
+				];
+				
+				$this->m_ckt->insert_data('tbl_kota_ongkir', $data_ins);
+			}
+
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				echo 'false';
+			} else {
+				$this->db->trans_commit();
+				echo 'true';
+			}
+		}
+	}
 	
 	public function index()
 	{
@@ -115,17 +193,11 @@ class Checkout extends CI_Controller {
 		}
 
 		
-		//echo $this->db->last_query();exit;
-		
 		// echo "<pre>";
 		// print_r ($data_cart);
 		// echo "</pre>";
 		// exit;
-		
-		// echo "<pre>";
-		// print_r ($this->cart->contents());
-		// echo "</pre>";
-		// exit;
+
 
 		$data = array(
 			'content' => 'checkout/view_checkout_1',
@@ -155,111 +227,33 @@ class Checkout extends CI_Controller {
 		}
 
 		$id_header = gen_uuid();
+
 		$email = $this->input->post('email');
 		$hp = $this->input->post('hp');
 		$nama = $this->input->post('nama');
 		$provinsi = $this->input->post('provinsi');
 		$kota = $this->input->post('kota');
-		$kecamatan = $this->input->post('kecamatan');
-		$kelurahan = $this->input->post('kelurahan');
 		$alamat = $this->input->post('alamat');
 
-		if (count($this->cart->contents()) >= 1) {
-			$row_id_concat = '';
-			$harga_total = 0;
-			$arr_data_det = [];
-			foreach ($this->cart->contents() as $key => $value) {
-				$harga_total += (float)$value['price'];
-				$row_id_concat .= $value['rowid'];
+		$cek_token = $this->check_token_session();
+		if($cek_token['status']) {
+			// update checkout
+			$arr_data = [
+				'nama' => $nama,
+				'alamat' => $alamat,
+				'id_kota' => $kota,
+				'id_prov' => $provinsi,
+				'email' => trim($email),
+				'telp' => trim($hp),
+				'updated_at' => $timestamp
+			];
 
-				$arr_data_det[] = [
-					'id_checkout' => $id_header,
-					'id_produk' => $value['id'],
-					'id_satuan' => $value['options']['Id_satuan_produk'],
-					'id_stok' => $value['options']['Id_stok_produk'],
-					'sess_row_id' => $value['rowid'],
-					'harga_satuan' => $value['price']
-				];
-			}
-
-			//cek di checkout apakah ada transaksi dengan rowid concat diatas
-			$cek_tbl = $this->m_ckt->single_row('tbl_checkout', ['row_id_concat' => $row_id_concat, 'deleted_at' => null]);
-			if ($cek_tbl) {
-				$flag_trans = 'update';
-			} else {
-				$flag_trans = 'insert';
-			}
-		} else {
+			$upd = $this->m_ckt->update_data('tbl_checkout', $arr_data, ['token' => $cek_token['token']]);
+		}else{
 			$retval['status'] = false;
 			$retval['pesan'] = 'Data keranjang belanja kosong';
 			echo json_encode($retval);
 			return;
-		}
-
-		$this->db->trans_begin();
-
-
-		if ($flag_trans == 'insert') {
-			$arr_data = [
-				'id_checkout' => $id_header,
-				'tgl_checkout' => $date,
-				'status' => 1,
-				'harga_total_produk' => $harga_total,
-				'nama' => $nama,
-				'alamat' => $alamat,
-				'id_kel' => $kelurahan,
-				'id_kec' => $kecamatan,
-				'id_kota' => $kota,
-				'id_prov' => $provinsi,
-				'email' => trim($email),
-				'telp' => trim($hp),
-				'row_id_concat' => $row_id_concat,
-				'created_at' => $timestamp
-			];
-
-			$ins = $this->m_ckt->insert_data('tbl_checkout', $arr_data);
-
-			foreach ($arr_data_det as $k => $v) {
-				$data_det = [
-					'id_checkout' => $v['id_checkout'],
-					'id_produk' => $v['id_produk'],
-					'id_satuan' => $v['id_satuan'],
-					'id_stok' => $v['id_stok'],
-					'sess_row_id' => $v['sess_row_id'],
-					'harga_satuan' => $v['harga_satuan'],
-					'created_at' => $timestamp
-				];
-				$this->m_ckt->insert_data('tbl_checkout_detail', $data_det);
-			}
-		} else {
-			$arr_data = [
-				'tgl_checkout' => $date,
-				'harga_total_produk' => $harga_total,
-				'nama' => $nama,
-				'alamat' => $alamat,
-				'id_kel' => $kelurahan,
-				'id_kec' => $kecamatan,
-				'id_kota' => $kota,
-				'id_prov' => $provinsi,
-				'email' => trim($email),
-				'telp' => trim($hp),
-				'row_id_concat' => $row_id_concat,
-				'updated_at' => $timestamp
-			];
-
-			$upd = $this->m_ckt->update_data('tbl_checkout', $arr_data, ['id_checkout' => $cek_tbl->id_checkout]);
-
-			foreach ($arr_data_det as $k => $v) {
-				$data_det = [
-					'id_produk' => $v['id_produk'],
-					'id_satuan' => $v['id_satuan'],
-					'id_stok' => $v['id_stok'],
-					'sess_row_id' => $v['sess_row_id'],
-					'harga_satuan' => $v['harga_satuan'],
-					'updated_at' => $timestamp
-				];
-				$this->m_ckt->update_data('tbl_checkout_detail', $data_det, ['id' => $v['id_checkout']]);
-			}
 		}
 
 		if ($this->db->trans_status() === FALSE) {
@@ -281,7 +275,7 @@ class Checkout extends CI_Controller {
 		$menu_navbar = $this->mod_hpg->get_menu_navbar();
 		$count_kategori = $this->mod_hpg->count_kategori();
 		$submenu = array();
-		$row_id_concat = '';
+		
 		for ($i=1; $i <= $count_kategori; $i++) { 
 			//set array key berdasarkan loop dari angka 1
 			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
@@ -289,26 +283,22 @@ class Checkout extends CI_Controller {
 		$menu_select_search = $this->mod_hpg->get_menu_search();
 		$data_user = $this->m_ckt->get_data_user($id_user);
 		
-		if(count($this->cart->contents()) >= 1) {
-			foreach ($this->cart->contents() as $key => $value) {
-				$row_id_concat .= $value['rowid'];
-			}
-		}
+		$cek_token = $this->check_token_session();
+		if($cek_token['status']) {
+			$cek_tbl = $this->m_ckt->get_db_cart($cek_token['token']);
 
-		$cek_tbl = $this->m_ckt->single_row('tbl_checkout', ['row_id_concat' => $row_id_concat, 'deleted_at' => null]);
-		if($cek_tbl) {
-			$data_cart = $cek_tbl;
+			if ($cek_tbl) {
+				$data_cart = $cek_tbl;
+			}
+
 		}else{
-			$data_cart = null;
+			return redirect('checkout');
+			
 		}
 		
-		// echo "<pre>";
-		// print_r ($data_cart);
-		// echo "</pre>";
-		// exit;
 
 		$data = array(
-			'content' => 'checkout/view_checkout_1',
+			'content' => 'checkout/view_checkout_2',
 			'modal' => 'checkout/modal_checkout',
 			'count_kategori' => $count_kategori,
 			'submenu' => $submenu,
@@ -407,8 +397,6 @@ class Checkout extends CI_Controller {
 		echo json_encode($kelurahan);
 	}
 
-	
-
 	private function rule_validasi_step1()
 	{
 		$data = array();
@@ -451,19 +439,19 @@ class Checkout extends CI_Controller {
 			$data['status'] = FALSE;
 		}
 
-		if ($this->input->post('kecamatan') == '') {
-			$data['inputtipe'][] = 'select2';
-			$data['inputerror'][] = 'kecamatan';
-			$data['error_string'][] = 'Wajib mengisi kecamatan';
-			$data['status'] = FALSE;
-		}
+		// if ($this->input->post('kecamatan') == '') {
+		// 	$data['inputtipe'][] = 'select2';
+		// 	$data['inputerror'][] = 'kecamatan';
+		// 	$data['error_string'][] = 'Wajib mengisi kecamatan';
+		// 	$data['status'] = FALSE;
+		// }
 
-		if ($this->input->post('kelurahan') == '') {
-			$data['inputtipe'][] = 'select2';
-			$data['inputerror'][] = 'kelurahan';
-			$data['error_string'][] = 'Wajib mengisi kelurahan';
-			$data['status'] = FALSE;
-		}
+		// if ($this->input->post('kelurahan') == '') {
+		// 	$data['inputtipe'][] = 'select2';
+		// 	$data['inputerror'][] = 'kelurahan';
+		// 	$data['error_string'][] = 'Wajib mengisi kelurahan';
+		// 	$data['status'] = FALSE;
+		// }
 
 		if ($this->input->post('alamat') == '') {
 			$data['inputtipe'][] = 'text';
@@ -537,12 +525,7 @@ class Checkout extends CI_Controller {
 		));
 	}
 
-	public function ekspedisi_ongkir($origin="", $destination="", $weight="", $courier="")
-	{
-		$this->load->library('rajaongkir');
-		$cities = $this->rajaongkir->cost($origin, $destination, $weight, $courier);
-		return json_decode($cities, true);
-	}
+	
 	
 	public function get_alamat_user($id)
 	{
@@ -562,12 +545,7 @@ class Checkout extends CI_Controller {
         echo json_encode($beratTotal);
 	}
 
-	public function kota_ongkir($province_id="", $city_id="")
-	{
-		$this->load->library('rajaongkir');
-		$cities = $this->rajaongkir->city($province_id, $city_id);
-		return json_decode($cities, true);
-	}
+	
 
 	public function generateRandomString($length = 8) {
 	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -579,12 +557,7 @@ class Checkout extends CI_Controller {
 	    return $randomString;
 	}
 
-	public function prov_ongkir()
-	{
-		$this->load->library('rajaongkir');
-		$provinces = $this->rajaongkir->province();
-		return json_decode($provinces, true);
-	}
+	
 	
 	
 

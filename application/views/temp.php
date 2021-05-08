@@ -58,6 +58,24 @@
 			border: 1;
 			border-color: red;
 		}
+
+		div.div-link {
+			/* border: 1px solid; */
+			cursor: pointer;
+			/* width: 50%;
+			height: 20px; */
+		}
+
+		.div-link a {
+			display: block;
+			background: #c8c8c8;
+			height: 100%;
+			text-align: center;
+		}
+
+		.div-link:hover {
+			background: #f8f8f8;
+		}
 	</style>
 </head>
 
