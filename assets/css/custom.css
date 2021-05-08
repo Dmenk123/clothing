@@ -526,7 +526,7 @@ background-color: #333333;
     border-radius: 15px;
     box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px;
     margin-bottom: 30px;
-    margin: 0px auto 5px;
+    /* margin: 0px auto 5px; */
     width: calc(30% - 1rem);
     display: flex;
     flex-wrap: wrap;    
@@ -695,4 +695,11 @@ background-color: #333333;
 
 .product-price b{
   margin-left: 5px;
+}
+.img-responsive2{
+  display: block;
+  width: 255px;
+  height: 255px;
+  border-radius: 15px 15px 0 0;
+  box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px;
 }

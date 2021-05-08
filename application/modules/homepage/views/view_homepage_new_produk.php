@@ -26,13 +26,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <div class="col-md-3">
                             <div class="card">
                                 <div class="card-head">
-                                    <img src="" class="product-img">
-                                    <div class="product-detail">
-                                        <span class='text-head'>Hartbeartsport</span>Support nike air zome come together  for a more supportive well
-                                    </div>
-                                    <span class="back-text">
-                                        FAS
-                                    </span>
+                                    <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive2">
+                                   
                                 </div>
                                 <div class="card-body">
                                     <div class="product-desc">
