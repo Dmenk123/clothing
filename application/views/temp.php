@@ -121,6 +121,13 @@
              ?>
 
             <?php 
+                if (isset($content_new_produk)) 
+                {
+                    $this->load->view($content_new_produk); 
+                } 
+             ?>
+
+            <?php 
                 if (isset($content_banner)) 
                 {
                     $this->load->view($content_banner); 
