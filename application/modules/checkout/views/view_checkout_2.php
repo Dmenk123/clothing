@@ -13,11 +13,9 @@
 				<ul class="nav nav-pills nav-justified">
 					<li class=""><a href="<?=base_url('checkout');?>"><i class="fa fa-map-marker"></i><br>Data & Alamat</a>
 					</li>
-					<li class="active"><a href="#"><i class="fa fa-truck"></i><br>Metode Pengiriman</a>
+					<li class="active"><a href="#"><i class="fa fa-truck"></i><br>Jasa Ekspedisi</a>
 					</li>
 					<li class="disabled"><a href="#"><i class="fa fa-money"></i><br>Metode Pembayaran</a>
-					</li>
-					<li class="disabled"><a href="#"><i class="fa fa-eye"></i><br>Review</a>
 					</li>
 				</ul>
 
@@ -78,7 +76,7 @@
 						<a href="<?= base_url('checkout'); ?>" class="btn btn-default"><i class="fa fa-chevron-left"></i>Kembali</a>
 					</div>
 					<div class="pull-right">
-						<button type="submit" class="btn btn-primary">Lanjutkan Ke Metode Pengiriman<i class="fa fa-chevron-right"></i></button>
+						<button type="submit" class="btn btn-primary">Lanjutkan Ke Metode Pembayaran<i class="fa fa-chevron-right"></i></button>
 					</div>
 				</div>
 			</form>

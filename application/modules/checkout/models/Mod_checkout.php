@@ -88,6 +88,21 @@ class Mod_checkout extends CI_Model
 		return $query->result();
 	}
 
+	public function get_data_produk($id_checkout)
+	{
+		$this->db->select('tbl_checkout.*, tbl_checkout_detail.qty, tbl_checkout_detail.harga_satuan, tbl_produk.nama_produk, tbl_gambar_produk.nama_gambar, tbl_stok.ukuran_produk, tbl_stok.berat_satuan');
+		$this->db->from('tbl_checkout');
+		$this->db->join('tbl_checkout_detail', 'tbl_checkout.id_checkout = tbl_checkout_detail.id_checkout', 'left');
+		$this->db->join('tbl_stok', 'tbl_checkout_detail.id_stok = tbl_stok.id_stok', 'left');
+		$this->db->join('tbl_produk', 'tbl_checkout_detail.id_produk = tbl_produk.id_produk', 'left');
+		$this->db->join('tbl_gambar_produk', 'tbl_produk.id_produk = tbl_gambar_produk.id_produk', 'left');
+		$this->db->where('tbl_checkout.id_checkout', $id_checkout);
+		$this->db->where('tbl_gambar_produk.jenis_gambar', 'display');
+	
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
 	function getKodeUser(){
             $q = $this->db->query("select MAX(RIGHT(id_user,5)) as kode_max from tbl_user");
             $kd = "";

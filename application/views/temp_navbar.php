@@ -7,8 +7,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 <!-- <a class="navbar-brand home" href="index.html" data-animate-hover="bounce"> -->
                 <a class="navbar-brand home" href="<?php echo site_url('home'); ?>">
-                    <img src="<?php echo config_item('assets'); ?>img/loggo.png" alt="dmenk e-shop logo" class="hidden-xs">
-                    <img src="<?php echo config_item('assets'); ?>img/logo-smalle.png" alt="dmenk e-shop logo" class="visible-xs"><span class="sr-only">Obaju - go to homepage</span>
+                    <img src="<?php echo config_item('assets'); ?>img/loggo.png" alt="" class="hidden-xs">
+                    <img src="<?php echo config_item('assets'); ?>img/logo-smalle.png" alt="" class="visible-xs"><span class="sr-only"></span>
                 </a>
                 <div class="navbar-buttons">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation">
@@ -20,8 +20,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         <i class="fa fa-search"></i>
                     </button>
                     <a class="btn btn-default navbar-toggle" href="<?php echo site_url('cart'); ?>">
-                        <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs">3 items in cart</span>
+                        <i class="fa fa-shopping-cart"></i>  <span class="hidden-xs"><?php echo $rows; ?> items in cart</span>
                     </a>
+					
                 </div>
             </div>
             <!--/.navbar-header -->
@@ -58,15 +59,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
 
             <div class="collapse clearfix" id="search">
-                <?php $sub = $this->uri->segment(3); ?>
-                <form class="navbar-form" role="search" action="<?php echo site_url('produk/cari_produk/'.$sub); ?>" method="get">
-                    <div class="form-group">
-                        <select class="form-control" name="select">
-                            <?php foreach ($menu_select_search as $value) { ?>
-                               <option value="<?php echo $value->id_sub_kategori; ?>"><?php echo $value->nama_sub_kategori; ?></option>
-                            <?php } ?>
-                        </select>
-                        <input type="text" class="form-control" placeholder="Search" name="key">
+				<form class="navbar-form" role="search" action="<?= base_url('produk/katalog'); ?>" method="get">
+                    <div class="form-group" style="width:100%;">
+						<input type="text" class="form-control" placeholder="Temukan Produk Anda disini ......" name="key" style="width: 80%;" value="<?=$this->input->get('key');?>">
                         <button type="submit" class="btn btn-primary form-control"><i class="fa fa-search"></i></button>
 		          </div>
                 </form>

@@ -117,9 +117,9 @@
                                 </a>
                             </h3>
 						   <p class="price"><strong>Rp. <?php echo number_format($val->harga,0,",","."); ?></strong></p>
-							<p class="buttons">
+							<!-- <p class="buttons">
 								<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" class="btn btn-primary">Beli Sekarang</a>
-							</p>
+							</p> -->
                         </div>
                     </div><!-- /.product -->
                 </div>                

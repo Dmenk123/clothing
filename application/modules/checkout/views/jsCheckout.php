@@ -85,11 +85,6 @@
 				}
 			});
 		});
-
-		
-		
-		
-		console.log(data);
 	}
 
 	const loadDataKurirTerpilih = () => {
@@ -109,6 +104,77 @@
 		});
 	}
 
+	const lihatBukti = (imgfile, kodeVerify) => {
+		var urlBukti = "<?=base_url();?>"+imgfile;
+		$('#modalBukti').modal('show');
+		$('#imageArea').attr('src', urlBukti);
+		$('#judul').text('Bukti Transfer Kode  : '+kodeVerify);
+	}
+
+	const readURL = (input) => {
+        if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#div_preview_foto').css("display","block");
+            $('#preview_img').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#div_preview_foto').css("display","none");
+            $('#preview_img').attr('src', '');
+        }
+    }
+
+	const aksi_transfer = () => {
+        var form = $('#form_proses_transfer')[0];
+        var data = new FormData(form);
+		
+        $("#pay-button").prop("disabled", true);
+        $('#pay-button').text('Menyimpan Data'); //change button text
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "<?=base_url('checkout/trans_manual')?>",
+            data: data,
+            dataType: "JSON",
+            processData: false, // false, it prevent jQuery form transforming the data into a query string
+            contentType: false, 
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                if(data.status) {
+                    swal("Sukses!!", "Pembayaran Transfer Berhasil", "success");
+                    $("#pay-button").prop("disabled", false);
+                    $('#pay-button').text('Proses Data Pembayaran');
+                    window.location = data.redirect;
+                }else {
+                    for (var i = 0; i < data.inputerror.length; i++) 
+                    {
+                        if (data.inputerror[i] != 'pegawai') {
+                            $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+                            $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback'); //select span help-block class set text error string
+                        }else{
+                            //ikut style global
+                            $('[name="'+data.inputerror[i]+'"]').next().next().text(data.error_string[i]).addClass('invalid-feedback-select');
+                        }
+                    }
+
+                    $("#pay-button").prop("disabled", false);
+                    $('#pay-button').text('Proses Data Pembayaran');
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+                $("#pay-button").prop("disabled", false);
+                $('#pay-button').text('Proses Data Pembayaran');
+
+                reset_modal_form();
+                $(".modal").modal('hide');
+            }
+        });
+    }
+
+	
 	$(document).ready(function(){
 		loadDataKurirTerpilih();
 		//set active class to navbar
@@ -245,6 +311,25 @@
 			});
 
 		});
+		
+		$('.tombol_method_bayar').click(function (e) { 
+			e.preventDefault();
+			
+			$([document.documentElement, document.body]).animate({
+				scrollTop: $("#main-form-bayar").offset().top-50
+			}, 2000);
+			
+			var file_inc = $(this).attr("href");
+			$.ajax({
+				type: "get",
+				url: "<?=base_url('checkout/get_html_form')?>",
+				data: {file_inc:file_inc},
+				dataType: "json",
+				success: function (response) {
+					$('#main-form-bayar').html(response);
+				}
+			});
+		});
 
 		/////////////////////////////////////////////////////      
 
@@ -319,7 +404,6 @@
                 }
             });
     }
-
 
     function proses_pembayaran() {
         $.ajax({

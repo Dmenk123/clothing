@@ -10,6 +10,7 @@ class Checkout extends CI_Controller {
 		$this->load->library('cart');
 		$this->load->model('homepage/mod_homepage','mod_hpg');
 		$this->load->model('mod_checkout','m_ckt');
+		$this->load->model('m_global');
 	}
 
 	private function set_token_checkout()
@@ -30,8 +31,8 @@ class Checkout extends CI_Controller {
 			$this->db->trans_begin();
 
 			foreach ($this->cart->contents() as $key => $value) {
-				$harga_total += (float)$value['price'];
-				$berat_total += (float)$value['options']['Berat_produk'];
+				$harga_total += (float)$value['price'] * (float)$value['qty'];
+				$berat_total += (float)$value['options']['Berat_produk'] * (float)$value['qty'];
 
 				$arr_data_det[] = [
 					'id_checkout' => $id_header,
@@ -338,6 +339,49 @@ class Checkout extends CI_Controller {
         $this->load->view('temp',$data);
 	}
 
+	public function step3()
+	{
+		$id_user = $this->session->userdata('id_user');
+		$menu_navbar = $this->mod_hpg->get_menu_navbar();
+		$count_kategori = $this->mod_hpg->count_kategori();
+		$submenu = array();
+		
+		for ($i=1; $i <= $count_kategori; $i++) { 
+			//set array key berdasarkan loop dari angka 1
+			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
+		}
+		$menu_select_search = $this->mod_hpg->get_menu_search();
+		$data_user = $this->m_ckt->get_data_user($id_user);
+		
+		$cek_token = $this->check_token_session();
+		if($cek_token['status']) {
+			$cek_tbl = $this->m_ckt->get_db_cart($cek_token['token']);
+
+			if ($cek_tbl) {
+				$data_cart = $cek_tbl;
+			}
+
+		}else{
+			return redirect('checkout');
+			
+		}
+		
+
+		$data = array(
+			'content' => 'checkout/view_checkout_3',
+			'modal' => 'checkout/modal_checkout',
+			'count_kategori' => $count_kategori,
+			'submenu' => $submenu,
+			'data_cart' => $data_cart,
+			'menu_navbar' => $menu_navbar,
+			'js' => 'checkout/jsCheckout',
+			'menu_select_search' => $menu_select_search,
+			'data_user' => $data_user,
+		);
+
+        $this->load->view('temp',$data);
+	}
+
 	public function suggest_provinsi()
 	{
 		$provinsi = [];
@@ -609,7 +653,6 @@ class Checkout extends CI_Controller {
 		}
 	}
 
-
 	public function get_data_kurir_terpilih()
 	{
 		$cek_sesi = $this->check_token_session();
@@ -632,7 +675,6 @@ class Checkout extends CI_Controller {
 
 		echo json_encode(['status' => $status, 'html' => $html]);
 	}
-
 
 	private function get_template_kurir_terpilih($data)
 	{
@@ -670,71 +712,6 @@ class Checkout extends CI_Controller {
 
 	/////////////////////////////////////////////////////////
 
-	public function add_alamat_kirim()
-	{
-		$timestamp = date('Y-m-d H:i:s');
-		$type = "kirim";
-		$input = array(
-				'id_user' => $this->input->post('checkout1Id'),
-				'fname' => trim(strtoupper($this->input->post('checkout1Fname'))),
-				'lname' => trim(strtoupper($this->input->post('checkout1Lname'))),
-				'id_provinsi' => $this->input->post('checkout1Provinsi'),
-				'id_kota' => $this->input->post('checkout1Kota'),
-				'id_kecamatan' => $this->input->post('checkout1Kecamatan'),
-				'id_kelurahan' => $this->input->post('checkout1Kelurahan'),
-				'alamat' => trim(strtoupper($this->input->post('checkout1Alamat'))),
-				'kdpos' => trim(strtoupper($this->input->post('checkout1Kdpos'))),
-				'telp' => trim(strtoupper($this->input->post('checkout1Telp'))),
-				'type' => $type,
-				'timestamp' => $timestamp 
-			);
-
-		$insert = $this->m_ckt->insert_data_chekout1($input);
-
-		echo json_encode(array(
-			"status" => TRUE,
-			"id" => $insert,
-			"type" => $type,
-			"pesan_kirim" => 'Ubah alamat pengiriman berhasil'
-		));
-	}
-
-	public function add_alamat_tagih()
-	{
-		$timestamp = date('Y-m-d H:i:s');
-		$type = "tagih";
-		$input = array(
-				'id_user' => $this->input->post('checkout1Id'),
-				'fname' => trim(strtoupper($this->input->post('checkout1Fname'))),
-				'lname' => trim(strtoupper($this->input->post('checkout1Lname'))),
-				'id_provinsi' => $this->input->post('checkout1Provinsi'),
-				'id_kota' => $this->input->post('checkout1Kota'),
-				'id_kecamatan' => $this->input->post('checkout1Kecamatan'),
-				'id_kelurahan' => $this->input->post('checkout1Kelurahan'),
-				'alamat' => trim(strtoupper($this->input->post('checkout1Alamat'))),
-				'kdpos' => trim(strtoupper($this->input->post('checkout1Kdpos'))),
-				'telp' => trim(strtoupper($this->input->post('checkout1Telp'))),
-				'type' => $type,
-				'timestamp' => $timestamp 
-			);
-
-		$insert = $this->m_ckt->insert_data_chekout1($input);
-
-		echo json_encode(array(
-			"status" => TRUE,
-			"id" => $insert,
-			"type" => $type,
-			"pesan_tagih" => 'Ubah alamat penagihan berhasil'
-		));
-	}
-
-	
-	
-	public function get_alamat_user($id)
-	{
-		$data = $this->m_ckt->get_data_user($id);
-		echo json_encode($data);
-	}
 
 	public function get_berat_total_cart()
 	{
@@ -748,8 +725,6 @@ class Checkout extends CI_Controller {
         echo json_encode($beratTotal);
 	}
 
-	
-
 	public function generateRandomString($length = 8) {
 	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	    $charactersLength = strlen($characters);
@@ -760,223 +735,430 @@ class Checkout extends CI_Controller {
 	    return $randomString;
 	}
 
-	
-	
-	
-
-	public function suggest_provinsi_tujuan()
+	public function get_html_form()
 	{
-		$provinsi = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->prov_ongkir($key);
+		$metode = $this->input->get('file_inc');
+		$sesi = $this->check_token_session();
+		$checkout = $sesi['data'];
+
+		if($metode == 'transfer'){
+			$retval = $this->get_form_transfer($checkout);
 		}else{
-			$query = $this->prov_ongkir();
+			$retval = $this->get_form_payment($checkout);
 		}
 
-		/*print_r($query);*/
-		if (isset($query['rajaongkir']['results'][0])) {
-			for ($i=0; $i < count($query['rajaongkir']['results']); $i++) {
-				$provinsi[] = array(
-					'id' => $query['rajaongkir']['results'][$i]['province_id'],
-					'text' => $query['rajaongkir']['results'][$i]['province'],
-				);
-			}
-			echo json_encode($provinsi);
-		}
+		echo json_encode($retval);
+
 	}
 
-	public function suggest_kota_tujuan()
+	private function get_form_transfer($data)
 	{
-		$id = $this->input->get("idProv");
-		$kota = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->kota_ongkir($id, $key);
-		}else{
-			$query = $this->kota_ongkir($id);
-		}
+		$data_detail = $this->m_ckt->get_data_produk($data->id_checkout);
+		
+		$html = '
+			<div class="divider text-center"><span class="outer-line"></span><span class="outer-line"></span></div>
+				<br>
+				<form id="form_proses_transfer" method="post" enctype="multipart/form-data" class="ps-checkout__form">
+					<div class="row">
+						<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
+							<div class="ps-checkout__billing">
+								<div class="form-group">
+									<label for="Wajib Diisi"><strong>Rincian Pembayaran.</strong></label>
+									<table class="table table-borderless">
+										<tbody>
+											<tr>
+												<td>Atas Nama</td>
+												<td>:</td>
+												<td>'.$data_detail[0]->nama.'</td>
+											</tr>
+											<tr>
+												<td>Telp/Hp</td>
+												<td>:</td>
+												<td>'.$data_detail[0]->telp.'</td>
+											</tr>
+											<tr>
+												<td>Email</td>
+												<td>:</td>
+												<td>'.$data_detail[0]->email.'</td>
+											</tr>
+											<tr>
+												<td>Alamat</td>
+												<td>:</td>
+												<td>'.$data_detail[0]->kota_tujuan_txt.'</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="table-responsive">
+									<table class="table table-bordered" style="font-size:12px;">
+										<thead>
+											<tr>
+												<th>Gambar</th>
+												<th>Nama Produk</th>
+												<th>Ukuran</th>
+												<th>Qty</th>
+												<th>Berat Total</th>
+												<th>Harga Satuan</th>
+												<th>Harga Total</th>
+											</tr>
+										</thead>
+										<tbody id="show_detail">';
 
-		/*print_r($query);*/
-		if (isset($query['rajaongkir']['results'][0])) {
-			for ($i=0; $i < count($query['rajaongkir']['results']); $i++) {
-				$kota[] = array(
-					'id' => $query['rajaongkir']['results'][$i]['city_id'],
-					'text' => $query['rajaongkir']['results'][$i]['city_name'],
-				);
-			}
-			echo json_encode($kota);
-		}
+										foreach ($data_detail as $key => $value) {
+											$html .= '<tr>
+												<td><img src="'.base_url("assets/img/produk/$value->nama_gambar").'" width="50" height="50"></td>
+												<td>'.$value->nama_produk.'</td>
+												<td>'.$value->ukuran_produk.'</td>
+												<td>'.$value->qty.'</td>
+												<td>'.($value->berat_satuan * $value->qty).' gram</td>
+												<td><span class="pull-left">Rp. </span><span class="pull-right">'.number_format($value->harga_satuan,0,",",".").'</span></td>
+												<td><span class="pull-left">Rp. </span><span class="pull-right">'.number_format(($value->harga_satuan * $value->qty),0,",",".").'</span></td>
+											</tr>';
+										}
+
+										$html .= '
+											<tr>
+												<td colspan="6">Harga Total Produk</td>
+												<td><span class="pull-left">Rp. </span><span class="pull-right">'.number_format($data_detail[0]->harga_total_produk,0,",",".").'</span></td>
+											</tr>
+											<tr>
+												<td colspan="6">'.$data_detail[0]->jasa_ekspedisi.' '.$data_detail[0]->pilihan_paket.'</td>
+												<td><span class="pull-left">Rp. </span><span class="pull-right">'.number_format($data_detail[0]->ongkos_kirim,0,",",".").'</span></td>
+											</tr>
+											<tr>
+												<td colspan="6">Total Keseluruhan</td>
+												<td><span class="pull-left">Rp. </span><span class="pull-right">'.number_format($data_detail[0]->ongkos_total,0,",",".").'</span></td>
+											</tr>
+										';
+										
+										$html .= '</tbody>
+									</table>
+									</div>
+									<div class="form-group form-group--inline">
+										<label>Upload Bukti Transfer</label>
+										<div></div>
+										<div class="custom-file">
+											<input type="hidden" class="form-control" id="id_checkout" name="id_checkout" value="'.$data_detail[0]->id_checkout.'">
+											<input type="file" class="form-control" onchange="readURL(this)" id="bukti_transfer" style="" name="bukti_transfer" accept=".jpg,.jpeg,.png">
+											<span class="help-block"></span>
+										</div>
+									</div>
+									<div class="form-group" id="div_preview_foto" style="display: none;">
+										<label for="" class="form-control-label">Preview Bukti:</label>
+										<div></div>
+										<img id="preview_img" src="#" alt="Preview Foto" height="200" width="200"/>
+										<span class="help-block"></span>
+									</div>
+									<div class="form-group">
+										<label for="Wajib Diisi"><strong>Keterangan.</strong></label>
+										<br>
+										<p style="font-size:18px; font-family:arial; color:red; line-height:24px;">Setelah anda upload bukti transfer, admin akan mengecek. Setelah pembayarannya masuk, admin akan kirimkan Username & Password ke email anda.</p>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 ">
+								<div class="ps-checkout__order">
+									<footer>
+										<h3>Pembayaran dengan Transfer</h3>
+										<div class="form-group cheque">
+											<div class="">
+												<p>Transfer <strong>Rp '.number_format($data->ongkos_total,0,',','.').'</strong> ke Nomor Rekening di bawah Ini.</p>
+												<p>Rekening BCA : <span style="font-family:arial;">0885-181-223</span> <br> a.n Cipto Junaidi</p>
+											</div>
+										</div>
+										<div class="ps-shipping">
+											<p>Upload bukti transfer dg <strong>klik kolom upload di atas.</strong> Setelah  upload, lalu klik tombol Proses Menyimpan Data Pembayaran</p>
+											<div class="form-group paypal">
+												<button type="button" class="btn btn-md btn-success" id="pay-button" onclick="aksi_transfer()">Proses Menyimpan Data Pembayaran<i class="ps-icon-next"></button>
+											</div>
+										</div>
+									</footer>
+								</div>
+								<div class="ps-shipping">
+									<p>Kuota Terbatas. Yang duluan transfer, dilayani duluan.</p>
+								</div>
+							</div>
+						</div>
+					</div
+				</form>
+			</div>
+		';
+
+		return $html;
 	}
 
-	public function suggest_paket_ongkir()
+	private function get_form_payment($data)
 	{
-		$origin = intval($this->input->get("origin"));
-		$destination = intval($this->input->get("id"));
-		$weight = intval($this->input->get("berat"));
-		$courier = $this->input->get("kurir");
-		$paket = [];
-		if(!empty($this->input->get("term"))){
-			$key = $_GET['term'];
-			$query = $this->ekspedisi_ongkir($origin, $destination, $weight, $courier, $key);
-		}else{
-			$query = $this->ekspedisi_ongkir($origin, $destination, $weight, $courier);
-		}
+		$html = '<div class="divider text-center"><span class="outer-line"></span><span class="outer-line"></span></div>
+		<form id="payment-form" method="post" action="finish">
+			<input type="hidden" name="result_type" id="result-type" value=""></div>
+			<input type="hidden" name="result_data" id="result-data" value=""></div>
+		</form>
+				<br>
+				<form id="form_proses_payment" method="post" enctype="multipart/form-data" class="ps-checkout__form">
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						<!--<div class="alert alert-warning">
+							<strong>Peringatan!</strong> Harap isikannn email anda dengan benar & Mohon periksa kembali !
+						</div>-->
+							<div class="ps-checkout__billing">
+								<div class="form-group form-group--inline">
+									<label>Nama Depan<span></span>
+									</label>
+									<input type="hidden" id="id" name="id" value="a1">
+									<input class="form-control" style="" type="hidden" name="address" id="address">
+									<input class="form-control" style="" type="text" name="nama_depan" id="nama_depan">
+									<input type="hidden" name="keterangan" id="keterangan" value="">
+									<span class="help-block"></span>
+								</div>
+								<div class="form-group form-group--inline">
+									<label>Nama Belakang<span></span>
+									</label>
+									<input class="form-control" style="" type="text" name="nama_belakang" id="nama_belakang">
+									<span class="help-block"></span>
+								</div>
+							
+								<div class="form-group form-group--inline">
+									<label>Email<span></span>
+									</label>
+									<input class="form-control" style="" type="email" name="email" id="email" placeholder="">
+									<span class="help-block"></span>
+								</div>
+								
+								<!--<div class="form-group form-group--inline">
+									<label>Username<span></span>
+									</label>
+									<input class="form-control" style="" type="text" name="username" id="username" autocomplete="off">
+									<span class="help-block"></span>
+								</div>-->
+								
+								<!--<div class="form-group form-group--inline">
+									<label>Password<span></span>
+									</label>
+									<input class="form-control" style="" type="password" name="password" id="password" autocomplete="off">
+									<span class="help-block"></span>
+								</div>-->
+								
+								<!--<div class="form-group form-group--inline">
+									<label>Tulis Ulang Password<span></span>
+									</label>
+									<input class="form-control" style="" type="password" name="repassword" id="repassword" autocomplete="off">
+									<span class="help-block"></span>
+								</div>-->
+								
+								<div class="form-group form-group--inline">
+									<label>No. Telepon<span></span>
+									</label>
+									<input class="form-control numberinput" style="" type="text" name="telp" id="telp">
+									<span class="help-block"></span>
+								</div>
+								
+								<!--<div class="form-group form-group--inline">
+									<label>Nama Bank<span></span>
+									</label>
+									<input class="form-control" style="" type="text" name="bank" id="bank" placeholder="misal: BCA, MANDIRI, dll">
+									<span class="help-block"></span>
+								</div>-->
+								
+								<!--<div class="form-group form-group--inline">
+									<label>No. Rekening<span></span>
+									</label>
+									<input class="form-control numberinput" style="" type="text" name="norek" id="norek">
+									<span class="help-block"></span>
+								</div>-->
+								
+								<div class="form-group--inline paypal">
+									<button type="button" class="btn btn-md btn-success" id="pay-button" onclick="aksi_payment()">Continue<i class="ps-icon-next"></button>
+								</div>
+								<br>
+									<p style="font-size:18px; color:blue; line-height:24px;"><strong><span style="font-family:arial;font-style:normal!important;">Data di atas perlu benar karena untuk penghasilan anda nantinya tiap bulan dari kami.</span></strong></p>
+								
+								<div class="ps-shipping">
+									<p>Kuota Terbatas. Yang duluan transfer, dilayani duluan.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>';
 
-		/*print_r($query);*/
-		if (isset($query['rajaongkir']['results'][0]['costs'][0])) {
-			for ($i=0; $i < count($query['rajaongkir']['results'][0]['costs']); $i++) {
-				$paket[] = array(
-					'id' => $query['rajaongkir']['results'][0]['costs'][$i]['service'],
-					'text' => array(
-							'service' => $query['rajaongkir']['results'][0]['costs'][$i]['description'], 
-							'etd' => $query['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd'],
-							'value' => $query['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value']
-						), 
-				);
-			}
-			echo json_encode($paket);
-		}
+		return $html;
 	}
 
-	public function summary()
+	public function trans_manual()
 	{
-		$id_user = $this->session->userdata('id_user');
-		$menu_navbar = $this->mod_hpg->get_menu_navbar();
-		$count_kategori = $this->mod_hpg->count_kategori();
-		$submenu = array();
-		for ($i=1; $i <= $count_kategori; $i++) { 
-			//set array key berdasarkan loop dari angka 1
-			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
-		}
-		$menu_select_search = $this->mod_hpg->get_menu_search();
-		$data_user = $this->m_ckt->get_data_user($id_user);
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$id_checkout = $this->input->post('id_checkout');
 
-		$data_input = array(
-			'no_ref' => $this->generateRandomString(),
-			'iduser_krm' => $id_user,
-			'fname_krm' => $this->input->post('FFnameKrm'),
-			'lname_krm' => $this->input->post('FLnameKrm'),
-			'alamat_krm' => $this->input->post('FAlamatKrm'),
-			'kel_krm' => $this->input->post('FKelKrm'),
-			'nm_kel_krm' => $this->input->post('FTxtKelKrm'),
-			'kec_krm' => $this->input->post('FKecKrm'),
-			'nm_kec_krm' => $this->input->post('FTxtKecKrm'),
-			'kota_krm' => $this->input->post('FKotaKrm'),
-			'nm_kota_krm' => $this->input->post('FTxtKotaKrm'),
-			'prov_krm' => $this->input->post('FProvKrm'),
-			'nm_prov_krm' => $this->input->post('FTxtProvKrm'),
-			'kdpos_krm' => $this->input->post('FKdposKrm'),
-			'telp_krm' => $this->input->post('FTelpKrm'),
-			'method_krm' => $this->input->post('FMethodKrm'),
-			'prov_kurir' => $this->input->post('FProvKurir'),
-			'kota_kurir' => $this->input->post('FKotaKurir'),
-			'berat_kurir' => $this->input->post('FBeratKurir'),
-			'nama_kurir' => $this->input->post('FNamaKurir'),
-			'paket_kurir' => $this->input->post('FPaketKurir'),
-			'etd_kurir' => $this->input->post('FEtdKurir'),
-			'harga_kurir' => $this->input->post('FHargaKurir'),
+		$this->db->trans_begin();
+		$file_mimes = ['image/png', 'image/x-citrix-png', 'image/x-png', 'image/x-citrix-jpeg', 'image/jpeg', 'image/pjpeg'];
+		if(isset($_FILES['bukti_transfer']['name']) && in_array($_FILES['bukti_transfer']['type'], $file_mimes)) {
+									
+			if (!file_exists('./assets/img/bukti_transfer')) {
+				mkdir('./assets/img/bukti_transfer', 0777, true);
+			}
+			$namafileseo = $this->seoUrl($id_checkout.'-'.time());
+			$this->konfigurasi_upload_img($namafileseo);
+			
+			//get detail extension
+			$pathDet = $_FILES['bukti_transfer']['name'];
+			$extDet = pathinfo($pathDet, PATHINFO_EXTENSION);
+
+			if ($this->file_obj->do_upload('bukti_transfer')) 
+			{	
+				$gbrBukti = $this->file_obj->data();
+				$nama_file_foto = $gbrBukti['file_name'];
+				$resize = $this->konfigurasi_image_resize($nama_file_foto);
+				
+				$output_thumb = $this->konfigurasi_image_thumb($nama_file_foto, $gbrBukti);
+				$this->image_lib->clear();
+				## replace nama file + ext
+				$namafileseo = $namafileseo.'.'.$extDet;
+			} else {
+				$error = array('error' => $this->file_obj->display_errors());
+			}
+		}else{
+			$data['inputerror'][] = 'bukti_transfer';
+			$data['error_string'][] = 'Wajib Mengisi Bukti Transfer';
+			$data['status'] = FALSE;
+			echo json_encode($data);
+			return;
+		}
+
+		$order_id = $this->generate_order_id_manual();
+		// $kode_ref = $this->cek_kode_affiliate();
+		
+		$data_trans = [
+			'order_id' => $order_id,
+			'updated_at' => $timestamp,
+			'bukti_transfer'	=> 'assets/img/bukti_transfer/'.$namafileseo,
+			'bukti_transfer_thumb' => 'assets/img/bukti_transfer/thumbs/'.$output_thumb,
+			'is_manual' => 1
+		];
+
+
+		$update = $this->m_ckt->update_data('tbl_checkout', $data_trans, ['id_checkout' => $id_checkout]);
+		
+		if ($this->db->trans_status() === FALSE){
+			$this->db->trans_rollback();
+			$retval['status'] = false;
+			$retval['pesan'] = 'Gagal menambahkan transaksi';
+			$retval['redirect'] = base_url('checkout/step3');
+		}else{
+			$this->db->trans_commit();
+			$retval['status'] = true;
+			$retval['pesan'] = 'Sukses menambahkan transaksi';
+			$retval['redirect'] = base_url('home');
+		}
+
+		echo json_encode($retval);
+	}
+
+	private function konfigurasi_upload_img($nmfile)
+	{ 
+		//konfigurasi upload img display
+		$config['upload_path'] = './assets/img/bukti_transfer';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp';
+		$config['overwrite'] = TRUE;
+		$config['max_size'] = '4000';//in KB (4MB)
+		$config['max_width']  = '0';//zero for no limit 
+		$config['max_height']  = '0';//zero for no limit
+		$config['file_name'] = $nmfile;
+		//load library with custom object name alias
+		$this->load->library('upload', $config, 'file_obj');
+	}
+
+	private function konfigurasi_image_resize($nmfile)
+	{
+		//konfigurasi image lib
+	    $config['image_library'] = 'gd2';
+	    $config['source_image'] = './assets/img/bukti_transfer/'.$nmfile;
+	    $config['create_thumb'] = FALSE;
+	    $config['maintain_ratio'] = FALSE;
+	    $config['new_image'] = './assets/img/bukti_transfer/'.$nmfile;
+	    $config['overwrite'] = TRUE;
+	    $config['width'] = 480; //resize
+	    $config['height'] = 600; //resize
+	    $this->load->library('image_lib',$config); //load image library
+	    $this->image_lib->initialize($config);
+		$this->image_lib->resize();
+	}
+
+	private function konfigurasi_image_thumb($filename, $gbr)
+	{
+		//buat folder
+		if (!file_exists('./assets/img/bukti_transfer/thumbs')) {
+			mkdir('./assets/img/bukti_transfer/thumbs', 0777, true);
+		}
+
+		//konfigurasi image lib
+	    $config2['image_library'] = 'gd2';
+	    $config2['source_image'] = './assets/img/bukti_transfer/'.$filename;
+	    $config2['create_thumb'] = TRUE;
+	 	$config2['thumb_marker'] = '_thumb';
+	    $config2['maintain_ratio'] = FALSE;
+	    $config2['new_image'] = './assets/img/bukti_transfer/thumbs'.'/'.$filename;
+	    $config2['overwrite'] = TRUE;
+	    $config2['quality'] = '100%';
+	 	$config2['width'] = 45;
+	 	$config2['height'] = 45;
+	    $this->load->library('image_lib',$config2); //load image library
+	    $this->image_lib->initialize($config2);
+	    $this->image_lib->resize();
+	    return $output_thumb = $gbr['raw_name'].'_thumb'.$gbr['file_ext'];	
+	}
+
+	private function seoUrl($string) {
+	    //Lower case everything
+	    $string = strtolower($string);
+	    //Make alphanumeric (removes all other characters)
+	    $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+	    //Clean up multiple dashes or whitespaces
+	    $string = preg_replace("/[\s-]+/", " ", $string);
+	    //Convert whitespaces and underscore to dash
+	    $string = preg_replace("/[\s_]/", "-", $string);
+	    return $string;
+	}
+
+	private function generate_order_id_manual() {
+
+		$chars = array(
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 		);
-
-
-		$data = array(
-			'beratTotal' => 0,
-			'data_input' => $data_input,
-			'content' => 'checkout/view_summary',
-			'modal' => 'checkout/modal_checkout',
-			'count_kategori' => $count_kategori,
-			'submenu' => $submenu,
-			'menu_navbar' => $menu_navbar,
-			'js' => 'checkout/jsCheckout',
-			'menu_select_search' => $menu_select_search,
-			'data_user' => $data_user,
-		);
-
-        $this->load->view('temp',$data);
-	}
-
-    public function proses_summary()
-    {
-    	$method = $this->input->post('frmMethod');
-    	if ($method == "cod") {
-    		$metode = "COD";
-    	}else{
-    		$metode = "TFR";
-    	}
-    	$kode = $this->m_ckt->getKodeCheckout($metode);
-    	$kode_ref = $this->input->post('frmRef');
-    	$total_bayar = $this->input->post('frmBeaTotal');
-    	$waktu_tanggal = date('Y-m-d H:i:s');
-    	$tanggal = date('Y-m-d');
-    	//data header
-    	$data_header = array(
-    		'id_checkout' => $kode,
-    		'id_user' => $this->session->userdata('id_user'),
-    		'tgl_checkout' => $tanggal,
-    		'status' => "aktif",
-    		'harga_total_produk' => $this->input->post('frmBeaProduk'),
-    		'jasa_ekspedisi' => $this->input->post('frmKurir'),
-    		'pilihan_paket' => $this->input->post('frmPaket'),
-    		'estimasi_datang' => $this->input->post('frmEtd'),
-    		'ongkos_kirim' => $this->input->post('frmOngkir'),
-    		'alamat_kirim' => $this->input->post('frmAlamatKrm'),
-    		'fname_kirim' => strtoupper($this->input->post('frmFnameKrm')),
-    		'lname_kirim' => strtoupper($this->input->post('frmLnameKrm')),
-    		'ongkos_total' => $total_bayar,
-    		'method_checkout' => $metode,
-    		'kode_ref' => $kode_ref,
-    		'timestamp' => $waktu_tanggal,
-    	);
-
-    	//data detail header
-    	$hitung_item = count($this->input->post('frmIdproduk'));
-		$data_item_detail = array();
-			for ($i=0; $i < $hitung_item; $i++) 
-			{
-				$data_item_detail[$i] = array(
-					'id_checkout' => $kode,
-					'status' => "aktif",
-					'id_produk' => $this->input->post('frmIdproduk')[$i],
-					'id_satuan' => $this->input->post('frmIdsatuan')[$i],
-					'id_stok' => $this->input->post('frmIdstok')[$i],
-					'qty' => $this->input->post('frmIdqty')[$i],
-				);
-			}
-		//insert to db
-		$insert = $this->m_ckt->simpan_data($data_header, $data_item_detail);
-
-		//remove cart after insert
-		$hitung_item_cart = count($this->input->post('rowId'));
-		$data_cart = array();
-		for ($i=0; $i < $hitung_item_cart; $i++)
-		{
-			$data_cart[$i] = array(
-	            'rowid' => $this->input->post('rowId')[$i], 
-	            'qty' => 0, 
-	        );
-		}
-		// print_r($data_cart);
-		$this->cart->update($data_cart);
-
-		echo json_encode(array(
-			"status" => TRUE,
-			"pesan" => "Mohon Konfirmasi pembayaran sebelum 3 hari dari sekarang, untuk info lebih lanjut silahkan pilih menu nama anda pada menu navigasi. Terima kasih telah berbelanja."
-			));
-    }
- 
-
-	public function tampil_biaya_pengiriman($origin, $destination, $weight, $courier){
-		echo "<pre>";
-			print_r($this->ekspedisi_ongkir($origin, $destination, $weight, $courier));
-		echo "</pre>";
-	}
-
-	public function tampil_kota($province_id="", $city_id=""){
-		echo "<pre>";
-			print_r($this->kota_ongkir($province_id, $city_id));
-		echo "</pre>";
-	}
-
 	
+		shuffle($chars);
+	
+		$num_chars = count($chars) - 1;
+		$token = '';
+	
+		for ($i = 0; $i < 8; $i++){ // <-- $num_chars instead of $len
+			$token .= $chars[mt_rand(0, $num_chars)];
+		}
+	
+		return $token;
+	}
+	
+	private function rand_string() {
 
+		$chars = array(
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+		);
+	
+		shuffle($chars);
+	
+		$num_chars = count($chars) - 1;
+		$token = '';
+	
+		for ($i = 0; $i < 3; $i++){ // <-- $num_chars instead of $len
+			$token .= $chars[mt_rand(0, $num_chars)];
+		}
+	
+		return $token;
+	}
 }
