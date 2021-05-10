@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 ?> 
-	<div class="navbar navbar-default yamm" role="navigation" id="navbar">
+	<div class="navbar navbar-default yamm" role="navigation" id="navbar" style="margin-bottom:15px;padding-bottom:1%;">
         <div class="container">
             <div class="navbar-header">
 

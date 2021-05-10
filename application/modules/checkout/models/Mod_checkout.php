@@ -90,7 +90,7 @@ class Mod_checkout extends CI_Model
 
 	public function get_data_produk($id_checkout)
 	{
-		$this->db->select('tbl_checkout.*, tbl_checkout_detail.qty, tbl_checkout_detail.harga_satuan, tbl_produk.nama_produk, tbl_gambar_produk.nama_gambar, tbl_stok.ukuran_produk, tbl_stok.berat_satuan');
+		$this->db->select('tbl_checkout.*, tbl_checkout_detail.qty, tbl_checkout_detail.harga_satuan, tbl_checkout_detail.sess_row_id, tbl_produk.nama_produk, tbl_gambar_produk.nama_gambar, tbl_stok.ukuran_produk, tbl_stok.berat_satuan');
 		$this->db->from('tbl_checkout');
 		$this->db->join('tbl_checkout_detail', 'tbl_checkout.id_checkout = tbl_checkout_detail.id_checkout', 'left');
 		$this->db->join('tbl_stok', 'tbl_checkout_detail.id_stok = tbl_stok.id_stok', 'left');

@@ -95,7 +95,7 @@ class Cart extends CI_Controller {
                     <td>'.$items['name'].'</td>
                     <td>'.$items['options']['Size_produk'].'</td>
                     <td> 
-	            		<select class="form-control form-control-sm" style="width:60px;" id="'.$items['rowid'].'" class="cart_qty">';
+	            		<select class="form-control form-control-sm" style="width:60px;" id="'.$items['rowid'].'" onchange="gantiQtyCart($(this))">';
 	            			for ($i=1; $i <= $items['options']['Stok_produk']; $i++) {
 	            				if ($i == $items['qty']) {
 	            					$output .='<option value="'.$i.'" selected>'.$i.'</option>';
@@ -129,7 +129,7 @@ class Cart extends CI_Controller {
             <tr>
                 <th colspan="7"><span style="font-size:20px;">Total Belanja</span></th>
                 <th colspan="2">
-                    <span style="font-size:20px; text-decoration:underline;">
+                    <span style="font-size:20px;">
                         Rp. '.number_format($this->cart->total(),0,",",".").'
                     </span>
                 </th>

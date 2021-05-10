@@ -576,19 +576,20 @@ class Checkout extends CI_Controller {
 	private function get_tabel_list_ekspedisi($data)
 	{
 		$html = "
-		<table class='table'>
-			<thead>
-				<tr>
-					<th>Kurir</th>
-					<th>Paket</th>
-					<th>Asal</th>
-					<th>Tujuan</th>
-					<th>Harga</th>
-					<th>Estimasi Hari</th>
-					<th>Pilih</th>
-				</tr>
-			</thead>
-			<tbody>";
+		<div class='table-responsive'>
+			<table class='table'>
+				<thead>
+					<tr>
+						<th>Kurir</th>
+						<th>Paket</th>
+						<th class='hidden'>Asal</th>
+						<th class='hidden'>Tujuan</th>
+						<th>Harga</th>
+						<th>Estimasi Hari</th>
+						<th>Pilih</th>
+					</tr>
+				</thead>
+				<tbody>";
 
 
 		foreach ($data as $key => $value) {
@@ -597,15 +598,15 @@ class Checkout extends CI_Controller {
 				<tr>
 					<td data-kurir='".$value['kurir']."'>".$value['kurir']."</td>
 					<td data-paket='".$value['paket']."'>".$value['paket']."</td>
-					<td data-asal='".$value['asal']."'>".$value['asal']."</td>
-					<td data-tujuan='".$value['tujuan']."'>".$value['tujuan']."</td>
+					<td class='hidden' data-asal='".$value['asal']."'>".$value['asal']."</td>
+					<td class='hidden' data-tujuan='".$value['tujuan']."'>".$value['tujuan']."</td>
 					<td data-harga='".$value['harga']."'>".$strHarga."</td>
 					<td data-estimasi='".$value['estimasi']."'>".$value['estimasi']."</td>
 					<td><button type='button' class='btn btn-sm btn-primary' onclick='pilihKurir($(this))'>Pilih Kurir</button></td>
 				</tr>";
 		}
 
-		$html .= "</tbody></table>";
+		$html .= "</tbody></table></div>";
 		return $html;
 	}
 
@@ -680,18 +681,19 @@ class Checkout extends CI_Controller {
 	{
 		$html = "
 		<h4>Kurir yang anda pilih : </h4>
-		<table class='table table-bordered'>
-			<thead>
-				<tr style='background-color:#4fbfa8;border-color:#4fbfa8'>
-					<th>Kurir</th>
-					<th>Paket</th>
-					<th>Asal</th>
-					<th>Tujuan</th>
-					<th>Harga</th>
-					<th>Estimasi Hari</th>
-				</tr>
-			</thead>
-			<tbody>";
+		<div class='table-responsive'>
+			<table class='table table-bordered'>
+				<thead>
+					<tr style='background-color:#4fbfa8;border-color:#4fbfa8'>
+						<th>Kurir</th>
+						<th>Paket</th>
+						<th>Asal</th>
+						<th>Tujuan</th>
+						<th>Harga</th>
+						<th>Estimasi Hari</th>
+					</tr>
+				</thead>
+				<tbody>";
 
 		$strHarga = "<span class='float-left'>Rp. </span><span class='float-right'>".number_format($data['harga'],0,',','.')."</span>";
 		$html .= "
@@ -705,7 +707,7 @@ class Checkout extends CI_Controller {
 			</tr>";
 		
 
-		$html .= "</tbody></table>";
+		$html .= "</tbody></table></div>";
 		return $html;
 	}
 
@@ -784,7 +786,7 @@ class Checkout extends CI_Controller {
 											<tr>
 												<td>Alamat</td>
 												<td>:</td>
-												<td>'.$data_detail[0]->kota_tujuan_txt.'</td>
+												<td>'.$data_detail[0]->alamat.' '.$data_detail[0]->kota_tujuan_txt.'</td>
 											</tr>
 										</tbody>
 									</table>

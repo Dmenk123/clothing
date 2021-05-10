@@ -223,17 +223,17 @@
 			e.preventDefault();
 			var form = $('#form_step1')[0];
 			var data = new FormData(form);
-
-			swal({
-				title: "Yakin Lanjutkan ?",
-				text: "Anda akan melanjutkan ke tahap selanjutnya !",
-				// icon: "warning",
-				showCancelButton: true,
-				showConfirmButton: true,
-				confirmButtonText: 'Ya, Lanjutkan',
-				cancelButtonText: 'Tidak, Batalkan',
-				dangerMode: false,
-			}, () => {
+			$('.tombol-ckt').prop('disabled', true);
+			// swal({
+			// 	title: "Yakin Lanjutkan ?",
+			// 	text: "Anda akan melanjutkan ke tahap selanjutnya !",
+			// 	// icon: "warning",
+			// 	showCancelButton: true,
+			// 	showConfirmButton: true,
+			// 	confirmButtonText: 'Ya, Lanjutkan',
+			// 	cancelButtonText: 'Tidak, Batalkan',
+			// 	dangerMode: false,
+			// }, () => {
 				$.ajax({
 					type: "POST",
 					enctype: 'multipart/form-data',
@@ -268,7 +268,7 @@
 						console.log("ERROR : ", e);
 					}
 				});
-			});
+			// });
 
 		});
 
@@ -276,17 +276,18 @@
 			e.preventDefault();
 			var form = $('#form_step2')[0];
 			var data = new FormData(form);
+			$('.tombol-ckt').prop('disabled', true);
 
-			swal({
-				title: "Yakin Lanjutkan ?",
-				text: "Anda akan melanjutkan ke tahap selanjutnya !",
-				// icon: "warning",
-				showCancelButton: true,
-				showConfirmButton: true,
-				confirmButtonText: 'Ya, Lanjutkan',
-				cancelButtonText: 'Tidak, Batalkan',
-				dangerMode: false,
-			}, () => {
+			// swal({
+			// 	title: "Yakin Lanjutkan ?",
+			// 	text: "Anda akan melanjutkan ke tahap selanjutnya !",
+			// 	// icon: "warning",
+			// 	showCancelButton: true,
+			// 	showConfirmButton: true,
+			// 	confirmButtonText: 'Ya, Lanjutkan',
+			// 	cancelButtonText: 'Tidak, Batalkan',
+			// 	dangerMode: false,
+			// }, () => {
 				$.ajax({
 					type: "POST",
 					enctype: 'multipart/form-data',
@@ -302,13 +303,14 @@
 							location.href="<?php echo site_url('checkout/step3'); ?>";
 						}else {
 							alert(data.pesan);
+							$('.tombol-ckt').prop('disabled', false);
 						}
 					},
 					error: function (e) {
 						console.log("ERROR : ", e);
 					}
 				});
-			});
+			// });
 
 		});
 		

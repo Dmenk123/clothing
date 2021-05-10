@@ -5,10 +5,7 @@
 		//set active class to navbar
 		var uriValue = "produk";
 		$('#li_nav_home').removeClass('active');
-		$('#li_nav_kontak').removeClass('active');
-		$('#li_nav_faq').removeClass('active');
-		$('#li_nav_login').removeClass('active');
-		$('#li_nav_produk').addClass('active');
+		$('#li_nav_kontak').addClass('active');
 		
 		// Load shopping cart
         $('#detail_cart').load("<?php echo site_url('cart/load_cart'); ?>");
@@ -38,25 +35,24 @@
             }
         });
 
-        //update qty Cart
-        $(document).on('change','.cart_qty',function(){
-            var row_id = $(this).attr("id"); //mengambil row_id dari artibut id
-            var qty = $(this).val(); //mengambil value
-            $.ajax({
-                url : "<?php echo site_url('cart/update_cart') ?>",
-                method : "POST",
-                data : {row_id : row_id, qty : qty},
-                success :function(data){
-                    $('#detail_cart').html(data);
-                    location.reload();
-                }
-            });
-        });
-
         //load total cost summary
         $('#detail_summary').load("<?php echo site_url('cart/load_summary'); ?>");
 			
 	});
+
+	const gantiQtyCart = (cb) => {
+		var row_id = cb.attr("id"); //mengambil row_id dari artibut id
+		var qty = cb.val(); //mengambil value
+		$.ajax({
+			url : "<?php echo site_url('cart/update_cart') ?>",
+			method : "POST",
+			data : {row_id : row_id, qty : qty},
+			success :function(data){
+				$('#detail_cart').html(data);
+				location.reload();
+			}
+		});
+	}
 
 	//set uri string
 	function setParam(name, value) {

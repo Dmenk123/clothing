@@ -1,4 +1,4 @@
-<div class="container2" style="width:100%!important;">
+<div class="container2" style="width:100%!important;margin-top:-20px;">
                 <!-- <div class="col-md-12"> -->
                     <div id="main-slider">
                         <!--<div class="item" >

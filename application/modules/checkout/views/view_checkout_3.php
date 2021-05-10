@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="width:100%!important">
    <div class="col-md-12">
       <ul class="breadcrumb">
          <li><a href="#">Home</a></li>
@@ -9,13 +9,13 @@
    <div class="col-md-12" id="checkout">
 		<div class="box">
 			<form id="form_step2" name="form_step2" method="post">
-				<h1>Checkout</h1>
+				<h2 style="color:#4fbfa8;">Checkout</h2>
 				<ul class="nav nav-pills nav-justified">
-					<li class=""><a href="<?=base_url('checkout');?>"><i class="fa fa-map-marker"></i><br>Data & Alamat</a>
+					<li class="miring"><a href="<?=base_url('checkout');?>"><i class="fa fa-map-marker"></i><br>Alamat</a>
 					</li>
-					<li class=""><a href="<?=base_url('checkout/step2');?>"><i class="fa fa-truck"></i><br>Jasa Ekspedisi</a>
+					<li class="miring"><a href="<?=base_url('checkout/step2');?>"><i class="fa fa-truck"></i><br>Ekspedisi</a>
 					</li>
-					<li class="active"><a href="#"><i class="fa fa-money"></i><br>Metode Pembayaran</a>
+					<li class="active miring"><a href="#"><i class="fa fa-money"></i><br>Pembayaran</a>
 					</li>
 				</ul>
 

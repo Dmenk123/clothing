@@ -56,23 +56,7 @@
                 <h4>Produk Detail</h4>
                 <?php foreach ($detail_produk as $key => $value) { ?>
                     <p><?php echo $value->keterangan_produk; ?></p>
-                    <h4>Bahan Produk</h4>
-                    <ul>
-                        <li><?php echo $value->bahan_produk; ?></li>
-                    </ul>
                 <?php } ?>
-
-                <h4>Ukuran Produk</h4>
-                <ul>
-                <?php foreach ($ukuran_produk as $value) { ?>
-                    <li><?php echo $value->ukuran_produk." (Stok sisa : ".$value->stok_sisa.")"; ?></li>                    
-                <?php } ?>
-                </ul>
-                <blockquote>
-                    <p><em><strong>Tips & info :</strong> Bahan dasar dalam pembuatan produk sangat penting untuk diperhatikan, misalnya bahan dari katun sangat cocok untuk musim dingin dikarenakan hangat saat dipakai. Selain itu pastikan juga memilih produk berdasarkan ukuran postur tubuh anda, sebab sebagus apapun model produk apabila tidak pas dengan ukuran maka penampilan anda juga tidak akan maksimal.</em>
-                    </p>
-                </blockquote>
-                <hr>
         </div> <!-- end div.box #product-detail -->
     </div><!-- /.col-md-9 -->
 </div><!-- /.container -->    

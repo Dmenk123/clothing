@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="width:100%!important">
    <div class="col-md-12">
       <ul class="breadcrumb">
          <li><a href="#">Home</a></li>
@@ -9,13 +9,13 @@
    <div class="col-md-12" id="checkout">
 		<div class="box">
 			<form id="form_step1" name="form_step1" method="post">
-					<h1>Checkout</h1>
+					<h2 style="color:#4fbfa8;">Checkout</h2>
 					<ul class="nav nav-pills nav-justified">
-						<li class="active"><a href="#"><i class="fa fa-map-marker"></i><br>Data & Alamat</a>
+						<li class="active miring"><a href="#"><i class="fa fa-map-marker"></i><br>Alamat</a>
 						</li>
-						<li class="disabled"><a href="#"><i class="fa fa-truck"></i><br>Jasa Ekspedisi</a>
+						<li class="disabled miring"><a href="#"><i class="fa fa-truck"></i><br>Ekspedisi</a>
 						</li>
-						<li class="disabled"><a href="#"><i class="fa fa-money"></i><br>Metode Pembayaran</a>
+						<li class="disabled miring"><a href="#"><i class="fa fa-money"></i><br>Pembayaran</a>
 						</li>
 					</ul>
 
@@ -55,14 +55,14 @@
 							<div class="col-sm-6 col-md-6">
 								<div class="form-group">
 									<label>Provinsi</label>
-									<select class="form-control select2" id="provinsi" name="provinsi" onchange="selectProv()"></select>
+									<select class="form-control select2" id="provinsi" name="provinsi" onchange="selectProv()" style="width:100%;"></select>
 									<span class="help-block"></span>
 								</div>
 							</div>
 							<div class="col-sm-6 col-md-6">
 								<div class="form-group">
 									<label for="zip">Kabupaten/Kota</label>
-									<select class="form-control select2" id="kota" name="kota"></select>
+									<select class="form-control select2" id="kota" name="kota" style="width:100%;"></select>
 									<span class="help-block"></span>
 								</div>
 							</div>
@@ -79,12 +79,14 @@
 					</div>
 
 					<div class="box-footer">
-						<div class="pull-left">
-							<a href="basket.html" class="btn btn-default"><i class="fa fa-chevron-left"></i>Kembali</a>
-						</div>
-						<div class="pull-right">
-							<button type="submit" class="btn btn-primary">Lanjutkan Ke Jasa Ekspedisi<i class="fa fa-chevron-right"></i>
-							</button>
+						<div class="col-12 row">
+							<div class="col-xs-6 col-md-6">
+								<a  href="<?= base_url('cart'); ?>" class="btn btn-default pull-left tombol-ckt"><i class="fa fa-chevron-left"></i>Kembali</a>
+							</div>
+							<div class="col-xs-6 col-md-6">
+								<button type="submit" class="btn btn-primary pull-right tombol-ckt">Lanjut ke Ekspedisi<i class="fa fa-chevron-right"></i>
+								</button>
+							</div>
 						</div>
 					</div>
 			</form>
