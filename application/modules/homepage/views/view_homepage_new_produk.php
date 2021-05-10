@@ -38,7 +38,7 @@ $query = $this->db->get(''); ?>
 							<div class="card-body">
 								<div class="product-desc">
 									<span class="product-title">
-										Hartbee<b>Sport</b>
+										<b><?php echo $val->nama_produk; ?></b>
 										<span class="badge">
 											New
 										</span>
@@ -56,7 +56,7 @@ $query = $this->db->get(''); ?>
 								</div>
 								<div class="product-properties">
 									<span class="product-size">
-										<h4><b>Rp. 350.000</b></h4>
+										<h4><b><?php echo 'Rp '.number_format($val->harga,0,",","."); ?></b></h4>
 										<!-- <ul class="ul-size">
 											<li><a href=""></a>7</li>
 											<li><a href=""></a>8</li>
@@ -105,7 +105,7 @@ $query = $this->db->get(''); ?>
 							<div class="card-body">
 								<div class="product-desc">
 									<span class="product-title">
-										Hartbee<b>Sport</b> 
+										<b><?php echo $val->nama_produk; ?></b> 
 										<span class="badge">
 											New
 										</span>
