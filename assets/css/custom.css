@@ -498,7 +498,7 @@ background-color: #333333;
   margin-top: -12px;
   opacity: 0.1;
 }
-@media (min-width: 401px){
+@media (min-width: 420px){
   .card{
     border-radius: 15px;
     box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px;
@@ -702,10 +702,10 @@ background-color: #333333;
   }
 }
 
-@media (max-width: 400px){
+@media (max-width: 419px){
   .card{
-    border-radius: 15px;
-    box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px;
+    /* border-radius: 15px; */
+    /* box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px; */
     margin-bottom: 30px;
     /* margin: 0px auto 5px; */
     width: calc(50% - 1rem);
