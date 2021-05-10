@@ -90,7 +90,7 @@ $query = $this->db->get(''); ?>
 
 		<div class="container" id="tampilan-hp" style="display:none">
 			<div class="col-md-12">
-				<h2>Produk terbaru minggu ini</h2>
+				<h4 style="text-align:center">Produk terbaru minggu ini</h4>
 			</div>
 			<div class="col-sm-12 row" style="display:flex;flex-wrap:wrap;padding-left:0px!important;padding-right:0px!important;">
 				<?php foreach ($query->result() as $key => $val) { ?>
