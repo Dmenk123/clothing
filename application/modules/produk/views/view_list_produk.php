@@ -1,23 +1,17 @@
 <div class="container">
     <div class="col-md-12">
-        <!-- <div class="box">
-            <?php foreach ($get_data_page as $value) { ?>
-               <h1>Produk <?php echo $value->nama_sub_kategori;?></h1>
-				<p>Berbagai pilihan produk <?php echo $value->nama_sub_kategori;?> murah dan berkualitas yang tersedia, pliih gambar untuk detail produk.</p>
-            <?php } ?>
-        </div> -->
-
+       
         <!-- *** BOX INFO BAR *** -->
         <div class="box info-bar">
             <div class="row">
-				<div class="col-md-12">
+				<!-- <div class="col-md-12">
 					<form class="navbar-form" role="search" action="<?= base_url('produk/katalog'); ?>" method="get">
 						<div class="form-group" style="width: 100%;">
 							<input type="text" class="form-control" placeholder="Temukan Produk Anda disini ......" name="key" style="width: 95%;" value="<?=$this->input->get('key');?>">
 							<button type="submit" class="btn btn-primary form-control"><i class="fa fa-search"></i></button>
 						</div>
 					</form>
-				</div>
+				</div> -->
                 <div class="col-sm-12 col-md-4 products-showing">
                     <?php 
                         $hitung_hasil = count($results);
@@ -83,9 +77,9 @@
                     <div class="text">
                         <p style="text-align: center; font-size: 16px;"><a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" style="color: black;"><?php echo $val->nama_produk; ?></a></p>
                         <p class="price"><strong>Rp. <?php echo number_format($val->harga,0,",","."); ?></strong></p>
-                        <p class="buttons">
+                        <!-- <p class="buttons">
                             <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" class="btn btn-primary">Beli Sekarang</a>
-                        </p>
+                        </p> -->
                     </div>
                     <!-- /.text -->
                 </div>

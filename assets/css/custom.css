@@ -527,13 +527,21 @@ background-color: #333333;
     box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px;
     margin-bottom: 30px;
     /* margin: 0px auto 5px; */
+<<<<<<< HEAD
     width: calc(50% - 1rem);
+=======
+    /* width: calc(30% - 1rem);
+>>>>>>> f96a0934becde80f80f7d928747bd2e12a928b0b
     display: flex;
     flex: 1 1 16.667%;
     flex-wrap: wrap;    
     margin-right: -15px;
+<<<<<<< HEAD
     margin-left: -15px;
     max-width: 16.667%;
+=======
+    margin-left: -15px; */
+>>>>>>> f96a0934becde80f80f7d928747bd2e12a928b0b
   }
 }
 

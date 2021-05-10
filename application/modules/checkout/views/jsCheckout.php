@@ -31,7 +31,152 @@
 		});
 	}
 
+	const showHarga = (kurir) => {
+		$('#div-harga-kurir').slideUp();
+
+		$.ajax({
+			type: "post",
+			url: '<?php echo site_url('checkout/get_data_harga'); ?>',
+			data: {kurir:kurir},
+			dataType: "json",
+			success: function (response) {
+				if(response.status) {
+					$('#tabel-harga-kurir').html(response.html);
+				}
+			}
+		});
+
+		$('#div-harga-kurir').slideDown();
+	}
+
+	const pilihKurir = (cb) => {
+		swal({
+			title: "Perhatian",
+			text: "Pilih Kurir ini ?",
+			// icon: "warning",
+			showCancelButton: true,
+			showConfirmButton: true,
+			confirmButtonText: 'Ya',
+			cancelButtonText: 'Tidak',
+			dangerMode: false,
+		}, () => {
+			let data = {
+				'kurir' : cb.closest('tr').find('td[data-kurir]').data('kurir'),
+				'paket' : cb.closest('tr').find('td[data-paket]').data('paket'),
+				'asal' : cb.closest('tr').find('td[data-asal]').data('asal'),
+				'tujuan' : cb.closest('tr').find('td[data-tujuan]').data('tujuan'),
+				'estimasi' : cb.closest('tr').find('td[data-estimasi]').data('estimasi'),
+				'harga' : cb.closest('tr').find('td[data-harga]').data('harga')
+			};
+
+			$.ajax({
+				type: "POST",
+				url: '<?php echo site_url('checkout/simpan_data_kurir'); ?>',
+				data: data,
+				dataType: "JSON",
+				// timeout: 600000,
+				success: function (data) {
+					if(data.status) {
+						$('#div-kurir-terpilih').html(data.html);
+					}
+				},
+				error: function (e) {
+					console.log("ERROR : ", e);
+				}
+			});
+		});
+	}
+
+	const loadDataKurirTerpilih = () => {
+		$.ajax({
+			type: "POST",
+			url: '<?php echo site_url('checkout/get_data_kurir_terpilih'); ?>',
+			dataType: "JSON",
+			success: function (data) {
+				//console.log(data);
+				if(data.status) {
+					$('#div-kurir-terpilih').html(data.html);
+				}
+			},
+			error: function (e) {
+				console.log("ERROR : ", e);
+			}
+		});
+	}
+
+	const lihatBukti = (imgfile, kodeVerify) => {
+		var urlBukti = "<?=base_url();?>"+imgfile;
+		$('#modalBukti').modal('show');
+		$('#imageArea').attr('src', urlBukti);
+		$('#judul').text('Bukti Transfer Kode  : '+kodeVerify);
+	}
+
+	const readURL = (input) => {
+        if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#div_preview_foto').css("display","block");
+            $('#preview_img').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#div_preview_foto').css("display","none");
+            $('#preview_img').attr('src', '');
+        }
+    }
+
+	const aksi_transfer = () => {
+        var form = $('#form_proses_transfer')[0];
+        var data = new FormData(form);
+		
+        $("#pay-button").prop("disabled", true);
+        $('#pay-button').text('Menyimpan Data'); //change button text
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "<?=base_url('checkout/trans_manual')?>",
+            data: data,
+            dataType: "JSON",
+            processData: false, // false, it prevent jQuery form transforming the data into a query string
+            contentType: false, 
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                if(data.status) {
+                    swal("Sukses!!", "Pembayaran Transfer Berhasil", "success");
+                    $("#pay-button").prop("disabled", false);
+                    $('#pay-button').text('Proses Data Pembayaran');
+                    window.location = data.redirect;
+                }else {
+                    for (var i = 0; i < data.inputerror.length; i++) 
+                    {
+                        if (data.inputerror[i] != 'pegawai') {
+                            $('[name="'+data.inputerror[i]+'"]').addClass('is-invalid');
+                            $('[name="'+data.inputerror[i]+'"]').next().text(data.error_string[i]).addClass('invalid-feedback'); //select span help-block class set text error string
+                        }else{
+                            //ikut style global
+                            $('[name="'+data.inputerror[i]+'"]').next().next().text(data.error_string[i]).addClass('invalid-feedback-select');
+                        }
+                    }
+
+                    $("#pay-button").prop("disabled", false);
+                    $('#pay-button').text('Proses Data Pembayaran');
+                }
+            },
+            error: function (e) {
+                console.log("ERROR : ", e);
+                $("#pay-button").prop("disabled", false);
+                $('#pay-button').text('Proses Data Pembayaran');
+
+                reset_modal_form();
+                $(".modal").modal('hide');
+            }
+        });
+    }
+
+	
 	$(document).ready(function(){
+		loadDataKurirTerpilih();
 		//set active class to navbar
 		$('#li_nav_home').removeClass('active');
 		$('#li_nav_kontak').addClass('active');
@@ -72,7 +217,6 @@
 			echo "selectProv();";
 			echo '$("#kota").append($("<option selected=\'selected\'></option>").val("'.$data_cart->id_kota.'").text("'.$data_cart->nama_kota.'")).trigger(\'change\');';
 		}
-
 		?>
 		
 		$('#form_step1').submit(function (e) { 
@@ -118,276 +262,76 @@
 									$($('[name="'+data.inputerror[i]+'"]').data('select2').$container).next().text(data.error_string[i]).addClass('invalid-feedback');
 								}
 							}
-			
-							// $("#btnSave").prop("disabled", false);
-							// $('#btnSave').text('Simpan');
 						}
 					},
 					error: function (e) {
 						console.log("ERROR : ", e);
-						// $("#btnSave").prop("disabled", false);
-						// $('#btnSave').text('Simpan');
 					}
 				});
 			});
 
 		});
 
-		var radios = document.querySelectorAll('input[type=radio][name="ekspedisi"]');
+		$('#form_step2').submit(function (e) { 
+			e.preventDefault();
+			var form = $('#form_step2')[0];
+			var data = new FormData(form);
 
-		function changeHandler(event) {
-		if ( this.value === 'jne' ) {
-			console.log('value', 'jne');
-		} else if ( this.value === 'tiki' ) {
-			console.log('value', 'tiki');
-		}  
-		}
+			swal({
+				title: "Yakin Lanjutkan ?",
+				text: "Anda akan melanjutkan ke tahap selanjutnya !",
+				// icon: "warning",
+				showCancelButton: true,
+				showConfirmButton: true,
+				confirmButtonText: 'Ya, Lanjutkan',
+				cancelButtonText: 'Tidak, Batalkan',
+				dangerMode: false,
+			}, () => {
+				$.ajax({
+					type: "POST",
+					enctype: 'multipart/form-data',
+					url: '<?php echo site_url('checkout/simpan_step2'); ?>',
+					data: data,
+					dataType: "JSON",
+					processData: false, // false, it prevent jQuery form transforming the data into a query string
+					contentType: false, 
+					cache: false,
+					// timeout: 600000,
+					success: function (data) {
+						if(data.status) {
+							location.href="<?php echo site_url('checkout/step3'); ?>";
+						}else {
+							alert(data.pesan);
+						}
+					},
+					error: function (e) {
+						console.log("ERROR : ", e);
+					}
+				});
+			});
 
-		Array.prototype.forEach.call(radios, function(radio) {
-		radio.addEventListener('change', changeHandler);
+		});
+		
+		$('.tombol_method_bayar').click(function (e) { 
+			e.preventDefault();
+			
+			$([document.documentElement, document.body]).animate({
+				scrollTop: $("#main-form-bayar").offset().top-50
+			}, 2000);
+			
+			var file_inc = $(this).attr("href");
+			$.ajax({
+				type: "get",
+				url: "<?=base_url('checkout/get_html_form')?>",
+				data: {file_inc:file_inc},
+				dataType: "json",
+				success: function (response) {
+					$('#main-form-bayar').html(response);
+				}
+			});
 		});
 
-		/////////////////////////////////////////////////////
-       
-
-        
-
-        
-
-        // select class modal whenever bs.modal hidden
-        $(".modal").on("hidden.bs.modal", function(){
-            $('#checkout1_kel').empty(); 
-            $('#checkout1_kec').empty();
-            $('#checkout1_kota').empty();
-            $('#checkout1_prov').empty();
-            $("#form_checkout1").validate().resetForm();
-        });
-
-        $( "#checkout2_byr" ).select2({
-        });
-
-        $('#checkout2_byr').change(function(){
-            // set form field untuk proses summary
-            $('[name="FMethodKrm"]').val($('#checkout2_byr').val());
-            var kota = $('#krmKota').text();
-            var metode = $("#checkout2_byr").val();
-            if (kota != "KOTA SURABAYA" && metode == "cod") {
-                alert("Metode COD Hanya dapat dilakukan untuk kota SURABAYA !!");
-                $('#checkout2_byr').val('').trigger('change');
-            }
-            //jika metode transfer
-            if (metode == "transfer") {
-                $('#step3_area').append('<div class="form-group col-md-12" id="content_field"></div>');
-                $('#content_field').append('<p style="text-align: center;"><strong>Pilih Jasa Pengiriman</strong></p>');
-                
-                $('#content_field').append('<div class="form-group">'
-                    +'<label for="lblProvTujuan" class="lblKotaErr">Provinsi Tujuan</label>'
-                    +'<select class="form-control" id="prov_tujuan" name="provTujuan" style="width: 100%;" data-minimum-results-for-search="Infinity"></select>'
-                +'</div>');
-                $('#content_field').append('<div class="form-group">'
-                    +'<label for="lblKotaTujuan" class="lblKotaErr">Kota/Kabupaten Tujuan</label>'
-                    +'<select class="form-control" id="kota_tujuan" name="kotaTujuan" style="width: 100%;" data-minimum-results-for-search="Infinity"></select>'
-                +'</div');
-                $('#content_field').append('<div class="form-group">'
-                    +'<label for="lblBerat" class="lblKotaErr">Total Berat (gram)</label>'
-                    +'<input type="text" class="form-control" id="total_berat" name="totalBerat" style="width: 100%;" readonly>'
-                +'</div');
-                $('#content_field').append('<div class="form-group">'
-                    +'<label for="lblEkspedisi" class="lblKotaErr">Jasa Ekspedisi</label>'
-                    +'<select class="form-control" id="jasa_ekspedisi" name="jasaEKspedisi" style="width: 100%;" data-minimum-results-for-search="Infinity">'
-                        +'<option value="">-- Pilih jasa ekspedisi / kurir --</option>'
-                        +'<option value="jne">Jalur Nugraha Ekakurir (JNE)</option>'
-                        +'<option value="pos">PT. POS Indonesia (POS)</option>'
-                        +'<option value="tiki">Citra Van Titipan Kilat (TIKI)</option>'
-                     +'</select>'
-                +'</div');
-                $('#content_field').append('<div class="form-group">'
-                    +'<label for="lblPilihPaket" class="lblKotaErr">Pilih Paket (Keterangan : Nama paket | Waktu kirim (hari) | Harga)</label>'
-                    +'<select class="form-control" id="paket_ongkir" name="paketOngkir" style="width: 100%;" data-minimum-results-for-search="Infinity">'
-                +'</div');
-                 $('#content_field').append('<div class="form-group divHarga">'
-                    +'<span id="tempHarga" class="hidden"></span><span id="tempEtd" class="hidden"></span>'
-                    +'BIAYA PENGIRIMAN : Rp. <span style="font-size:20px; text-decoration:underline;" id="tampilHarga"></span>'
-                +'</div');
-                //select2 config
-                $( "#jasa_ekspedisi" ).select2({
-                });
-
-                $( "#kota_tujuan" ).select2({
-                });
-
-                $( "#kota_tujuan" ).select2({
-                });
-
-                $( "#paket_ongkir" ).select2({
-                });
-
-                $("#prov_tujuan").select2({
-                    ajax: {
-                        url: '<?php echo site_url('checkout/suggest_provinsi_tujuan'); ?>',
-                        dataType: "json",
-                        type: "GET",
-                        data: function (params) {
-                            var queryParameters = {
-                                term: params.term
-                            }
-                            return queryParameters;
-                        },
-                        processResults: function (data) {
-                            return {
-                                results: $.map(data, function (item) {
-                                    return {
-                                        text: item.text,
-                                        id: item.id
-                                    }
-                                })
-                            };
-                        },
-                        cache: true
-                    }
-                });
-
-                //event change to trigger select2 kota
-                $('#prov_tujuan').change(function(){
-                    // set form field untuk proses summary
-                    $('[name="FProvKurir"]').val($('#prov_tujuan :selected').text());
-                    var idProvTujuan = $('#prov_tujuan').val();
-                    $('#kota_tujuan').empty();
-                    $("#kota_tujuan").select2({
-                        ajax: {
-                            url: '<?php echo site_url('checkout/suggest_kota_tujuan?idProv='); ?>'+idProvTujuan,
-                            dataType: "json",
-                            type: "GET",
-                            data: function (params) {
-                                var queryParameters = {
-                                    term: params.term
-                                }
-                                return queryParameters;
-                            },
-                            processResults: function (data) {
-                                return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.text,
-                                            id: item.id
-                                        }
-                                    })
-                                };
-                            },
-                            cache: true
-                        }
-                    });
-                });
-
-                $('#kota_tujuan').change(function(){
-                    // set form field untuk proses summary
-                    $('[name="FKotaKurir"]').val($('#kota_tujuan :selected').text());
-                    $('#jasa_ekspedisi').val('').trigger('change');
-                    $('#paket_ongkir').val('').trigger('change');
-                });
-
-                //ajax load total berat
-                $.ajax({
-                        url: '<?php echo site_url('checkout/get_berat_total_cart'); ?>',
-                        dataType: "json",
-                        type: "GET",
-                        success : function(data) {
-                            $('#total_berat').val(data);
-                            $('[name="FBeratKurir"]').val(data);
-                        }
-                });
-                
-                //event change to trigger select2 paket
-                $('#jasa_ekspedisi').change(function(){
-                    // set form field untuk proses summary
-                    $('[name="FNamaKurir"]').val($('#jasa_ekspedisi').val());
-                    $('#paket_ongkir').val('').trigger('change');
-                    $('#tampilHarga').text("");
-                    var origin = 444;
-                    var idKotaTujuan = $('#kota_tujuan').val();
-                    var beratTotal = $('#total_berat').val();
-                    var idKurir = $('#jasa_ekspedisi').val();
-                    $("#paket_ongkir").select2({
-                        ajax: {
-                            url: '<?php echo site_url('checkout/suggest_paket_ongkir?origin='); ?>'+origin+'&id='+idKotaTujuan+'&berat='+beratTotal+'&kurir='+idKurir,
-                            dataType: "json",
-                            type: "GET",
-                            data: function (params) {
-                                var queryParameters = {
-                                    term: params.term
-                                }
-                                return queryParameters;
-                            },
-
-                            processResults: function (data) {
-                                return {
-                                    results: $.map(data, function (item) {
-                                        return {
-                                            text: item.text.service+' | '+item.text.etd+' | '+item.text.value,
-                                            id: item.id,
-                                        }
-                                    })
-                                };
-                            },
-                            cache: true
-                        }
-                    });//select2 end                          
-                });//evnt change end
-
-                $('#paket_ongkir').change(function(){
-                    // set form field untuk proses summary
-                    $('[name="FPaketKurir"]').val($('#paket_ongkir').val());
-                    var hasil;
-                    //set tampil harga to null
-                    $('#tampilHarga').text("");
-                    //deklare kata with select2 selected
-                    var kata = $('#paket_ongkir :selected').text();
-                    //split string
-                    var cacah = kata.split(' | ');
-                    // set value to span tempharga
-                    $('#tempHarga').text(cacah[2]);
-                    $('#tempEtd').text(cacah[1]);
-                    //set variable hasil with value of tempharga
-                    var hasil = $('#tempHarga').text();
-                    //show tampil harga with number formatted
-                    $('#tampilHarga').text(numberWithCommas(hasil));
-                    // set form field untuk proses summary
-                    $('[name="FHargaKurir"]').val($('#tempHarga').text());
-                    $('[name="FEtdKurir"]').val($('#tempEtd').text());
-                });             
-            }//end if event chnage method transaksi
-            else
-            {   
-                //remove div append
-                $('#content_field').remove();
-                //remove form text summary 
-                $('[name="FProvKurir"]').val("");
-                $('[name="FKotaKurir"]').val("");
-                $('[name="FBeratKurir"]').val("");
-                $('[name="FNamaKurir"]').val("");
-                $('[name="FPaketKurir"]').val("");
-                $('[name="FHargaKurir"]').val("");
-            }//end elseif event chnage method transaksi
-        });//end change metode bayar
-
-        //set default span text to textfield
-        $('[name="FIduserKrm"]').val($('#krmIdusr').text());
-        $('[name="FFnameKrm"]').val($('#krmFname').text());
-        $('[name="FLnameKrm"]').val($('#krmLname').text());
-        $('[name="FAlamatKrm"]').val($('#krmAlamat').text());
-        $('[name="FKelKrm"]').val($('#krmIdKel').text());
-        $('[name="FTxtKelKrm"]').val($('#krmKel').text());
-        $('[name="FKecKrm"]').val($('#krmIdKec').text());
-        $('[name="FTxtKecKrm"]').val($('#krmKec').text());
-        $('[name="FKotaKrm"]').val($('#krmIdKota').text());
-        $('[name="FTxtKotaKrm"]').val($('#krmKota').text());
-        $('[name="FProvKrm"]').val($('#krmIdProv').text());
-        $('[name="FTxtProvKrm"]').val($('#krmProv').text());
-        $('[name="FKdposKrm"]').val($('#krmKdpos').text());
-        $('[name="FTelpKrm"]').val($('#krmTelp').text());
-
-        // // Load shopping cart
-        // $('#show_detail').load("<?php echo site_url('checkout/load_detail_cart'); ?>");
+		/////////////////////////////////////////////////////      
 
 	}); // end jquery  
 
@@ -459,40 +403,6 @@
                     alert('Error get data from ajax');
                 }
             });
-    }
-
-    function update_alamat_chckout1()
-    {
-        var IsValid = $("form[name='formCheckout1']").valid();
-        if(IsValid)
-        {
-            $('#krmFname').text($('[name="checkout1Fname"]').val());
-            $('#krmLname').text($('[name="checkout1Lname"]').val());
-            $('#krmAlamat').text($('[name="checkout1Alamat"]').val());
-            $('#krmKel').text($('[name="checkout1Kelurahan"] option:selected').text());
-            $('#krmKec').text($('[name="checkout1Kecamatan"] option:selected').text());
-            $('#krmKota').text($('[name="checkout1Kota"] option:selected').text());
-            $('#krmProv').text($('[name="checkout1Provinsi"] option:selected').text());
-            $('#krmKdpos').text($('[name="checkout1Kdpos"]').val());
-            $('#krmTelp').text($('[name="checkout1Telp"]').val());
-            $('[name="FIduserKrm"]').val($('[name="checkout1Id"]').val());
-            $('[name="FFnameKrm"]').val($('[name="checkout1Fname"]').val());
-            $('[name="FLnameKrm"]').val($('[name="checkout1Lname"]').val());
-            $('[name="FAlamatKrm"]').val($('[name="checkout1Alamat"]').val());
-            $('[name="FKelKrm"]').val($('[name="checkout1Kelurahan"]').val());
-            $('[name="FTxtKelKrm"]').val($('[name="checkout1Kelurahan"] option:selected').text());
-            $('[name="FKecKrm"]').val($('[name="checkout1Kecamatan"]').val());
-            $('[name="FTxtKecKrm"]').val($('[name="checkout1Kecamatan"] option:selected').text());
-            $('[name="FKotaKrm"]').val($('[name="checkout1Kota"]').val());
-            $('[name="FTxtKotaKrm"]').val($('[name="checkout1Kota"] option:selected').text());
-            $('[name="FProvKrm"]').val($('[name="checkout1Provinsi"]').val());
-            $('[name="FTxtProvKrm"]').val($('[name="checkout1Provinsi"] option:selected').text());
-            $('[name="FKdposKrm"]').val($('[name="checkout1Kdpos"]').val());
-            $('[name="FTelpKrm"]').val($('[name="checkout1Telp"]').val());
-
-            $('#modal_checkout1').modal('hide');
-            $('#checkout2_byr').val('').trigger('change');
-        }
     }
 
     function proses_pembayaran() {
