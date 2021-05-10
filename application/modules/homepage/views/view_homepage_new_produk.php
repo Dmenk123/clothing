@@ -88,7 +88,7 @@ $query = $this->db->get(''); ?>
 			</div>
 		</div>
 
-		<div class="container" id="tampilan-hp" style="display:none">
+		<div class="container" id="tampilan-hp" style="display:none;padding-left:0px!important;padding-right:0px!important;">
 			<div class="col-md-12">
 				<h4 style="text-align:center">Produk terbaru minggu ini</h4>
 			</div>
