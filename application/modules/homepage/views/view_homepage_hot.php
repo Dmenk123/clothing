@@ -5,9 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 <div class="box">
                     <div class="container">
-                        <div class="col-md-12">
-                            <h2>Produk terbaru minggu ini</h2>
-                        </div>
+                        
                         <div class="feature-row" style="margin-bottom:60px;">
                             <div class="feature-row__item">
                             
@@ -51,73 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                         </div>
                     </div>
 
-                        <!-- produk -->
-                    <div class="product-slider">
-                        <?php $this->db->select('
-                            tbl_produk.id_produk,
-                            tbl_produk.id_sub_kategori,
-                            tbl_produk.nama_produk,
-                            tbl_produk.harga,
-							tbl_produk.slug,
-                            tbl_gambar_produk.nama_gambar
-                        ');
-                        $this->db->from('tbl_gambar_produk');
-                        $this->db->join('tbl_produk', 'tbl_gambar_produk.id_produk = tbl_produk.id_produk', 'left');
-                        $this->db->where('tbl_gambar_produk.jenis_gambar', 'display');
-                        $this->db->where('tbl_produk.status', '1');
-                        $this->db->order_by('tbl_gambar_produk.id_gambar', 'desc');
-                        $this->db->limit(5);
-                        $query = $this->db->get('');?>
-                        <!-- <div class="row col-sm-12"  > -->
-                        <!-- <div class="col-sm-12" > -->
-                        <?php foreach ($query->result() as $val) { ?>
-                            <div class="item row" >
-                                <div class="product">
-                                    <div class="flip-container">
-                                        <div class="flipper">
-                                            <div class="front">
-                                                <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
-                                                    <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
-                                                </a>
-                                            </div>
-                                            <div class="back">
-                                                <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
-                                                    <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <a href="detail.html" class="invisible">
-                                        <img src="<?php echo config_item('assets'); ?>img/produk/<?php echo $val->nama_gambar; ?>" alt="" class="img-responsive">
-                                    </a>
-                                    <div class="text">
-                                        <h3>
-                                            <a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
-                                            <?php echo $val->nama_produk; ?></a>
-                                        </h3>
-                                        <p class="price">Rp. <?php echo number_format($val->harga,0,",","."); ?></p>
-										<!-- <p class="buttons">
-											<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>" class="btn btn-primary">Beli Sekarang</a>
-										</p> -->
-                                    </div>
-                                    <!-- /.text -->
-
-                                    <!-- ribbon -->
-                                    <div class="ribbon new">
-                                        <div class="theribbon">NEW</div>
-                                        <div class="ribbon-background"></div>
-                                    </div>
-                                    <!-- /.ribbon -->
-                                </div>
-                                <!-- /.product -->
-                            </div>
-                        <?php } ?>
-                            <!-- </div> -->
-                            <!-- </div> -->
-                      
-
-                    </div>
-                        <!-- produk -->
+                   
                      
                     <!-- </div> -->
                 </div>
