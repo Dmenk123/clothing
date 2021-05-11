@@ -90,27 +90,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                     <div class="col-md-3 col-sm-6">
 
-                        <h4>Dapatkan berita menarik</h4>
-
-                        <p class="text-muted">Silakan subscribe dengan memasukkan email anda, agar bisa mendapatkan informasi penawaran menarik dari Crazy Property Tycoon</p>
-
-                        <form>
-                            <div class="input-group">
-
-                                <input type="text" class="form-control">
-
-                                <span class="input-group-btn">
-
-			    <button class="btn btn-default" type="button">Subscribe!</button>
-
-			</span>
-
-                            </div>
-                            <!-- /input-group -->
-                        </form>
-
-                        <hr>
-
                         <h4>Stay in touch</h4>
 
                         <p class="social">

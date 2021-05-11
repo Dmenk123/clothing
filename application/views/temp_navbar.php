@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
                 <!-- <a class="navbar-brand home" href="index.html" data-animate-hover="bounce"> -->
                 <a class="navbar-brand home" href="<?php echo site_url('home'); ?>">
-                    <img src="<?php echo config_item('assets'); ?>img/loggo.png" alt="" class="hidden-xs">
+                    <img src="<?php echo config_item('assets'); ?>img/loggo.png" alt="" class="">
                     <img src="<?php echo config_item('assets'); ?>img/logo-smalle.png" alt="" class="visible-xs"><span class="sr-only"></span>
                 </a>
                 <div class="navbar-buttons">
@@ -34,10 +34,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <li class="" id="li_nav_home"><a href="<?php echo site_url('home'); ?>">Home</a></li>
                     <!-- Katalog -->
                     <li class="" id="li_nav_kontak"><a href="<?php echo site_url('produk/katalog'); ?>">Katalog</a></li>
-                    <!-- Kontak -->
-                    <!-- <li class="" id="li_nav_kontak"><a href="<?php echo site_url('kontak'); ?>">Kontak Kami</a></li> -->
-                    <!-- faq -->
-                    <!-- <li class="" id="li_nav_faq"><a href="<?php echo site_url('faq'); ?>">FAQ</a></li> -->
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -59,10 +55,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
 
             <div class="collapse clearfix" id="search">
-				<form class="navbar-form" role="search" action="<?= base_url('produk/katalog'); ?>" method="get">
-                    <div class="form-group" style="width:100%;">
-						<input type="text" class="form-control" placeholder="Temukan Produk Anda disini ......" name="key" style="width: 80%;" value="<?=$this->input->get('key');?>">
-                        <button type="submit" class="btn btn-primary form-control"><i class="fa fa-search"></i></button>
+				<form class="navbar-form" role="search" action="<?= base_url('produk/katalog'); ?>" method="get" style="width:100%;margin-left: 0px;margin-right: 0px;">
+                    <div class="form-group col-md-12 row">
+						<div class="col-md-11">
+							<input type="text" class="form-control" placeholder="Temukan Produk Anda disini ......" name="key" style="width: 100%;" value="<?=$this->input->get('key');?>">
+						</div>
+						<div class="col-md-1">
+							<button type="submit" class="btn btn-primary form-control pull-left"><i class="fa fa-search"></i></button>
+						</div>
 		          </div>
                 </form>
 

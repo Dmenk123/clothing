@@ -193,6 +193,33 @@ background-color: #333333;
 		font-size: 10px;
 		text-align: center;
 	}
+
+	div.div-tombol-payment img{
+		max-width: 100% !important;
+		width: 120px;
+		height: 100px;
+	}
+
+	div.div-link {
+		padding: 2px;
+	}
+
+	div.div-tombol-kurir {
+		padding-right: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+	}
+
+	div.div-tombol-kurir img{
+		max-width: 100% !important;
+		width: 120px;
+		height: 100px;
+	}
+
+	div.div-tombol-kurir p{
+		font-size: 8px;
+	}
 }
 
 /*.hero__overlay::before {*/

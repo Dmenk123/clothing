@@ -93,6 +93,69 @@ class Checkout extends CI_Controller {
 		}
 	}
 
+	private function refresh_checkout($id_checkout)
+	{
+		$obj_date = new DateTime();
+		$date = $obj_date->format('Y-m-d');
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		$this->db->trans_begin();
+		
+		$del_detail = $this->m_global->delete(['id_checkout' => $id_checkout], 'tbl_checkout_detail');
+
+		if (count($this->cart->contents()) >= 1) {
+			$harga_total = 0;
+			$berat_total = 0;
+			$arr_data_det = [];
+			
+			foreach ($this->cart->contents() as $key => $value) {
+				$harga_total += (float)$value['price'] * (float)$value['qty'];
+				$berat_total += (float)$value['options']['Berat_produk'] * (float)$value['qty'];
+
+				$arr_data_det[] = [
+					'id_checkout' => $id_checkout,
+					'id_produk' => $value['id'],
+					'id_satuan' => $value['options']['Id_satuan_produk'],
+					'id_stok' => $value['options']['Id_stok_produk'],
+					'qty' => $value['qty'],
+					'sess_row_id' => $value['rowid'],
+					'berat_satuan' => $value['options']['Berat_produk'],
+					'harga_satuan' => $value['price']
+				];
+			}
+
+			$arr_data = [
+				'harga_total_produk' => $harga_total,
+				'berat_total' => $berat_total,
+				'updated_at' => $timestamp
+			];
+
+			$upd = $this->m_ckt->update_data('tbl_checkout', $arr_data, ['id_checkout' => $id_checkout]);
+
+			foreach ($arr_data_det as $k => $v) {
+				$data_det = [
+					'id_checkout' => $v['id_checkout'],
+					'id_produk' => $v['id_produk'],
+					'id_satuan' => $v['id_satuan'],
+					'id_stok' => $v['id_stok'],
+					'qty' => $v['qty'],
+					'sess_row_id' => $v['sess_row_id'],
+					'harga_satuan' => $v['harga_satuan'],
+					'berat_satuan' => $v['berat_satuan'],
+					'created_at' => $timestamp
+				];
+
+				$this->m_ckt->insert_data('tbl_checkout_detail', $data_det);
+			}
+		}
+
+
+		if ($this->db->trans_status() === FALSE) {
+			$this->db->trans_rollback();
+		} else {
+			$this->db->trans_commit();
+		}		
+	}
+
 	private function kota_ongkir($province_id="", $city_id="")
 	{
 		$this->load->library('rajaongkir');
@@ -189,6 +252,11 @@ class Checkout extends CI_Controller {
 
 		$cek_token = $this->check_token_session();
 		if($cek_token['status']) {
+			// updating tabel checkout dan detail berdasarkan isian cart e
+			// disini ga maen deleted at, langsung hapus kolom detail checkout
+			// klo maen deleted at, sakno tabel e full
+			$this->refresh_checkout($cek_token['data']->id_checkout);
+			
 			$cek_tbl = $this->m_ckt->get_db_cart($cek_token['token']);
 
 			if ($cek_tbl) {

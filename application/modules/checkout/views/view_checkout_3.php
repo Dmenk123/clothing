@@ -45,13 +45,13 @@
 						<!--<h4>Silahkan Pilih Metode Pembayaran</h4>-->
 					</div>
 
-					<div class="row">
-						<div class="col-sm-12 col-md-6 col-xs-12">
+					<div class="row div-tombol-payment">
+						<div class="col-sm-6 col-md-6 col-xs-6">
 							<div class="latest-post pull-right">
 								<a class="img-thumb tombol_method_bayar" href="transfer"><img style="max-width: 80%;" src="<?= base_url('assets/img/transfer1aa.png')?>" alt="img" width="300" height="180" class="pull-right"></a>
 							</div>
 						</div>
-						<div class="col-sm-12 col-md-6 col-xs-12">
+						<div class="col-sm-6 col-md-6 col-xs-6">
 							<div class="latest-post pull-left">
 								<a class="img-thumb tombol_method_bayar" href="payment"><img style="max-width: 80%;" src="<?= base_url('assets/img/transfer2aa.png')?>" alt="img" width="300" height="180"></a>
 							</div>

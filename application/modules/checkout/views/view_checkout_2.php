@@ -21,8 +21,8 @@
 
 				<div class="content">
 					<div class="row">
-						<div class="col-sm-4 div-link" onclick="showHarga('jne')">
-							<div class="box shipping-method">
+						<div class="col-md-4 col-sm-4 col-xs-4 div-link" onclick="showHarga('jne')">
+							<div class="box shipping-method div-tombol-kurir">
 								<p style="text-align: center;">
 									<img src="<?=base_url('assets/img/logo_ekspedisi/jne.png')?>" alt="" width="100%" height="150">
 									<br>
@@ -31,8 +31,8 @@
 
 							</div>
 						</div>
-						<div class="col-sm-4 div-link" onclick="showHarga('pos')">
-							<div class="box shipping-method">
+						<div class="col-md-4 col-sm-4 col-xs-4 div-link" onclick="showHarga('pos')">
+							<div class="box shipping-method div-tombol-kurir">
 
 								<p style="text-align: center;">
 									<img src="<?=base_url('assets/img/logo_ekspedisi/pos.png')?>" alt="" width="100%" height="150">
@@ -43,8 +43,8 @@
 							</div>
 						</div>
 
-						<div class="col-sm-4 div-link" onclick="showHarga('tiki')">
-							<div class="box shipping-method">
+						<div class="col-md-4 col-sm-4 col-xs-4 div-link" onclick="showHarga('tiki')">
+							<div class="box shipping-method div-tombol-kurir">
 
 								<p style="text-align: center;">
 									<img src="<?=base_url('assets/img/logo_ekspedisi/tiki.png')?>" alt="" width="100%" height="150">

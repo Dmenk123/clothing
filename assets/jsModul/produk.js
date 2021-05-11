@@ -5,29 +5,7 @@ $(document).ready(function() {
 
 	//set active class to navbar
 	$('#li_nav_home').removeClass('active');
-	$('#li_nav_kontak').removeClass('active');
-	$('#li_nav_faq').removeClass('active');
-	$('#li_nav_login').removeClass('active');
-	$('#li_nav_produk').addClass('active');
-	
-	// //set active class to sidebar
-	// let i;
-	// key = 1;
-	// let segment = $('#segment').text();
-	// $.ajax({
-	// 	url: baseUrl+'produk/get_kategori',
-	// 	type: "POST",
-	// 	dataType: "JSON",
-	// 	async : false,
-    //     data : { segment : segment },
-	// 	success : function(data) {
-	// 		for (i = 1; i <= data.count_kategori; i++) { 
-	// 			if (i == data.kategori[key-1].id_kategori) {
-	// 				$('.li_submenu'+data.kategori[key-1].id_kategori+'').addClass('active');
-	// 			}
-	// 		}
-	// 	}
-	// });
+	$('#li_nav_kontak').addClass('active');
 		
 	//sort per page
 	$('#select_show').change(function() {

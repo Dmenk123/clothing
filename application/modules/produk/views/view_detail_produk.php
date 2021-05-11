@@ -13,7 +13,7 @@
             <div class="col-sm-6">
                 <?php foreach ($detail_produk as $val) { ?>
                     <div class="box">
-                        <h1 class="text-center"><a href="#details" class="scroll-to"><?php echo $val->nama_produk; ?></a></h1>
+                        <h2 style="color: #4fbfa8;" class="text-center"><?php echo $val->nama_produk; ?></h2>
                         <p class="price">Rp. <?php echo number_format($val->harga,0,",","."); ?></p>
                         <div class="col-sm-4" style="text-align: center;">
                             <label><strong>Size : </strong></label>
