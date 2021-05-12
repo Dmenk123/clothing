@@ -87,6 +87,7 @@ $query = $this->db->get(''); ?>
 				<?php } ?>
 			</div>
 		</div>
+	
 
 		<div class="container" id="tampilan-hp" style="display:none;padding-left:0px!important;padding-right:0px!important;">
 			<div class="col-md-12">
@@ -123,7 +124,7 @@ $query = $this->db->get(''); ?>
 								</div>
 								<div class="product-properties">
 									<span class="product-size">
-										<h4><b>Rp. 350.000</b></h4>
+										<h4><b><?php echo 'Rp '.number_format($val->harga,0,",","."); ?></b></h4>
 										<!-- <ul class="ul-size">
 											<li><a href=""></a>7</li>
 											<li><a href=""></a>8</li>
