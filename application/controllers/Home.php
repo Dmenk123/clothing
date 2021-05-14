@@ -21,7 +21,7 @@ class Home extends CI_Controller {
 			//set array key berdasarkan loop dari angka 1
 			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
 		}
-		
+
 		$data = array(
 			'content_slider' => 'homepage/view_homepage_slider',
 			'content_advantage' => 'homepage/view_homepage_advantage',
@@ -37,11 +37,11 @@ class Home extends CI_Controller {
 			'menu_select_search' => $menu_select_search
 		);
 
-		if ($this->session->userdata('id_user') == !null) {
-			$id_user = $this->session->userdata('id_user');
-			$checkout_notif = $this->mod_ckt->notif_count($id_user);
-			$data['notif_count'] = $checkout_notif;
-		}
+		// if ($this->session->userdata('id_user') == !null) {
+		// 	$id_user = $this->session->userdata('id_user');
+		// 	$checkout_notif = $this->mod_ckt->notif_count($id_user);
+		// 	$data['notif_count'] = $checkout_notif;
+		// }
 
 		$this->load->view('temp', $data);
 	}

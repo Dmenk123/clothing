@@ -2,7 +2,9 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Master_produk_adm extends CI_Controller {
-	
+	const pathImgDet = '../clothing/assets/img/produk/img_detail';
+	const pathProduk = '../clothing/assets/img/produk';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -366,6 +368,7 @@ class Master_produk_adm extends CI_Controller {
 			'keterangan_produk' => trim($this->input->post('keteranganProduk')),
 			'bahan_produk' => trim($this->input->post('bahanProduk')),
 			'created' => $timestamp,
+			'slug' => $this->seoUrl(trim($this->input->post('namaProduk'))),
 			'status' => '1'
 		);
 		//save data (PROSES PERTAMA)
@@ -424,7 +427,7 @@ class Master_produk_adm extends CI_Controller {
                 $this->image_lib->clear();//clear img lib after resize
 
                 //unlink file upload, just image processed file only saved in server
-				$ifile = '/e-commerce/assets/img/produk/img_detail/'.$gbrDetail['file_name'];
+				$ifile = self::pathImgDet.'/'.$gbrDetail['file_name'];
 				unlink($_SERVER['DOCUMENT_ROOT'] .$ifile); // use server document root
             }
             else
@@ -452,7 +455,7 @@ class Master_produk_adm extends CI_Controller {
 				//save data (PROSES KETIGA)
 				$this->m_prod->insert_data_gambar($input_detail);
 				$this->image_lib->clear();//clear img lib after resize
-				$ifile = '/e-commerce/assets/img/produk/img_detail/'.$gbrDetail['file_name']; 
+				$ifile = self::pathImgDet.'/'.$gbrDetail['file_name']; 
 				unlink($_SERVER['DOCUMENT_ROOT'] .$ifile); // use server document root
             }
 		}//end loop
@@ -481,6 +484,7 @@ class Master_produk_adm extends CI_Controller {
 			'keterangan_produk' => trim($this->input->post('keteranganProduk')),
 			'bahan_produk' => trim($this->input->post('bahanProduk')),
 			'modified' => $timestamp,
+			'slug' => $this->seoUrl(trim($this->input->post('namaProduk'))),
 			'status' => '1'
 		);
 		//update data (PROSES PERTAMA)
@@ -544,7 +548,7 @@ class Master_produk_adm extends CI_Controller {
 					//save data (PROSES KETIGA)
 					$this->m_prod->update_data_gambar(array('id_gambar' => $this->input->post('idGbrDet'.$i)), $input_detail);
 	                $this->image_lib->clear();//clear img lib after resize
-	                $ifile = '/e-commerce/assets/img/produk/img_detail/'.$gbrDetail['file_name']; 
+	                $ifile = self::pathImgDet.'/'.$gbrDetail['file_name']; 
 					unlink($_SERVER['DOCUMENT_ROOT'] .$ifile); // use server document root
 	            }
 			} //end isset files
@@ -600,6 +604,18 @@ class Master_produk_adm extends CI_Controller {
 		);
 
 		echo json_encode($data);
+	}
+
+	private function seoUrl($string) {
+	    //Lower case everything
+	    $string = strtolower($string);
+	    //Make alphanumeric (removes all other characters)
+	    $string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+	    //Clean up multiple dashes or whitespaces
+	    $string = preg_replace("/[\s-]+/", " ", $string);
+	    //Convert whitespaces and underscore to dash
+	    $string = preg_replace("/[\s_]/", "-", $string);
+	    return $string;
 	}
 
 }//end of class Master_produk_admp.php

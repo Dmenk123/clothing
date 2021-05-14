@@ -218,7 +218,7 @@ class Mod_produk extends CI_Model
 				tbl_produk
 				LEFT JOIN tbl_gambar_produk ON tbl_produk.id_produk = tbl_gambar_produk.id_produk 
 			WHERE
-				tbl_gambar_produk.jenis_gambar = 'display' 
+				tbl_gambar_produk.jenis_gambar = 'display' and tbl_produk.status = '1'
 			ORDER BY 
 				rand()
 			LIMIT 5

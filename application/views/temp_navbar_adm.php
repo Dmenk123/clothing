@@ -48,7 +48,7 @@
          </ul>
       </div>
       <!-- notifikasi -->
-      <div class="navbar-custom pull-right"> 
+      <!-- <div class="navbar-custom pull-right"> 
          <ul class="nav navbar-nav">
             <li class="dropdown user user-menu">
                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i>
@@ -79,6 +79,6 @@
                <?php } ?>
             </li>  
          </ul>
-      </div>  
+      </div>   -->
    </nav>
 </header>
