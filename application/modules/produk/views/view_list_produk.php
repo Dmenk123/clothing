@@ -2,7 +2,7 @@
     <div class="col-md-12">
        
         <!-- *** BOX INFO BAR *** -->
-        <div class="box info-bar">
+        <div class="box info-bar" style="margin-left: 30px;">
             <div class="row">
 				<!-- <div class="col-md-12">
 					<form class="navbar-form" role="search" action="<?= base_url('produk/katalog'); ?>" method="get">
@@ -63,6 +63,7 @@
                 </div>
             </div>
         </div>
+        <br>
         <!-- *** END BOX INFO BAR *** -->
 
         <!-- *** ROW PRODUCT *** -->

@@ -741,6 +741,13 @@ background-color: #333333;
 }
 
 @media (max-width: 419px){
+  .info-bar{
+    line-height: 32px;
+    vertical-align: middle;
+    margin-left:0px!important;
+    margin-right:10px;
+  }
+ 
   .card{
     /* border-radius: 15px; */
     /* box-shadow: rgb(49 53 59 / 12%) 0px 1px 6px 0px; */
