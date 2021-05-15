@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>adminlte/css/AdminLTE.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="<?php echo config_item('assets'); ?>adminlte/css/skins/skin-black.css">
+    <link rel="stylesheet" href="<?php echo config_item('assets'); ?>adminlte/css/skins/skin-blue-light.min.css">
     <!-- <link rel="stylesheet" href="<?php echo config_item('assets'); ?>dist/css/skins/_all-skins.min.css"> -->
     <!-- your stylesheet with modifications -->
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo config_item('assets'); ?>css/custom_adm.css">
@@ -40,6 +40,8 @@
     <!-- select2 -->
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>select2/select2.min.css">
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>select2/select2-bootstrap.css">
+		<link rel="stylesheet" href="<?php echo config_item('assets'); ?>color-picker/src/colorPick.min.css">
+	
     <!-- css notifikasi -->
     <link rel="stylesheet" href="<?php echo config_item('assets'); ?>adminlte/css/notifikasi.css">
 
@@ -48,10 +50,29 @@
     if(isset($css)){
       $this->load->view($css);
   }?>
+
+	<style>
+		.picker {
+			border-radius: 5px;
+			width: 36px;
+			height: 36px;
+			cursor: pointer;
+			-webkit-transition: all linear .2s;
+			-moz-transition: all linear .2s;
+			-ms-transition: all linear .2s;
+			-o-transition: all linear .2s;
+			transition: all linear .2s;
+			border: thin solid #eee;
+			z-index:999999 !important;
+		}
+		.picker:hover {
+			transform: scale(1.1);
+		}
+	</style>
   
 </head>
 <!-- configure skin theme in body class -->
-<body class="hold-transition skin-black sidebar-mini">
+<body class="hold-transition skin-blue-light sidebar-mini">
   <div class="wrapper">
     <!-- <div id="all"> -->
     <!-- Content Wrapper. Contains page content -->
@@ -130,6 +151,7 @@
   <!-- DataTables -->
   <script src="<?php echo config_item('assets')?>datatables/jquery.dataTables.min.js"></script>
   <script src="<?php echo config_item('assets')?>datatables/dataTables.bootstrap.min.js"></script>
+	<script src="<?php echo config_item('assets')?>color-picker/src/colorPick.min.js"></script>
   
   <!-- load js per modul -->
   <?php

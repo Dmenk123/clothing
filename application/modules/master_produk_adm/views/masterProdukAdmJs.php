@@ -316,6 +316,55 @@ function addDetailProduk()
     $('.modal-title').text('Add Detail Produk');
 }
 
+function configProduk(id)
+{
+	$('#modal_diskon_form').modal('show'); // show bootstrap modal when complete loaded
+	$('.modal-title').text('Diskon Produk'); // Set title to Bootstrap modal title
+    // $.ajax({
+    //     url : "<?php echo site_url('master_produk_adm/config_diskon_produk')?>/" + id,
+    //     type: "GET",
+    //     dataType: "JSON",
+    //     success: function(data)
+    //     {
+    //         //remove class hidden pada div span catatan
+    //         $('#note_modal').removeClass('hidden');
+    //         //ambil data ke json->modal
+    //         $('[name="idProduk"]').val(data.id_produk);
+    //         $('[name="namaProduk"]').val(data.nama_produk);
+    //         $('[name="hargaProduk"]').val(data.harga);
+    //         $('[name="keteranganProduk"]').val(data.keterangan_produk);
+    //         $('[name="bahanProduk"]').val(data.bahan_produk);
+    //         $('[name="idGbrDisplay"]').val(data.id_gambar);
+    //         $('[name="idGbrDet1"]').val(data.id_gambar_detail1);
+    //         $('[name="idGbrDet2"]').val(data.id_gambar_detail2);
+    //         $('[name="idGbrDet3"]').val(data.id_gambar_detail3);
+
+    //         var selectedKategori = $("<option></option>").val(data.id_kategori).text(data.nama_kategori);
+    //         var selectedSubKategori = $("<option></option>").val(data.id_sub_kategori).text(data.nama_sub_kategori);
+    //         var selectedSatuan = $("<option></option>").val(data.id_satuan).text(data.nama_satuan);            
+            
+    //         //tanpa trigger event
+    //         $('[name="kategoriProduk"]').append(selectedKategori);
+    //         $('[name="subKategoriProduk"]').append(selectedSubKategori);
+    //         $('[name="satuanProduk"]').append(selectedSatuan);
+    //         //set value of span
+    //         $('.txtGbrProduk').text(data.nama_gambar);
+    //         $('.txtGbrDet1').text(data.nama_gambar_detail1);
+    //         $('.txtGbrDet2').text(data.nama_gambar_detail2);
+    //         $('.txtGbrDet3').text(data.nama_gambar_detail3);
+    //         $('#txt_wajib_det1').addClass('hidden', true);
+
+    //         $('#modal_produk_form').modal('show'); // show bootstrap modal when complete loaded
+    //         $('.modal-title').text('Edit Produk'); // Set title to Bootstrap modal title
+
+    //     },
+    //     error: function (jqXHR, textStatus, errorThrown)
+    //     {
+    //         alert('Error get data from ajax');
+    //     }
+    // });
+}
+
 function editProduk(id)
 {
     save_method = 'update';

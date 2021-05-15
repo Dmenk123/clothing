@@ -84,25 +84,25 @@ $(document).ready(function() {
     });
 
     //event onchange selectSize
-    $('.selectSize').change(function(event) {
-    	$('.selectQty').empty();
-        $('.selectQty').append('<option value="">Pilih Qty Produk</option>'); 
-        let id_produk = $('.txtIdProduk').val();
-        let size_produk = $('.selectSize').val(); 
-        key = 1;
-        $.ajax({
-        	url: baseUrl+'produk/get_stok_produk',
-        	type: "POST",
-        	dataType: "JSON",
-        	data: {id_produk: id_produk, size_produk: size_produk},
-        	success: function(data){
-               	Object.keys(data.stok).forEach(function(){
-			        $('.selectQty').append('<option value="'+data.stok[key-1]+'">'+data.stok[key-1]+'</option>'); 
-			        key++;
-		        });
-		    }    
-        });
-    });		
+    // $('.selectSize').change(function(event) {
+    // 	$('.selectQty').empty();
+    //     $('.selectQty').append('<option value="">Pilih Qty Produk</option>'); 
+    //     let id_produk = $('.txtIdProduk').val();
+    //     let size_produk = $('.selectSize').val(); 
+    //     key = 1;
+    //     $.ajax({
+    //     	url: baseUrl+'produk/get_stok_produk',
+    //     	type: "POST",
+    //     	dataType: "JSON",
+    //     	data: {id_produk: id_produk, size_produk: size_produk},
+    //     	success: function(data){
+    //            	Object.keys(data.stok).forEach(function(){
+	// 		        $('.selectQty').append('<option value="'+data.stok[key-1]+'">'+data.stok[key-1]+'</option>'); 
+	// 		        key++;
+	// 	        });
+	// 	    }    
+    //     });
+    // });		
 });
 
 //set uri string

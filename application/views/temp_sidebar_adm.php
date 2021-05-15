@@ -25,7 +25,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'master_kategori_adm') {
                 echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'master_supplier_adm') {
+              }elseif ($this->uri->segment('1') == 'master_tag_adm') {
                 echo 'active treeview';
               } ?>">
 
@@ -46,10 +46,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <a href="<?php echo site_url('master_produk_adm');?>"><i class="fa fa-tasks"></i> Master Produk</a>
               </li> 
               <li class="<?php if ($this->uri->segment('1') == 'master_kategori_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('master_kategori_adm');?>"><i class="fa fa-tags"></i> Master Kategori</a>
+                <a href="<?php echo site_url('master_kategori_adm');?>"><i class="fa fa-bookmark"></i> Master Kategori</a>
               </li>
-              <li class="<?php if ($this->uri->segment('1') == 'master_supplier_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('master_supplier_adm');?>"><i class="fa fa-address-book"></i> Master Supplier</a>
+							<li class="<?php if ($this->uri->segment('1') == 'master_tag_adm') {echo 'active';} ?>">
+                <a href="<?php echo site_url('master_tag_adm');?>"><i class="fa fa-tags"></i> Master Tag Produk</a>
               </li>
             </ul>
           </li>
@@ -58,17 +58,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <!-- transaksi treeview -->
           <!-- tentukan attribute active class -->
           <li class="
-             <?php if ($this->uri->segment('1') == 'order_produk_adm') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'terima_produk_adm') {
+             <?php if ($this->uri->segment('1') == 'tambah_stok_adm') {
                 echo 'active treeview';  
               }elseif ($this->uri->segment('1') == 'confirm_penjualan_adm') {
                 echo 'active treeview';  
-              }elseif ($this->uri->segment('1') == 'retur_masuk_adm') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'retur_keluar_adm') {
-                echo 'active treeview';
-              } ?>">
+              }?>">
             <a href="#">
               <i class="fa fa-exchange"></i>
               <span>Data Transaksi</span>
@@ -78,20 +72,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </a>
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <li class="<?php if ($this->uri->segment('1') == 'order_produk_adm') {echo 'active';} ;?>">
-                <a href="<?php echo site_url('order_produk_adm');?>"><i class="fa fa-shopping-cart"></i> Order Produk</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'terima_produk_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('terima_produk_adm');?>"><i class="fa fa-plus-square"></i> Penerimaan Produk</a>
+              <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+                <a href="<?php echo site_url('tambah_stok_adm');?>"><i class="fa fa-plus-square"></i> Tambah Stok</a>
               </li>
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'retur_masuk_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('retur_masuk_adm');?>"><i class="fa fa-long-arrow-left"></i> Retur Produk Masuk</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'retur_keluar_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('retur_keluar_adm');?>"><i class="fa fa-long-arrow-right"></i> Retur Produk Keluar</a>
               </li>
             </ul>
           </li>
@@ -102,17 +87,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="
              <?php if ($this->uri->segment('1') == 'laporan_stok') {
                 echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'Laporan_permintaan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_history_order') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_penerimaan') {
-                echo 'active treeview';  
               }elseif ($this->uri->segment('1') == 'laporan_penjualan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_retur_masuk') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_retur_keluar') {
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'laporan_mutasi') {
                 echo 'active treeview';
@@ -129,23 +104,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <li class="<?php if ($this->uri->segment('1') == 'laporan_stok') {echo 'active';} ;?>">
                 <a href="<?php echo site_url('laporan_stok');?>"> Laporan Stok Produk</a>
               </li>
-              <li class="<?php if ($this->uri->segment('1') == 'Laporan_permintaan') {echo 'active';} ?>">
-                <a href="<?php echo site_url('Laporan_permintaan');?>"> Laporan Permintaan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_history_order') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_history_order');?>"> Laporan Riwayat Permintaan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_penerimaan') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_penerimaan');?>"> Laporan Penerimaan</a>
-              </li>
               <li class="<?php if ($this->uri->segment('1') == 'laporan_penjualan') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_penjualan');?>"> Laporan Penjualan</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_retur_masuk') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_retur_masuk');?>"> Laporan Penerimaan Retur</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_retur_keluar') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_retur_keluar');?>"> Laporan Retur Penjualan</a>
               </li>
                <li class="<?php if ($this->uri->segment('1') == 'laporan_mutasi') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_mutasi');?>"> Laporan Mutasi</a>
@@ -203,7 +163,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'master_kategori_adm') {
                 echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'master_supplier_adm') {
+              }elseif ($this->uri->segment('1') == 'master_tag_adm') {
                 echo 'active treeview';
               }?>">
 
@@ -224,10 +184,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <a href="<?php echo site_url('master_produk_adm');?>"><i class="fa fa-tasks"></i> Master Produk</a>
               </li> 
               <li class="<?php if ($this->uri->segment('1') == 'master_kategori_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('master_kategori_adm');?>"><i class="fa fa-tags"></i> Master Kategori</a>
+                <a href="<?php echo site_url('master_kategori_adm');?>"><i class="fa fa-bookmark"></i> Master Kategori</a>
               </li>
-              <li class="<?php if ($this->uri->segment('1') == 'master_supplier_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('master_supplier_adm');?>"><i class="fa fa-address-book"></i> Master Supplier</a>
+							<li class="<?php if ($this->uri->segment('1') == 'master_tag_adm') {echo 'active';} ?>">
+                <a href="<?php echo site_url('master_tag_adm');?>"><i class="fa fa-tags"></i> Master Tag Produk</a>
               </li>
             </ul>
           </li>
@@ -236,15 +196,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <!-- transaksi treeview -->
           <!-- tentukan attribute active class -->
           <li class="
-             <?php if ($this->uri->segment('1') == 'order_produk_adm') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'terima_produk_adm') {
+             <?php if ($this->uri->segment('1') == 'tambah_stok_adm') {
                 echo 'active treeview';  
               }elseif ($this->uri->segment('1') == 'confirm_penjualan_adm') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'retur_masuk_adm') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'retur_keluar_adm') {
                 echo 'active treeview';
               } ?>">
 
@@ -258,20 +212,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <li class="<?php if ($this->uri->segment('1') == 'order_produk_adm') {echo 'active';} ;?>">
-                <a href="<?php echo site_url('order_produk_adm');?>"><i class="fa fa-shopping-cart"></i> Order Produk</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'terima_produk_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('terima_produk_adm');?>"><i class="fa fa-plus-square"></i> Penerimaan Produk</a>
+              <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+                <a href="<?php echo site_url('tambah_stok_adm');?>"><i class="fa fa-plus-square"></i> Tambah Stok</a>
               </li>
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'retur_masuk_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('retur_masuk_adm');?>"><i class="fa fa-long-arrow-left"></i> Retur Produk Masuk</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'retur_keluar_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('retur_keluar_adm');?>"><i class="fa fa-long-arrow-right"></i> Retur Produk Keluar</a>
               </li>
             </ul>
           </li>
@@ -282,17 +227,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="
              <?php if ($this->uri->segment('1') == 'laporan_stok') {
                 echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'Laporan_permintaan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_history_order') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_penerimaan') {
-                echo 'active treeview';  
               }elseif ($this->uri->segment('1') == 'laporan_penjualan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_retur_masuk') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_retur_keluar') {
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'laporan_mutasi') {
                 echo 'active treeview';
@@ -311,23 +246,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <li class="<?php if ($this->uri->segment('1') == 'laporan_stok') {echo 'active';} ;?>">
                 <a href="<?php echo site_url('laporan_stok');?>"> Laporan Stok Produk</a>
               </li>
-              <li class="<?php if ($this->uri->segment('1') == 'Laporan_permintaan') {echo 'active';} ?>">
-                <a href="<?php echo site_url('Laporan_permintaan');?>"> Laporan Permintaan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_history_order') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_history_order');?>"> Laporan Riwayat Permintaan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_penerimaan') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_penerimaan');?>"> Laporan Penerimaan</a>
-              </li>
               <li class="<?php if ($this->uri->segment('1') == 'laporan_penjualan') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_penjualan');?>"> Laporan Penjualan</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_retur_masuk') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_retur_masuk');?>"> Laporan Penerimaan Retur</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_retur_keluar') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_retur_keluar');?>"> Laporan Retur Penjualan</a>
               </li>
                <li class="<?php if ($this->uri->segment('1') == 'laporan_mutasi') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_mutasi');?>"> Laporan Mutasi</a>
@@ -381,17 +301,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="
              <?php if ($this->uri->segment('1') == 'laporan_stok') {
                 echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'Laporan_permintaan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_history_order') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_penerimaan') {
-                echo 'active treeview';  
               }elseif ($this->uri->segment('1') == 'laporan_penjualan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_retur_masuk') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_retur_keluar') {
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'laporan_mutasi') {
                 echo 'active treeview';
@@ -410,23 +320,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <li class="<?php if ($this->uri->segment('1') == 'laporan_stok') {echo 'active';} ;?>">
                 <a href="<?php echo site_url('laporan_stok');?>"> Laporan Stok Produk</a>
               </li>
-              <li class="<?php if ($this->uri->segment('1') == 'Laporan_permintaan') {echo 'active';} ?>">
-                <a href="<?php echo site_url('Laporan_permintaan');?>"> Laporan Permintaan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_history_order') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_history_order');?>"> Laporan Riwayat Permintaan</a>
-              </li>
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_penerimaan') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_penerimaan');?>"> Laporan Penerimaan</a>
-              </li>
               <li class="<?php if ($this->uri->segment('1') == 'laporan_penjualan') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_penjualan');?>"> Laporan Penjualan</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_retur_masuk') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_retur_masuk');?>"> Laporan Penerimaan Retur</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_retur_keluar') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_retur_keluar');?>"> Laporan Retur Penjualan</a>
               </li>
                <li class="<?php if ($this->uri->segment('1') == 'laporan_mutasi') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_mutasi');?>"> Laporan Mutasi</a>

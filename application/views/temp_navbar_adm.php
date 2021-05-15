@@ -2,9 +2,9 @@
    <!-- Logo -->
    <a href="<?php echo site_url('home');?>" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><img src="<?php echo base_url('assets/img/loogoa_thumb.png');?>"></span>
+      <span class="logo-mini">CPT</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><img src="<?php echo base_url('assets/img/logo_smalle.png');?>"></span>
+      <span class="logo-lg"><img src="<?php echo base_url('assets/img/logo_smalle.png');?>" width="100" height="40"></span>
    </a>
    
    <!-- Header Navbar: style can be found in header.less -->

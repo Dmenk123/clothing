@@ -65,18 +65,19 @@ class Master_produk_adm extends CI_Controller {
 			$row[] = $listProduk->nama_sub_kategori;
 			$row[] = $listProduk->harga;
 			$row[] = $listProduk->nama_satuan;
-			$row[] = $listProduk->bahan_produk;
 			//add html for action button
 			if ($listProduk->status == '1') {
 				$row[] =
-				'<a class="btn btn-sm btn-default" href="'.$link_detail.'" title="Detail" id="btn_detail"><i class="glyphicon glyphicon-search"></i> Detail</a>
-				 <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Balas" onclick="editProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
-				 <a class="btn btn-sm btn-success btn_edit_status" href="javascript:void(0)" title="aktif" id="'.$listProduk->id_produk.'"><i class="fa fa-check"></i> Aktif</a>';
+				'<a class="btn btn-xs btn-default" href="'.$link_detail.'" title="Detail" id="btn_detail"><i class="glyphicon glyphicon-search"></i> Detail</a>
+				 <a class="btn btn-xs btn-primary" href="javascript:void(0)" title="Balas" onclick="editProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+				 <a class="btn btn-xs btn-warning" href="javascript:void(0)" title="Config" onclick="configProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-cog"></i> Config</a>
+				 <a class="btn btn-xs btn-success btn_edit_status" href="javascript:void(0)" title="aktif" id="'.$listProduk->id_produk.'"><i class="fa fa-check"></i> Aktif</a>';
 			}else{
 				$row[] =
-				'<a class="btn btn-sm btn-default" href="'.$link_detail.'" title="Detail" id="btn_detail"><i class="glyphicon glyphicon-search"></i> Detail</a>
-				 <a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Balas" onclick="editProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
-				 <a class="btn btn-sm btn-danger btn_edit_status" href="javascript:void(0)" title="nonaktif" id="'.$listProduk->id_produk.'"><i class="fa fa-times"></i> Nonaktif</a>';
+				'<a class="btn btn-xs btn-default" href="'.$link_detail.'" title="Detail" id="btn_detail"><i class="glyphicon glyphicon-search"></i> Detail</a>
+				 <a class="btn btn-xs btn-primary" href="javascript:void(0)" title="Balas" onclick="editProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
+				 <a class="btn btn-xs btn-warning" href="javascript:void(0)" title="Config" onclick="configProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-cog"></i> Config</a>
+				 <a class="btn btn-xs btn-danger btn_edit_status" href="javascript:void(0)" title="nonaktif" id="'.$listProduk->id_produk.'"><i class="fa fa-times"></i> Nonaktif</a>';
 			}
 			
 			$data[] = $row;
@@ -234,6 +235,10 @@ class Master_produk_adm extends CI_Controller {
 			'status' => TRUE,
 			'pesan' => "Data produk detail berhasil diupdate"
 		));
+	}
+
+	function config_diskon_produk($id_produk) {
+		
 	}
 
 	public function edit_data_produk($id_produk)

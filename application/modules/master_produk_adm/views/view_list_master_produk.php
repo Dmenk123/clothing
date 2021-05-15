@@ -31,7 +31,6 @@
                       <th>Sub Kategori</th>
                       <th>Harga</th>
                       <th>Satuan</th>
-                      <th>Bahan</th>
                       <th style="width: 240px; text-align: center;">Action</th>
                     </tr>
                   </thead>

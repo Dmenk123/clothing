@@ -87,11 +87,11 @@ class Produk extends CI_Controller {
 			'id_sort' => $id_sort
 		);
 
-		if ($this->session->userdata('id_user') == !null) {
-			$id_user = $this->session->userdata('id_user');
-			$checkout_notif = $this->mod_ckt->notif_count($id_user);
-			$data['notif_count'] = $checkout_notif;
-		}
+		// if ($this->session->userdata('id_user') == !null) {
+		// 	$id_user = $this->session->userdata('id_user');
+		// 	$checkout_notif = $this->mod_ckt->notif_count($id_user);
+		// 	$data['notif_count'] = $checkout_notif;
+		// }
 
 		$this->load->view('temp', $data);
 	}

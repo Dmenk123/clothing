@@ -39,19 +39,12 @@ class Login extends CI_Controller {
 					));
 				$this->m_log->set_lastlogin($login_data['id_user']);
 			}
-			if ($login_data['id_level_user'] == "2") {
+			
 			echo json_encode(array(
 				"status" => TRUE,
-				"pesan" => 'Selamat datang '.$login_data['fname_user'].' dan selamat berbelanja',
 				"level" => $login_data['id_level_user'],
 			));
-			}else{
-				echo json_encode(array(
-					"status" => TRUE,
-					"pesan" => 'Selamat datang '.$login_data['fname_user'].' dan selamat bekerja',
-					"level" => $login_data['id_level_user'],
-				));
-			}
+
 		}
 	}
 
