@@ -120,7 +120,13 @@
   <!-- load modal per modul -->
   <?php
   if(isset($modal)){
-    $this->load->view($modal);
+		if(is_array($modal)) {
+			foreach ($modal as $k => $v) {
+				$this->load->view($v);
+			}	
+		}else{
+			$this->load->view($modal);
+		}
   } ?>
 
   <!-- jQuery 2.2.3 -->

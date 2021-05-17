@@ -58,9 +58,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <!-- transaksi treeview -->
           <!-- tentukan attribute active class -->
           <li class="
-             <?php if ($this->uri->segment('1') == 'tambah_stok_adm') {
-                echo 'active treeview';  
-              }elseif ($this->uri->segment('1') == 'confirm_penjualan_adm') {
+             <?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {
                 echo 'active treeview';  
               }?>">
             <a href="#">
@@ -72,9 +70,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </a>
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+              <!-- <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('tambah_stok_adm');?>"><i class="fa fa-plus-square"></i> Tambah Stok</a>
-              </li>
+              </li> -->
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
               </li>
@@ -196,9 +194,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <!-- transaksi treeview -->
           <!-- tentukan attribute active class -->
           <li class="
-             <?php if ($this->uri->segment('1') == 'tambah_stok_adm') {
-                echo 'active treeview';  
-              }elseif ($this->uri->segment('1') == 'confirm_penjualan_adm') {
+             <?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {
                 echo 'active treeview';
               } ?>">
 
@@ -212,9 +208,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+              <!-- <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('tambah_stok_adm');?>"><i class="fa fa-plus-square"></i> Tambah Stok</a>
-              </li>
+              </li> -->
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
               </li>

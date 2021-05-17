@@ -242,10 +242,9 @@ class Mod_master_produk_adm extends CI_Model
 	public function get_detail_produk_header($id_produk)
 	{
 		$this->db->select('
-				tbl_gambar_produk.nama_gambar,
-				tbl_produk.id_produk,
-				tbl_produk.nama_produk,
-			');
+			tbl_gambar_produk.nama_gambar,
+			tbl_produk.*,
+		');
 
 		$this->db->from('tbl_produk');
 		$this->db->join('tbl_gambar_produk', 'tbl_produk.id_produk = tbl_gambar_produk.id_produk', 'left');

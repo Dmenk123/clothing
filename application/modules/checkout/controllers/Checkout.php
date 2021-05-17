@@ -457,6 +457,10 @@ class Checkout extends CI_Controller {
 
 		$cek_token = $this->check_token_session();
 		
+		if($cek_token['status'] == false) {
+			return redirect('home');
+		}
+
 		$data = [
 			'data' => $cek_token['data']
 		];
@@ -1157,6 +1161,7 @@ class Checkout extends CI_Controller {
 		$data_trans = [
 			'order_id' => $order_id,
 			'updated_at' => $timestamp,
+			'status' => 2, //status sudah bayar
 			'bukti_transfer'	=> 'assets/img/bukti_transfer/'.$namafileseo,
 			'bukti_transfer_thumb' => 'assets/img/bukti_transfer/thumbs/'.$output_thumb,
 			'is_manual' => 1

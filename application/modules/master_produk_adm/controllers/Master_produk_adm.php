@@ -39,7 +39,7 @@ class Master_produk_adm extends CI_Controller {
 
 		$data = array(
 			'content'=>'view_list_master_produk',
-			'modal'=>'modalMasterProdukAdm',
+			'modal'=> 'modalMasterProdukAdm',
 			'js'=>'masterProdukAdmJs',
 			'data_user' => $data_user,
 			'qty_notif' => $jumlah_notif,
@@ -56,6 +56,7 @@ class Master_produk_adm extends CI_Controller {
 		foreach ($list as $listProduk) {
 			$no++;
 			$link_detail = site_url('master_produk_adm/master_produk_detail/').$listProduk->id_produk;
+			$link_config = site_url('master_produk_adm/config_produk/').$listProduk->id_produk;
 			$row = array();
 			//loop value tabel db
 			$row[] = '<img src="./assets/img/produk/'.$listProduk->nama_gambar.'" alt="Gambar Produk" class="img_produk">';
@@ -70,13 +71,13 @@ class Master_produk_adm extends CI_Controller {
 				$row[] =
 				'<a class="btn btn-xs btn-default" href="'.$link_detail.'" title="Detail" id="btn_detail"><i class="glyphicon glyphicon-search"></i> Detail</a>
 				 <a class="btn btn-xs btn-primary" href="javascript:void(0)" title="Balas" onclick="editProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
-				 <a class="btn btn-xs btn-warning" href="javascript:void(0)" title="Config" onclick="configProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-cog"></i> Config</a>
+				 <a class="btn btn-xs btn-warning" href="'.$link_config.'" title="Config"><i class="glyphicon glyphicon-cog"></i> Config</a>
 				 <a class="btn btn-xs btn-success btn_edit_status" href="javascript:void(0)" title="aktif" id="'.$listProduk->id_produk.'"><i class="fa fa-check"></i> Aktif</a>';
 			}else{
 				$row[] =
 				'<a class="btn btn-xs btn-default" href="'.$link_detail.'" title="Detail" id="btn_detail"><i class="glyphicon glyphicon-search"></i> Detail</a>
 				 <a class="btn btn-xs btn-primary" href="javascript:void(0)" title="Balas" onclick="editProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-pencil"></i> Edit</a>
-				 <a class="btn btn-xs btn-warning" href="javascript:void(0)" title="Config" onclick="configProduk('."'".$listProduk->id_produk."'".')"><i class="glyphicon glyphicon-cog"></i> Config</a>
+				 <a class="btn btn-xs btn-warning" href="'.$link_config.'" title="Config"><i class="glyphicon glyphicon-cog"></i> Config</a>
 				 <a class="btn btn-xs btn-danger btn_edit_status" href="javascript:void(0)" title="nonaktif" id="'.$listProduk->id_produk.'"><i class="fa fa-times"></i> Nonaktif</a>';
 			}
 			
@@ -237,8 +238,51 @@ class Master_produk_adm extends CI_Controller {
 		));
 	}
 
-	function config_diskon_produk($id_produk) {
-		
+	public function config_produk($id_produk) {
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_dasbor->get_data_user($id_user);
+
+		// $jumlah_notif = $this->m_dasbor->email_notif_count($id_user);  //menghitung jumlah email masuk
+		// $notif = $this->m_dasbor->get_email_notif($id_user); //menampilkan isi email
+
+		$query_header = $this->m_prod->get_detail_produk_header($id_produk);
+
+		$data = array(
+			'content'=>'form_config_produk',
+			// 'modal'=>'modalDetailProdukAdm',
+			'js'=>'MasterProdukAdmJs',
+			'data_user' => $data_user,
+			// 'qty_notif' => $jumlah_notif,
+			// 'isi_notif' => $notif,
+			'hasil_header' => $query_header
+		);
+		$this->load->view('temp_adm',$data);
+	}
+
+	public function simpan_diskon()
+	{
+		$data = array(
+			'id_produk' => $this->input->post('idProduk'),
+			'berat_satuan' => trim($this->input->post('beratSatuanDet')),
+			'stok_awal' => trim($this->input->post('stokAwalDet')),
+			'stok_sisa' => trim($this->input->post('stokAwalDet')),
+			'stok_minimum' => trim($this->input->post('stokMinDet'))
+		);
+		//cek ukuran di db
+		$cek_size = $this->m_prod->cek_size_produk($size, $this->input->post('idProduk'));
+		if ($cek_size == $size) {
+			echo json_encode(array(
+				'status' => TRUE,
+				'pesan' => "Maaf untuk produk ukuran \"".$size."\" sudah ada"
+			));
+		}else{
+			$this->m_prod->insert_data_produk_detail($data);
+
+			echo json_encode(array(
+				'status' => TRUE,
+				'pesan' => "Data produk detail berhasil disimpan"
+			));
+		}
 	}
 
 	public function edit_data_produk($id_produk)
