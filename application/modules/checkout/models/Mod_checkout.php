@@ -102,6 +102,22 @@ class Mod_checkout extends CI_Model
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function get_checkout_det_by_orderid($orderid)
+	{
+		$this->db->select('
+			tbl_checkout.*, 
+			tbl_checkout_detail.qty, 
+			tbl_checkout_detail.harga_satuan,
+			tbl_checkout_detail.sess_row_id
+		');
+		$this->db->from('tbl_checkout');
+		$this->db->join('tbl_checkout_detail', 'tbl_checkout.id_checkout = tbl_checkout_detail.id_checkout', 'left');
+		$this->db->where('tbl_checkout.order_id', $orderid);
+		
+		$query = $this->db->get();
+		return $query->result();
+	}
 	
 	function getKodeUser(){
             $q = $this->db->query("select MAX(RIGHT(id_user,5)) as kode_max from tbl_user");

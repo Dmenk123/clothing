@@ -314,6 +314,7 @@
 
 		});
 		
+		
 		$('.tombol_method_bayar').click(function (e) { 
 			e.preventDefault();
 			
@@ -440,3 +441,4 @@
 
 		
 </script>
+

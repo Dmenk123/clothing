@@ -450,6 +450,47 @@ class Checkout extends CI_Controller {
         $this->load->view('temp',$data);
 	}
 
+	public function thanks()
+	{
+		$id_user = $this->session->userdata('id_user');
+		$data_user = $this->m_ckt->get_data_user($id_user);
+
+		$cek_token = $this->check_token_session();
+		
+		$data = [
+			'data' => $cek_token['data']
+		];
+
+		$this->load->view('v_thanks', $data);
+	}
+
+	public function finish_transfer()
+	{
+		$this->load->library('cart');
+		$order_id = $this->input->post('orderid');
+		if($order_id == '') {
+			return redirect('home','refresh');
+		}
+
+		$datanya = $this->m_ckt->get_checkout_det_by_orderid($order_id);
+
+		if(!$datanya){
+			return redirect('home', 'refresh');
+		}
+
+		// hapus cart session
+		foreach ($datanya as $key => $value) {
+			$data = array(
+				'rowid' => $value->sess_row_id,
+				'qty' => 0,
+			);
+
+			$this->cart->update($data);
+		}
+
+		return redirect('home', 'refresh');
+	}
+
 	public function suggest_provinsi()
 	{
 		$provinsi = [];
@@ -603,16 +644,31 @@ class Checkout extends CI_Controller {
 	}
 
 	public function get_data_harga()
-	{		
+	{
 		$checkout_data = $this->check_token_session();
 		$kurir = $this->input->post('kurir');
 		$html = '';
 
 		if($checkout_data) {
 			$data = $this->ekspedisi_ongkir(self::KOTA_ORIGIN, $checkout_data['data']->id_kota, $checkout_data['data']->berat_total, $kurir);
-			
 
 			if($data) {
+				if($data['rajaongkir']['status']['code'] == 400) {
+					$html = "
+						<div class='table-responsive'>
+							<table class='table'>
+								<thead>
+									<tr>
+										<th colspan='7'>".$data['rajaongkir']['status']['description']. "</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					";
+					echo json_encode(['status' => true, 'data' => null, 'html' => $html]);
+					return;
+				}
+
 				$retval = [];
 				foreach ($data['rajaongkir']['results'] as $key => $value) {
 					foreach ($value['costs'] as $k => $v) {
@@ -1118,7 +1174,7 @@ class Checkout extends CI_Controller {
 			$this->db->trans_commit();
 			$retval['status'] = true;
 			$retval['pesan'] = 'Sukses menambahkan transaksi';
-			$retval['redirect'] = base_url('home');
+			$retval['redirect'] = base_url('checkout/thanks');
 		}
 
 		echo json_encode($retval);
