@@ -65,6 +65,7 @@ $query = $this->db->get(''); ?>
 											<li><a href=""></a>11</li>
 										</ul> -->
 									</span>
+								<!-- </div> -->
 									<!-- <span class="product-color">
 										<h4>Colors</h4>
 										<ul class="ul-color">
@@ -74,6 +75,7 @@ $query = $this->db->get(''); ?>
 										</ul>
 									</span> -->
 									<br>
+								<!-- <div style="align:center"> -->
 									<span class="product-price">
 										<a href="<?php echo site_url('produk/produk_detail/').$val->slug; ?>">
 											<b>Beli Sekarang</b>

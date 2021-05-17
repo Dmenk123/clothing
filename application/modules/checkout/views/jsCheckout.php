@@ -323,15 +323,61 @@
 			}, 2000);
 			
 			var file_inc = $(this).attr("href");
-			$.ajax({
-				type: "get",
-				url: "<?=base_url('checkout/get_html_form')?>",
-				data: {file_inc:file_inc},
-				dataType: "json",
-				success: function (response) {
-					$('#main-form-bayar').html(response);
-				}
-			});
+			if (file_inc == "payment") {
+				$.ajax({
+					method : 'POST',
+					url: '<?=base_url()?>snap/token',
+					data : {id: "a1", price: 10000, quantity: 2, name: "coba", gross_amount: 1000},
+					cache: false,
+
+					success: function(data) {
+						//location = data;
+
+						console.log('token = '+data);
+						
+						var resultType = document.getElementById('result-type');
+						var resultData = document.getElementById('result-data');
+
+						function changeResult(type,data){
+						$("#result-type").val(type);
+						$("#result-data").val(JSON.stringify(data));
+						//resultType.innerHTML = type;
+						//resultData.innerHTML = JSON.stringify(data);
+						}
+
+						snap.pay(data, {
+						
+						onSuccess: function(result){
+							changeResult('success', result);
+							console.log(result.status_message);
+							console.log(result);
+							$("#payment-form").submit();
+						},
+						onPending: function(result){
+							changeResult('pending', result);
+							console.log(result.status_message);
+							$("#payment-form").submit();
+						},
+						onError: function(result){
+							changeResult('error', result);
+							console.log(result.status_message);
+							$("#payment-form").submit();
+						}
+						});
+					}
+					});
+			} else {
+				$.ajax({
+					type: "get",
+					url: "<?=base_url('checkout/get_html_form')?>",
+					data: {file_inc:file_inc},
+					dataType: "json",
+					success: function (response) {
+						$('#main-form-bayar').html(response);
+					}
+				});
+			}
+			
 		});
 
 		/////////////////////////////////////////////////////      

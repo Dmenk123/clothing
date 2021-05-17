@@ -245,6 +245,9 @@
     <?php if(isset($modal)) { $this->load->view($modal); }?>
     <!-- *** SCRIPTS TO INCLUDE ***
  ____________________________________________________________________ -->
+ <script type="text/javascript"
+            src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="<CLIENT-KEY>"></script>
     <script src="<?php echo config_item('assets'); ?>js/jquery-1.11.0.min.js"></script>
     <script src="<?php echo config_item('assets'); ?>js/jquery-validation.js"></script>
     <!-- jQuery UI  -->
@@ -264,6 +267,7 @@
     <script src="<?=config_item('assets')?>datatables/dataTables.bootstrap.min.js"></script>
 	<script src="<?=config_item('assets')?>jQueryToastr/build/toastr.min.js"></script>
 	<script src="<?=config_item('assets')?>sweetalert/sweetalert.min.js"></script>
+    
 	<script>
 		$(document).ready(function () {
 			$('.select2').select2();
