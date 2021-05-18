@@ -246,7 +246,7 @@ class Master_produk_adm extends CI_Controller {
 		// $notif = $this->m_dasbor->get_email_notif($id_user); //menampilkan isi email
 
 		$query_header = $this->m_prod->get_detail_produk_header($id_produk);
-
+		// var_dump($query_header);exit;
 		$data = array(
 			'content'=>'form_config_produk',
 			// 'modal'=>'modalDetailProdukAdm',
@@ -254,34 +254,55 @@ class Master_produk_adm extends CI_Controller {
 			'data_user' => $data_user,
 			// 'qty_notif' => $jumlah_notif,
 			// 'isi_notif' => $notif,
-			'hasil_header' => $query_header
+			'hasil_header' => $query_header[0]
 		);
 		$this->load->view('temp_adm',$data);
 	}
 
 	public function simpan_diskon()
 	{
-		$data = array(
-			'id_produk' => $this->input->post('idProduk'),
-			'berat_satuan' => trim($this->input->post('beratSatuanDet')),
-			'stok_awal' => trim($this->input->post('stokAwalDet')),
-			'stok_sisa' => trim($this->input->post('stokAwalDet')),
-			'stok_minimum' => trim($this->input->post('stokMinDet'))
-		);
-		//cek ukuran di db
-		$cek_size = $this->m_prod->cek_size_produk($size, $this->input->post('idProduk'));
-		if ($cek_size == $size) {
-			echo json_encode(array(
-				'status' => TRUE,
-				'pesan' => "Maaf untuk produk ukuran \"".$size."\" sudah ada"
-			));
-		}else{
-			$this->m_prod->insert_data_produk_detail($data);
+		$id_produk = $this->input->post('idProduk');
+		$harga_produk = $this->input->post('hargaProduk');
+		$is_diskon = $this->input->post('isDiskon');
+		$diskon_harga = $this->input->post('diskonHarga');
+		$tag = $this->input->post('tagProduk');
 
-			echo json_encode(array(
-				'status' => TRUE,
-				'pesan' => "Data produk detail berhasil disimpan"
-			));
+		if($tag) {
+			foreach ($tag as $key => $value) {
+				$arr_tag[] = $value;
+			}
+			$arr_str = json_encode($arr_tag);
+		}else{
+			$arr_str = null;
+		}
+
+		if($is_diskon == '0') {
+			$diskon_harga = null;
+			$diskon_persen = null;
+		}else{
+			// jika ada diskon baru di hitung
+			$diskon_persen = (float)((float)$diskon_harga / (float)$harga_produk * 100);
+		}
+
+		$data = [
+			'is_diskon' => $is_diskon,
+			'diskon_harga' => $diskon_harga,
+			'diskon_persen' => $diskon_persen,
+			'tag_produk' => $arr_str,
+			'modified' => date('Y-m-d H:i:s'),
+		];
+
+		try {
+			$upd = $this->m_prod->update_data_produk(['id_produk' => $id_produk], $data);
+
+			// Set flash data 
+			$this->session->set_flashdata('feedback_success', 'Berhasil Set Diskon');
+
+			return redirect(base_url('master_produk_adm/config_produk/') . $id_produk, 'refresh');
+			
+		} catch (Exception $error) {
+			$this->session->set_flashdata('feedback_failed', $error->getMessage());
+			return redirect(base_url('master_produk_adm/config_produk/') . $id_produk, 'refresh');
 		}
 	}
 
