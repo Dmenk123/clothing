@@ -88,6 +88,38 @@ class M_global extends CI_Model
         return $q->result();
     }
 
+    function multi_row2($select=NULL, $array_where=NULL, $table=NULL, $join= NULL, $order_by=NULL, $limit=NULL){
+		if($select != null) {
+			$this->db->select($select);
+		}else{
+			$this->db->select('*');
+		}
+       
+		$this->db->from($table);
+
+		if(isset($array_where)){
+        	$this->db->where($array_where);
+		}
+		
+		if(isset($join)) {
+			foreach($join as $j) :
+				$this->db->join($j["tabel"], $j["on"],'left');
+			endforeach;
+		}
+
+		if(isset($order_by)){
+        	$this->db->order_by($order_by);
+        }
+
+        if(isset($$limit)) {
+            $this->db->limit($limit);
+        }
+		
+		$q = $this->db->get();
+		
+        return $q->result();
+    }
+
     function rownum($where,$table){
 		$this->db->select('*');
 		$this->db->where($where);

@@ -10,9 +10,8 @@ class Snap extends CI_Controller {
 		$this->load->library('veritrans');
 		$this->midtrans->config($params);
 		$this->load->helper('url');	
-		// $this->load->model('t_checkout');
-		// $this->load->model('m_global');
-		// $this->load->model('m_user');
+		// $this->load->model('mod_checkout','m_ckt');
+		$this->load->model('m_global');
     }
 
     public function index()
@@ -23,31 +22,54 @@ class Snap extends CI_Controller {
 
     public function token()
     {
+		$data_where = ['id_checkout' => '25ef8ddd-191e-440c-a64e-0d0ae94fd50a'];
+		$join = [ 
+			[
+				'table' => 'tbl_produk',
+				'on'	=> 'tbl_produk.id_produk = tbl_checkout_detail.id_produk'
+			]
+		];
+		$checkout   = $this->m_global->multi_row(null, $data_where, 'tbl_checkout_detail', $join);
+		$check      = $this->m_global->single_row("*", $data_where, 'tbl_checkout');
 		
-		$order_id  = rand();
+
+		// Optional
+
+		$item_detail = array();
+		$jumlah_harga = 0;
+		for ($i=0; $i<count($checkout); $i++) { 
+			
+				$item[$i] = array(
+					'id' => $checkout[$i]->id_produk,
+					'price' => $checkout[$i]->harga_satuan,
+					'quantity' => 1,
+					'name' => $checkout[$i]->nama_produk
+				);
+
+				array_push($item_detail, $item[$i]);
+
+				$jumlah_harga += $checkout[$i]->harga_satuan;
+
+		};
+
+		$order_id = rand();
+		$jumlah = $jumlah_harga;
 		$transaction_details = array(
-		  'order_id' => $order_id,
-		  'gross_amount' => 100000, // no decimal allowed for creditcard
-		);
+			'order_id' => $order_id,
+			'gross_amount' => $jumlah, // no decimal allowed for creditcard
+		  );
+
+		//   $ongkir = array(
+		// 	'id' => 'a002',
+		// 	'price' => $check->ongkos_kirim,
+		// 	'quantity' => 1,
+		// 	'name' => $check->jasa_ekspedisi.' - '.$check->pilihan_paket
+		// );
+
+		// array_push($item_detail, $ongkir);
 
 		// Optional
-		$item1_details = array(
-		  'id' => 'a1',
-		  'price' => 100000,
-		  'quantity' => 1,
-		  'name' => "Kelas Reguler"
-		);
-
-		// Optional
-		// 		$item2_details = array(
-		// 		  'id' => 'a2',
-		// 		  'price' => 4000,
-		// 		  'quantity' => 1,
-		// 		  'name' => "Biaya Admin"
-		// 		);
-
-		// Optional
-		$item_details = array ($item1_details);
+		$item_details = $item_detail;
 
 		// Optional
 		$billing_address = array(
