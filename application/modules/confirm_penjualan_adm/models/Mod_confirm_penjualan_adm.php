@@ -3,31 +3,27 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Mod_confirm_penjualan_adm extends CI_Model
 {
 	var $column_search = array(
-			'tbl_pembelian.id_pembelian',
-			'tbl_user.fname_user',
-			'tbl_checkout.fname_kirim',
-			'tbl_checkout.method_checkout',
-			'tbl_checkout.alamat_kirim',
-			'tbl_checkout.ongkos_total',
-			'tbl_checkout.kode_ref',
-			'tbl_checkout_detail.qty',
-			'tbl_pembelian.status_confirm_adm',
-			null,
-		);
+		'order_id',
+		'tgl_checkout',
+		'metode',
+		'nama',
+		'alamat',
+		'ongkos_kirim',
+		'ongkos_total',
+	);
 
 	var $column_order = array(
-			'tbl_pembelian.id_pembelian',
-			'tbl_user.fname_user',
-			'tbl_checkout.fname_kirim',
-			'tbl_checkout.method_checkout',
-			'tbl_checkout.alamat_kirim',
-			'tbl_checkout.ongkos_total',
-			'tbl_checkout.kode_ref',
-			'tbl_checkout_detail.qty',
-			'tbl_pembelian.status_confirm_adm',
-			null,
-		);
-	var $order = array('tbl_checkout.id_checkout' => 'desc'); // default order
+		'order_id',
+		'tgl_checkout',
+		'metode',
+		'nama',
+		'alamat',
+		'ongkos_kirim',
+		'ongkos_total',
+		null
+	);
+
+	var $order = array('tgl_checkout' => 'desc'); // default order
 
 	public function __construct()
 	{
@@ -39,38 +35,10 @@ class Mod_confirm_penjualan_adm extends CI_Model
 
 	private function _get_datatable_penjualan_query($term='') //term is value of $_REQUEST['search']
 	{
-		$column = array(
-				'tbl_pembelian.id_pembelian',
-				'tbl_user.fname_user',
-				'tbl_checkout.fname_kirim',
-				'tbl_checkout.method_checkout',
-				'tbl_checkout.alamat_kirim',
-				'tbl_checkout.ongkos_total',
-				'tbl_checkout.kode_ref',
-				'tbl_checkout_detail.qty',
-				'tbl_pembelian.status_confirm_adm',
-				null,
-			);
-
-		$this->db->select('
-				tbl_pembelian.id_pembelian,
-				tbl_user.fname_user,
-				tbl_user.lname_user,
-				tbl_checkout.fname_kirim,
-				tbl_checkout.lname_kirim,
-				tbl_checkout.method_checkout,
-				tbl_checkout.alamat_kirim,
-				tbl_checkout.ongkos_total,
-				tbl_checkout.kode_ref,
-				tbl_pembelian.status_confirm_adm,
-				COUNT(tbl_checkout_detail.id_checkout) AS jml
-			');
-
-		$this->db->from('tbl_pembelian');
-		$this->db->join('tbl_checkout', 'tbl_pembelian.id_checkout = tbl_checkout.id_checkout', 'left');
-		$this->db->join('tbl_user', 'tbl_pembelian.id_user = tbl_user.id_user', 'left');
-		$this->db->join('tbl_checkout_detail', 'tbl_checkout.id_checkout = tbl_checkout_detail.id_checkout','left');
-		$this->db->group_by('tbl_checkout_detail.id_checkout');
+		$this->db->select('tbl_checkout.*, CASE WHEN tbl_checkout.is_manual = 1 THEN \'Transfer Manual\' ELSE \'Payment Gateway\' END as metode');
+		$this->db->from('tbl_checkout');
+		$this->db->where('tbl_checkout.status', '2');
+		
 		$i = 0;
 		foreach ($this->column_search as $item) 
 		{
@@ -83,10 +51,19 @@ class Mod_confirm_penjualan_adm extends CI_Model
 				}
 				else
 				{
-					$this->db->or_like($item, $_POST['search']['value']);
+					if ($item == 'metode') {
+						/**
+						 * param both untuk wildcard pada awal dan akhir kata
+						 * param false untuk disable escaping (karena pake subquery)
+						 */
+						$this->db->or_like('(CASE WHEN tbl_checkout.is_manual = 1 THEN \'Transfer Manual\' ELSE \'Payment Gateway\' END)', $_POST['search']['value'], 'both', false);
+					}else{
+						$this->db->or_like($item, $_POST['search']['value']);
+					}
 				}
-				if(count($this->column_search) - 1 == $i) 
+				if(count($this->column_search) - 1 == $i) {
 					$this->db->group_end(); //close bracket
+				}
 			}
 			$i++;
 		}
@@ -125,6 +102,7 @@ class Mod_confirm_penjualan_adm extends CI_Model
 	public function count_all_penjualan()
 	{
 		$this->db->from('tbl_checkout');
+		$this->db->where('tbl_checkout'. '.status', '2');
 		return $this->db->count_all_results();
 	}
 

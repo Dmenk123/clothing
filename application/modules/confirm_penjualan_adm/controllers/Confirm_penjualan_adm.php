@@ -9,24 +9,19 @@ class Confirm_penjualan_adm extends CI_Controller {
 		$this->load->library('email'); // untuk kirim email
 		$this->load->model('dashboard_adm/Mod_dashboard_adm','m_dasbor');
 		$this->load->model('Mod_confirm_penjualan_adm','m_cfrm');
-		$this->load->model('Order_produk_adm/mod_order_produk_adm','m_order');
 		//cek sudah login apa tidak
 		if ($this->session->userdata('logged_in') != true) {
 			redirect('home/error_404');
 		}
-		//cek level user
-		if ($this->session->userdata('id_level_user') == "2" || $this->session->userdata('id_level_user') == "4") {
-			redirect('home/error_404');
-		}
 
 		//pesan stok minimum
-		$produk = $this->m_dasbor->get_produk();
+		/* $produk = $this->m_dasbor->get_produk();
 		$link_notif = site_url('laporan_stok');
 		foreach ($produk as $val) {
 			if ($val->stok_sisa <= $val->stok_minimum) {
 				$this->session->set_flashdata('cek_stok', 'Terdapat Stok produk dibawah nilai minimum, Mohon di cek ulang <a href="'.$link_notif.'">disini</a>');
 			}
-		}
+		} */
 	}
 
 	public function index()
@@ -34,17 +29,17 @@ class Confirm_penjualan_adm extends CI_Controller {
 		$id_user = $this->session->userdata('id_user'); 
 		$data_user = $this->m_dasbor->get_data_user($id_user);
 
-		$jumlah_notif = $this->m_dasbor->email_notif_count($id_user);  //menghitung jumlah email masuk
-		$notif = $this->m_dasbor->get_email_notif($id_user); //menampilkan isi email
+		// $jumlah_notif = $this->m_dasbor->email_notif_count($id_user);  //menghitung jumlah email masuk
+		// $notif = $this->m_dasbor->get_email_notif($id_user); //menampilkan isi email
 
 		$data = array(
-			'content'=>'view_list_confirm_penjualan_adm',
-			'modal'=>'modalConfirmPenjualanAdm',
-			'css'=>'cssConfirmPenjualanAdm',
-			'js'=>'jsConfirmPenjualanAdm',
+			'content' => 'view_list_confirm_penjualan_adm',
+			'modal' => 'modalConfirmPenjualanAdm',
+			'css' => 'cssConfirmPenjualanAdm',
+			'js' => 'jsConfirmPenjualanAdm',
 			'data_user' => $data_user,
-			'qty_notif' => $jumlah_notif,
-			'isi_notif' => $notif,
+			// 'qty_notif' => $jumlah_notif,
+			// 'isi_notif' => $notif,
 		);
 		$this->load->view('temp_adm',$data);
 	}
@@ -54,51 +49,31 @@ class Confirm_penjualan_adm extends CI_Controller {
 		$list = $this->m_cfrm->get_datatable_penjualan();
 		$data = array();
 		$no =$_POST['start'];
-		foreach ($list as $listPenjualan) {
-			$link_detail = site_url('confirm_penjualan_adm/confirm_penjualan_detail/').$listPenjualan->id_pembelian;
+		foreach ($list as $datalist) {
+			$link_detail = site_url('confirm_penjualan_adm/confirm_penjualan_detail/').$datalist->id_checkout;
 			$no++;
 			$row = array();
-			//loop value tabel db
-			$row[] = $listPenjualan->id_pembelian;
-			$row[] = $listPenjualan->fname_user." ".$listPenjualan->lname_user;
-			$row[] = $listPenjualan->fname_kirim." ".$listPenjualan->lname_kirim;
-			$row[] = $listPenjualan->method_checkout;
-			$row[] = $listPenjualan->alamat_kirim;
-			$row[] = number_format($listPenjualan->ongkos_total,0,",",".");
-			$row[] = $listPenjualan->kode_ref;
-			if ($listPenjualan->status_confirm_adm == '0') {
-				$row[] = "<span style='color: red;'>Belum Dikonfirmasi</span>";
-			}elseif ($listPenjualan->status_confirm_adm == '1'){
-				$row[] = "Sudah Dikonfirmasi";
-			}else{
-				$row[] = "<span style='color: red;'><strong>Dibatalkan</strong></span>";
-			}
-			//add html for action button
-			if ($listPenjualan->jml > 0) {
-				if ($listPenjualan->status_confirm_adm != '2') {
-					$row[] = 
-					'<a class="btn btn-sm btn-default" href="'.$link_detail.'" title="Penjualan Detail" id="btn_detail"><i class="glyphicon glyphicon-info-sign"></i> '.$listPenjualan->jml.' Items</a>
-					 <a class="btn btn-sm btn-success btn_edit_status" href="javascript:void(0)" title="Aktif" id="'.$listPenjualan->id_pembelian.'"><i class="fa fa-check"></i> Aktif</a>';
-				}else{
-					$row[] = 
-					'<a class="btn btn-sm btn-default" href="'.$link_detail.'" title="Penjualan Detail" id="btn_detail"><i class="glyphicon glyphicon-info-sign"></i> '.$listPenjualan->jml.' Items</a>
-					 <a class="btn btn-sm btn-danger btn_edit_status" href="javascript:void(0)" title="Batal" id="'.$listPenjualan->id_pembelian.'"><i class="fa fa-times"></i> Batal</a>';
-				}
-			}
-			else
-			{
-				$row[] = null;
-			}
 
+			//loop value tabel db
+			$row[] = $datalist->order_id;
+			$row[] = $datalist->tgl_checkout;
+			$row[] = $datalist->metode;
+			$row[] = $datalist->nama;
+			$row[] = $datalist->alamat;
+			$row[] = number_format($datalist->ongkos_kirim,0,",",".");
+			$row[] = number_format($datalist->ongkos_total,0,",",".");
+			
+			//add html for action button
+			$row[] = '<a class="btn btn-sm btn-success" href="'.$link_detail.'" title="Penjualan Detail" id="btn_detail"><i class="glyphicon glyphicon-info-sign"></i> Detail</a>';
 			$data[] = $row;
 		}//end loop
 
 		$output = array(
-						"draw" => $_POST['draw'],
-						"recordsTotal" => $this->m_cfrm->count_all_penjualan(),
-						"recordsFiltered" => $this->m_cfrm->count_filtered_penjualan(),
-						"data" => $data,
-					);
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->m_cfrm->count_all_penjualan(),
+			"recordsFiltered" => $this->m_cfrm->count_filtered_penjualan(),
+			"data" => $data,
+		);
 		//output to json format
 		echo json_encode($output);
 	}
