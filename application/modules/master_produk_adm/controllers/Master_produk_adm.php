@@ -297,7 +297,6 @@ class Master_produk_adm extends CI_Controller {
 
 			// Set flash data 
 			$this->session->set_flashdata('feedback_success', 'Berhasil Set Diskon');
-
 			return redirect(base_url('master_produk_adm/config_produk/') . $id_produk, 'refresh');
 			
 		} catch (Exception $error) {
