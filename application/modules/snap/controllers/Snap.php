@@ -59,11 +59,11 @@ class Snap extends CI_Controller {
 			'gross_amount' => $jumlah, // no decimal allowed for creditcard
 		  );
 
-		//   $ongkir = array(
+		// $ongkir = array(
 		// 	'id' => 'a002',
 		// 	'price' => $check->ongkos_kirim,
 		// 	'quantity' => 1,
-		// 	'name' => $check->jasa_ekspedisi.' - '.$check->pilihan_paket
+		// 	'name' => $check->jasa_ekspedisi.' - '.$check->pilihan_paket,
 		// );
 
 		// array_push($item_detail, $ongkir);
