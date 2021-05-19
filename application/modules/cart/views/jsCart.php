@@ -2,6 +2,11 @@
 
 	$(document).ready(function() {
 
+		//force integer input in textfield
+		$('input.numberinput').bind('keypress', function (e) {
+			return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
+		});
+
 		//set active class to navbar
 		var uriValue = "produk";
 		$('#li_nav_home').removeClass('active');
@@ -41,8 +46,9 @@
 	});
 
 	const gantiQtyCart = (cb) => {
-		var row_id = cb.attr("id"); //mengambil row_id dari artibut id
-		var qty = cb.val(); //mengambil value
+		var row_id = cb.attr("data-id"); //mengambil row_id dari artibut id
+		// var qty = cb.val(); //mengambil value
+		var qty = $('input#'+row_id).val(); //mengambil value
 		$.ajax({
 			url : "<?php echo site_url('cart/update_cart') ?>",
 			method : "POST",

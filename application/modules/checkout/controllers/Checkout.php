@@ -82,10 +82,11 @@ class Checkout extends CI_Controller {
 		}
 	}
 
-	private function check_token_session()
+	private function check_token_session($is_status_bayar = 1)
 	{
+		//status bayar 1 adalah transaksi baru (belum melakukan transfer)
 		$token = $this->session->userdata('token_checkout');
-		$cek = $this->m_ckt->single_row('tbl_checkout', ['token' => $token, 'status' => 1]);
+		$cek = $this->m_ckt->single_row('tbl_checkout', ['token' => $token, 'status' => $is_status_bayar]);
 		if($cek) {
 			return ['status' => true, 'token' => $token, 'data' => $cek];
 		}else{
@@ -237,20 +238,9 @@ class Checkout extends CI_Controller {
 	public function index()
 	{
 		$id_user = $this->session->userdata('id_user');
-		$menu_navbar = $this->mod_hpg->get_menu_navbar();
-		$count_kategori = $this->mod_hpg->count_kategori();
-		$submenu = array();
 		$data_cart = null;
-		
-		for ($i=1; $i <= $count_kategori; $i++) { 
-			//set array key berdasarkan loop dari angka 1
-			$submenu[$i] =  $this->mod_hpg->get_submenu_navbar($i);	
-		}
-		$menu_select_search = $this->mod_hpg->get_menu_search();
-		
-		// $data_user = $this->m_ckt->get_data_user($id_user);
-
 		$cek_token = $this->check_token_session();
+		
 		if($cek_token['status']) {
 			// updating tabel checkout dan detail berdasarkan isian cart e
 			// disini ga maen deleted at, langsung hapus kolom detail checkout
@@ -268,23 +258,16 @@ class Checkout extends CI_Controller {
 			$this->set_token_checkout();
 		}
 
-		
 		// echo "<pre>";
 		// print_r ($data_cart);
 		// echo "</pre>";
 		// exit;
 
-
 		$data = array(
 			'content' => 'checkout/view_checkout_1',
 			'modal' => 'checkout/modal_checkout',
-			'count_kategori' => $count_kategori,
 			'data_cart' => $data_cart,
-			'submenu' => $submenu,
-			'menu_navbar' => $menu_navbar,
 			'js' => 'checkout/jsCheckout',
-			'menu_select_search' => $menu_select_search,
-			// 'data_user' => $data_user,
 		);
 
         $this->load->view('temp',$data);
@@ -455,7 +438,7 @@ class Checkout extends CI_Controller {
 		$id_user = $this->session->userdata('id_user');
 		$data_user = $this->m_ckt->get_data_user($id_user);
 
-		$cek_token = $this->check_token_session();
+		$cek_token = $this->check_token_session(2);
 		
 		if($cek_token['status'] == false) {
 			return redirect('home');
@@ -491,6 +474,9 @@ class Checkout extends CI_Controller {
 
 			$this->cart->update($data);
 		}
+
+		// unset sesion token
+		$this->session->unset_userdata('token_checkout');
 
 		return redirect('home', 'refresh');
 	}
@@ -677,7 +663,8 @@ class Checkout extends CI_Controller {
 				foreach ($data['rajaongkir']['results'] as $key => $value) {
 					foreach ($value['costs'] as $k => $v) {
 						$arr_data['kurir'] = $value['name'];
-						$arr_data['paket'] = $v['service'].' - '.$v['description'];
+						// $arr_data['paket'] = $v['service'].' - '.$v['description'];
+						$arr_data['paket'] = $v['service'];
 						$arr_data['asal'] = $data['rajaongkir']['origin_details']['type'].' '.$data['rajaongkir']['origin_details']['city_name'].' '.$data['rajaongkir']['origin_details']['province'];
 						$arr_data['tujuan'] = $data['rajaongkir']['destination_details']['type'].' '.$data['rajaongkir']['destination_details']['city_name'].' '.$data['rajaongkir']['destination_details']['province'];
 						$arr_data['harga'] = $v['cost'][0]['value'];
@@ -708,13 +695,13 @@ class Checkout extends CI_Controller {
 			<table class='table'>
 				<thead>
 					<tr>
+						<th>Pilih</th>
 						<th>Kurir</th>
 						<th>Paket</th>
 						<th class='hidden'>Asal</th>
 						<th class='hidden'>Tujuan</th>
 						<th>Harga</th>
 						<th>Estimasi Hari</th>
-						<th>Pilih</th>
 					</tr>
 				</thead>
 				<tbody>";
@@ -724,13 +711,13 @@ class Checkout extends CI_Controller {
 			$strHarga = "<span class='float-left'>Rp. </span><span class='float-right'>".number_format($value['harga'],0,',','.')."</span>";
 			$html .= "
 				<tr>
+					<td><button type='button' class='btn btn-xs btn-primary' onclick='pilihKurir($(this))'>Pilih Kurir</button></td>
 					<td data-kurir='".$value['kurir']."'>".$value['kurir']."</td>
 					<td data-paket='".$value['paket']."'>".$value['paket']."</td>
 					<td class='hidden' data-asal='".$value['asal']."'>".$value['asal']."</td>
 					<td class='hidden' data-tujuan='".$value['tujuan']."'>".$value['tujuan']."</td>
 					<td data-harga='".$value['harga']."'>".$strHarga."</td>
 					<td data-estimasi='".$value['estimasi']."'>".$value['estimasi']."</td>
-					<td><button type='button' class='btn btn-sm btn-primary' onclick='pilihKurir($(this))'>Pilih Kurir</button></td>
 				</tr>";
 		}
 

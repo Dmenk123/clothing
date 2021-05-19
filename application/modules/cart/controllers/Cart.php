@@ -82,7 +82,7 @@ class Cart extends CI_Controller {
 		));
     }
 
-    function show_cart()
+	function show_cart()
     {
         //deklarasi variabel
         $output = '';
@@ -95,15 +95,8 @@ class Cart extends CI_Controller {
                     <td>'.$items['name'].'</td>
                     <td>'.$items['options']['Size_produk'].'</td>
                     <td> 
-	            		<select class="form-control form-control-sm" style="width:60px;" id="'.$items['rowid'].'" onchange="gantiQtyCart($(this))">';
-	            			for ($i=1; $i <= $items['options']['Stok_produk']; $i++) {
-	            				if ($i == $items['qty']) {
-	            					$output .='<option value="'.$i.'" selected>'.$i.'</option>';
-	            				}else{
-	            					$output .='<option value="'.$i.'">'.$i.'</option>';	
-	            				}
-	                    	}	
-	                    $output .='</select>
+						<input type="number" class="numberinput" style="width:60px;" id="'.$items['rowid'].'" value="'.$items['qty'].'">
+						<button type="button" data-id="'.$items['rowid'].'" onclick="gantiQtyCart($(this))" class="btn btn-primary btn-xs"><i class="fa fa-refresh"></i></button>
                     </td>
                     <td>'.$items['options']['Berat_produk'].' gram</td>
                     <td>'.$items['options']['Berat_produk'] * $items['qty'].' gram</td>

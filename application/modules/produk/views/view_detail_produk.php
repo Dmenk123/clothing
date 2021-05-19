@@ -28,10 +28,12 @@
                             <label><strong>Qty : </strong></label>
                         </div>
                         <div class="col-sm-8" style="padding-bottom: 10px;">
-                            <!-- <select class="form-control selectQty" id="qty_<?php echo $val->id_produk;?>" name="select_qty" required>
-                                <option value="">Pilih Qty Produk</option>
-                            </select> -->
-							<input type="number" class="form-control" id="qty_<?php echo $val->id_produk;?>" name="select_qty">
+                            <select class="form-control selectQty" id="qty_<?php echo $val->id_produk;?>" name="select_qty" required>
+								<?php for ($i=1; $i <= 30; $i++) { 
+									echo "<option value='$i'>$i</option>";
+								}?>
+                            </select>
+							<!-- <input type="number" class="form-control" id="qty_<?php echo $val->id_produk;?>" name="select_qty"> -->
                         </div>
                         <p class="text-center buttons">
                             <button class="btn btn-primary btn-block add_cart" data-idproduk="<?php echo $val->id_produk;?>" data-namaproduk="<?php echo $val->nama_produk;?>" data-hargaproduk="<?php echo $val->harga;?>" data-gambarproduk="<?php echo $val->nama_gambar;?>"><i class="fa fa-shopping-cart"></i>Add To Cart</button>

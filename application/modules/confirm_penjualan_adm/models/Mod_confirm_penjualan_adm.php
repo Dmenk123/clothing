@@ -108,40 +108,19 @@ class Mod_confirm_penjualan_adm extends CI_Model
 
 	// ================================================================================================
 
-	public function get_data_penjualan_header($id_penjualan)
+	public function get_data_penjualan_header($id_checkout)
 	{
-		$this->db->select('
-			tbl_pembelian.id_pembelian,
-			tbl_user.fname_user,
-			tbl_user.lname_user,
-			tbl_user.email,
-			tbl_checkout.method_checkout,
-			tbl_checkout.jasa_ekspedisi,
-			tbl_checkout.pilihan_paket,
-			tbl_checkout.estimasi_datang,
-			tbl_checkout.ongkos_kirim,
-			tbl_checkout.ongkos_total,
-			tbl_checkout.fname_kirim,
-			tbl_checkout.lname_kirim,
-			tbl_checkout.alamat_kirim,
-			tbl_pembelian.tgl_pembelian,
-			tbl_pembelian.id_checkout,
-			tbl_pembelian.btransfer_1,
-			tbl_pembelian.btransfer_2,
-			tbl_pembelian.btransfer_3,
-			tbl_pembelian.bconfirm_adm
-		');
-		$this->db->from('tbl_pembelian');
-		$this->db->join('tbl_user', 'tbl_pembelian.id_user = tbl_user.id_user','left');
-		$this->db->join('tbl_checkout', 'tbl_pembelian.id_checkout = tbl_checkout.id_checkout', 'left');
-        $this->db->where('tbl_pembelian.id_pembelian', $id_penjualan);
-        $this->db->group_by('tbl_pembelian.id_pembelian');
+		$this->db->select('*, CASE WHEN tbl_checkout.is_manual = 1 THEN \'Transfer Manual\' ELSE \'Payment Gateway\' END as metode');
+		$this->db->from('tbl_checkout');
+        $this->db->where('id_checkout', $id_checkout);
 
         $query = $this->db->get();
 
         if ($query->num_rows() > 0) {
-            return $query->result();
-        }
+            return $query->row();
+        }else{
+			return false;
+		}
 	}
 
 	public function get_data_id_checkout($id_penjualan)
@@ -156,8 +135,7 @@ class Mod_confirm_penjualan_adm extends CI_Model
 
 	public function get_data_penjualan_detail($id_checkout)
 	{
-		$this->db->select('tbl_checkout.fname_kirim,
-						   tbl_checkout.lname_kirim,
+		$this->db->select('tbl_checkout.*,
 						   tbl_produk.nama_produk,
 						   tbl_stok.ukuran_produk,
 						   tbl_satuan.nama_satuan,

@@ -78,6 +78,43 @@ class Confirm_penjualan_adm extends CI_Controller {
 		echo json_encode($output);
 	}
 
+	public function confirm_penjualan_detail()
+	{
+		$id_user = $this->session->userdata('id_user'); 
+		$data_user = $this->m_dasbor->get_data_user($id_user);
+
+		// $jumlah_notif = $this->m_dasbor->email_notif_count($id_user);  //menghitung jumlah email masuk
+		// $notif = $this->m_dasbor->get_email_notif($id_user); //menampilkan isi email
+
+		$id_checkout = $this->uri->segment(3);
+		$query_header = $this->m_cfrm->get_data_penjualan_header($id_checkout);
+		$query_data = $this->m_cfrm->get_data_penjualan_detail($id_checkout);
+
+		
+		// echo "<pre>";
+		// print_r ($query_header);
+		// echo "</pre>";
+
+		// echo "<pre>";
+		// print_r ($query_data);
+		// echo "</pre>";
+		// exit;
+
+		$data = array(
+			'content'=>'view_confirm_penjualan_detail',
+			// 'modal'=>'modalConfirmPenjualanAdm',
+			'css'=>'cssConfirmPenjualanAdm',
+			'js'=>'jsConfirmPenjualanAdm',
+			'data_user' => $data_user,
+			// 'qty_notif' => $jumlah_notif,
+			// 'isi_notif' => $notif,
+			'hasil_header' => $query_header,
+			'hasil_data' => $query_data,
+		);
+		$this->load->view('temp_adm',$data);
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public function get_konfirmasi_penjualan($id)
 	{
 		$data = array(
@@ -231,32 +268,7 @@ class Confirm_penjualan_adm extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function confirm_penjualan_detail()
-	{
-		$id_user = $this->session->userdata('id_user'); 
-		$data_user = $this->m_dasbor->get_data_user($id_user);
-
-		$jumlah_notif = $this->m_dasbor->email_notif_count($id_user);  //menghitung jumlah email masuk
-		$notif = $this->m_dasbor->get_email_notif($id_user); //menampilkan isi email
-
-		$id_pembelian = $this->uri->segment(3);
-		$query_header = $this->m_cfrm->get_data_penjualan_header($id_pembelian);
-		$id_checkout = $this->m_cfrm->get_data_id_checkout($id_pembelian);
-		$query_data = $this->m_cfrm->get_data_penjualan_detail($id_checkout);
-
-		$data = array(
-			'content'=>'view_detail_confirm_penjualan_adm',
-			'modal'=>'modalConfirmPenjualanAdm',
-			'css'=>'cssConfirmPenjualanAdm',
-			'js'=>'jsConfirmPenjualanAdm',
-			'data_user' => $data_user,
-			'qty_notif' => $jumlah_notif,
-			'isi_notif' => $notif,
-			'hasil_header' => $query_header,
-			'hasil_data' => $query_data,
-		);
-		$this->load->view('temp_adm',$data);
-	}
+	
 
 	public function cetak_nota_penjualan()
 	{
