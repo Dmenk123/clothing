@@ -126,8 +126,7 @@
                     $this->load->view($content_new_produk); 
                 } 
              ?>
-
-            <?php 
+   <?php 
                 if (isset($content_banner)) 
                 {
                     $this->load->view($content_banner); 
@@ -135,9 +134,9 @@
              ?>
 
             <?php 
-                if (isset($content_quotes)) 
+                if (isset($content_paragraph)) 
                 {
-                    $this->load->view($content_quotes); 
+                    $this->load->view($content_paragraph); 
                 } 
              ?>
 
@@ -145,6 +144,27 @@
                 if (isset($content_grid)) 
                 {
                     $this->load->view($content_grid); 
+                } 
+             ?>
+             
+             <?php 
+                if (isset($content_quotes)) 
+                {
+                    $this->load->view($content_quotes); 
+                } 
+             ?>
+             
+             <?php 
+                if (isset($content_banner2)) 
+                {
+                    $this->load->view($content_banner2); 
+                } 
+             ?>
+             
+             <?php 
+                if (isset($content_tombol)) 
+                {
+                    $this->load->view($content_tombol); 
                 } 
              ?>
             <!-- /#hot -->
