@@ -45,6 +45,11 @@
 					<!--<h4>Silahkan Pilih Metode Pembayaran</h4>-->
 				</div>
 
+				<form id="payment-form" method="post" action="<?=site_url()?>/snap/finish">
+					<input type="hidden" name="result_type" id="result-type" value=""></div>
+					<input type="hidden" name="result_data" id="result-data" value=""></div>
+				</form>
+
 				<div class="row div-tombol-payment">
 					<div class="col-sm-6 col-md-6 col-xs-6">
 						<div class="latest-post pull-right">

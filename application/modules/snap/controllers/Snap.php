@@ -22,7 +22,10 @@ class Snap extends CI_Controller {
 
     public function token()
     {
-		$data_where = ['id_checkout' => '25ef8ddd-191e-440c-a64e-0d0ae94fd50a'];
+		$token = $this->session->userdata('token_checkout');
+		$cek = $this->m_global->single_row('*',  ['token' => $token, 'status' => 1], 'tbl_checkout');
+
+		$data_where = ['id_checkout' => $cek->id_checkout];
 		$join = [ 
 			[
 				'table' => 'tbl_produk',
@@ -31,24 +34,23 @@ class Snap extends CI_Controller {
 		];
 		$checkout   = $this->m_global->multi_row(null, $data_where, 'tbl_checkout_detail', $join);
 		$check      = $this->m_global->single_row("*", $data_where, 'tbl_checkout');
-		
 
 		// Optional
 
 		$item_detail = array();
 		$jumlah_harga = 0;
 		for ($i=0; $i<count($checkout); $i++) { 
-			
+				$harga = $checkout[$i]->harga_satuan;
 				$item[$i] = array(
 					'id' => $checkout[$i]->id_produk,
-					'price' => $checkout[$i]->harga_satuan,
-					'quantity' => 1,
+					'price' => $harga,
+					'quantity' => $checkout[$i]->qty,
 					'name' => $checkout[$i]->nama_produk
 				);
 
 				array_push($item_detail, $item[$i]);
 
-				$jumlah_harga += $checkout[$i]->harga_satuan;
+				$jumlah_harga += ($harga * $checkout[$i]->qty);
 
 		};
 
@@ -194,6 +196,7 @@ class Snap extends CI_Controller {
 			'finish_redirect_url' => $result->finish_redirect_url,
 			'bill_key' => $bill_key,
 			'biller_code' => $biller_code,
+			'token_checkout' =>  $this->session->userdata('token_checkout'),
 		];
 
 	    $return = $this->snapmodel->insert($data);
@@ -233,7 +236,7 @@ class Snap extends CI_Controller {
 
 		// update status pembayaran
 		if ($result->transaction_status == 'pending' || $result->transaction_status == 'settlement') {
-			redirect('confirm/confirm_success/'.$result->order_id);
+			redirect('snap/status/'.$result->order_id);
 		}else{
 			redirect('home/oops/');
 		}
@@ -1060,6 +1063,11 @@ class Snap extends CI_Controller {
 		$snapToken = $this->midtrans->getSnapToken($transaction_data);
 		error_log($snapToken);
 		echo $snapToken;
+	}
+
+	public function status($id_order)
+	{
+		var_dump('suon');
 	}
 	
 	
