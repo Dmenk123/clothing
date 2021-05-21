@@ -158,7 +158,7 @@ class Mod_confirm_penjualan_adm extends CI_Model
 
 	public function update_data_konfirmasi($where, $data)
 	{
-		$this->db->update("tbl_pembelian", $data, $where);
+		$this->db->update("tbl_checkout", $data, $where);
 	}
 
 	public function tambah_datalog_konfirmasi($data)

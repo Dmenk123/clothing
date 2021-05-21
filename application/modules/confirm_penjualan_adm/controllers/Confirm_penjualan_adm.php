@@ -9,6 +9,7 @@ class Confirm_penjualan_adm extends CI_Controller {
 		$this->load->library('email'); // untuk kirim email
 		$this->load->model('dashboard_adm/Mod_dashboard_adm','m_dasbor');
 		$this->load->model('Mod_confirm_penjualan_adm','m_cfrm');
+		$this->load->model('m_global');
 		//cek sudah login apa tidak
 		if ($this->session->userdata('logged_in') != true) {
 			redirect('home/error_404');
@@ -102,7 +103,7 @@ class Confirm_penjualan_adm extends CI_Controller {
 
 		$data = array(
 			'content'=>'view_confirm_penjualan_detail',
-			// 'modal'=>'modalConfirmPenjualanAdm',
+			'modal'=>'modalConfirmPenjualanAdm',
 			'css'=>'cssConfirmPenjualanAdm',
 			'js'=>'jsConfirmPenjualanAdm',
 			'data_user' => $data_user,
@@ -113,15 +114,31 @@ class Confirm_penjualan_adm extends CI_Controller {
 		);
 		$this->load->view('temp_adm',$data);
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public function get_konfirmasi_penjualan($id)
 	{
+		$data_header = $this->m_cfrm->get_data_penjualan_header($id);
+		$txt_email = "<p>Kepada Yth.</p>";
+		$txt_email .= "<ul>";
+		$txt_email .= "<li>Nama : $data_header->nama</li>";
+		$txt_email .= "<li>Alamat : ".$data_header->alamat." ".$data_header->kota_asal_txt."</li>";
+		$txt_email .= "<li>Email : $data_header->email</li>";
+		$txt_email .= "</ul>";
+		$txt_email .= "<p>Terima kasih telah menyelesaikan pembayaran. Berikut Kode Resi Anda.</p>";
+		$txt_email .= "<ul>";
+		$txt_email .= "<li><strong>Kode Resi : XXX-XXX-XXX </strong></li>";
+		$txt_email .= "</ul>";
+		//$txt_email .= "<p> Salam Sukses (Crazy Property Tycoon)</p>";
+
 		$data = array(
-			'data_header' => $this->m_cfrm->get_data_penjualan_header($id),
+			'data_header' => $data_header,
+			'txt_email' => $txt_email
 		);
 		echo json_encode($data);
 	}
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
+	
 
 	public function konfigurasi_upload_bukti($nmfile)
 	{ 
@@ -183,50 +200,109 @@ class Confirm_penjualan_adm extends CI_Controller {
 	    $this->image_lib->resize();
 	}
 
-	public function konfirmasi_penjualan($idBeli)
+	public function konfirmasi_penjualan()
 	{	
-		//replace space with dash
-		$nmfile = str_replace(" ", "-", strtolower(trim("bukti transfer ".$this->input->post('fieldIdBeli'))));
-		//load konfig upload
-		$this->konfigurasi_upload_bukti($nmfile);
-		//jika melakukan upload foto
-		if ($this->gbr_bukti->do_upload('buktiConfirm')) 
-		{
-			$gbrBukti = $this->gbr_bukti->data();
-			//inisiasi variabel u/ digunakan pada fungsi config img bukti
-			$nama_file_bukti = $gbrBukti['file_name'];
-			//call email config 
-			$this->konfigurasi_email($this->input->post('fieldEmailCustomer'));
-			//add attachment pada konfigurasi email
-			$this->email->attach($gbrBukti['full_path']);
-		    //send email
-		    $this->email->send();
-		    //load config img bukti
-		    $this->konfigurasi_image_bukti($nama_file_bukti);
-	        //data input array
-			$data_input = array(
-				'status_confirm_adm' => "1",
-				'tgl_confirm_adm' => date('Y-m-d'),
-				'bconfirm_adm' => $gbrBukti['file_name'], 
-			);
-			//clear img lib after resize
-			$this->image_lib->clear();
-			//update tbl_pembelian
-			$this->m_cfrm->update_data_konfirmasi(array('id_pembelian' => $this->input->post('fieldIdBeli')), $data_input);
-			//insert tbl log
-			$data_log = array(
-				'keterangan' => 'Insert data konfirmasi ke tabel pembelian, id_user = '.$this->input->post('fieldIdUser'),
-				'datetime' => date('Y-m-d H:i:s'),
-				'id_user' => $this->input->post('fieldIdUser'),
-				'data_baru' => $nmfile
-			);
-			$this->m_cfrm->tambah_datalog_konfirmasi($data_log);
-		} //end 
+		$order_id = $this->input->post('fieldOrderId');
+		$nama = $this->input->post('fieldNama');
+		$email = $this->input->post('fieldEmail');
+		$subjek = $this->input->post('subjekEmail');
+		$txt_email = $this->input->post('pesanEmail');
+		
+		//data input array
+		$data_input = array(
+			'status' => "3",
+			'tgl_confirm_adm' => date('Y-m-d'),
+		);
+		
+		//update tbl_pembelian
+		$this->m_cfrm->update_data_konfirmasi(['order_id' => $order_id], $data_input); 
+
+		// kirim email manual
+		$data_ckt = $this->m_global->single_row('*', ['order_id' => $order_id], 'tbl_checkout');
+		$email_manual = $this->kirim_email_manual($data_ckt, $subjek, $txt_email);
 
 		echo json_encode(array(
 			"status" => TRUE,
 			"pesan" => 'Data Telah berhasil dikonfirmasi'
 		));
+	}
+
+	public function kirim_email_manual($data_ckt, $subjek, $txt_email)
+	{
+		$obj_date = new DateTime();
+		$timestamp = $obj_date->format('Y-m-d H:i:s');
+		// $arr_valid = $this->rule_validasi();
+		
+		$nama = $data_ckt->nama;
+		$email = $data_ckt->email;
+		$subjek = $subjek;
+		$pesan_email = $txt_email;
+		
+		$this->db->trans_begin();
+
+		$send_email = $this->send_email(trim($email), trim($subjek), $txt_email);
+		// if($send_email){
+		// 	$data_mail['isi_email'] = $pesan_email;
+		// 	$data_mail['created_at'] = $timestamp;
+		// 	$insert = $this->m_global->store($data_mail, 't_email');
+		// }
+		
+		// if ($this->db->trans_status() === FALSE){
+		// 	$this->db->trans_rollback();
+		// 	$retval['status'] = false;
+		// 	$retval['pesan'] = 'Gagal Kirim Email';
+		// 	$dataret['err'] = TRUE;
+		// }else{
+		// 	$this->db->trans_commit();
+		// 	$retval['status'] = true;
+		// 	$retval['pesan'] = 'Sukses Kirim Email';
+		// 	$dataret['err'] = FALSE;
+		// }
+
+		if($send_email){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public function send_email($receiver_email, $subject, $message)
+	{
+		// Storing submitted values
+		$sender_email = 'admin@crazypropertytycoon.com';
+		$user_password = 'admin@crazypropertytycoon.com';
+		$username = 'admin@crazypropertytycoon.com';
+
+		// Configure email library
+		$config['protocol'] = 'http';
+		$config['smtp_host'] = 'mx1.hostinger.in';
+		$config['smtp_timeout'] = '7';
+		$config['smtp_port'] = 110;
+		$config['charset']    = 'utf-8';
+		$config['newline']    = "\r\n";
+		$config['mailtype'] = 'text'; // or html
+		//$config['validation'] = TRUE; // bool whether to validate email or not
+		$config['smtp_user'] = $sender_email;
+		$config['smtp_pass'] = $user_password;
+
+		// Load email library and passing configured values to email library
+		$this->load->library('email', $config);
+		$this->email->set_newline("\r\n");
+
+		// Sender email address
+		$this->email->from($sender_email, $username);
+		// Receiver email address
+		$this->email->to($receiver_email);
+		// Subject of email
+		$this->email->subject($subject);
+		// Message in email
+		$this->email->message($message);
+
+		if ($this->email->send()) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 	public function edit_status_penjualan($id)

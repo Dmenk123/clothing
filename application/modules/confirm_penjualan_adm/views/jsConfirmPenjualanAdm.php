@@ -47,7 +47,7 @@ $(document).ready(function() {
    //modal gambar transfer detail
    $('.modalGbrTransfer').click(function() {
       let nmGbr = $(this).data("id");
-      $('#imgGbrDetail').attr('src', baseUrl+'assets/img/bukti_transfer/'+nmGbr);
+      $('#imgGbrDetail').attr('src', baseUrl+nmGbr);
       $('.txtJudul').text('Gambar Bukti Transfer');
       $('#modal_gambar_detail').modal('show');
    });
@@ -124,7 +124,7 @@ function randString(angka)
    return text;
 }
 
-function editConfirmPenjualan(id)
+function confirmPenjualan(id)
 {
    save_method = 'update';
    $('#form_confirm_jual')[0].reset(); // reset form on modals
@@ -136,9 +136,11 @@ function editConfirmPenjualan(id)
       dataType: "JSON",
       success: function(data)
       {
-         $('[name="fieldIdBeli"]').val(data.data_header[0].id_pembelian);
-         $('[name="fieldEmailCustomer"]').val(data.data_header[0].email);
-         $('.txtBuktiConfirm').text(data.data_header[0].bconfirm_adm);
+         $('[name="fieldOrderId"]').val(data.data_header.order_id);
+			$('[name="fieldNama"]').val(data.data_header.nama);
+			$('[name="fieldEmail"]').val(data.data_header.email);
+			// $("#pesan_email").html(data.data_header.email);
+			// $("#toni").html(data.txt_email);
       },
       error: function (e) {
          console.log("ERROR : ", e);
@@ -161,14 +163,13 @@ function saveKonfirmasi()
          // Get form
          let form = $('#form_confirm_jual')[0];
          let data = new FormData(form);
-         let idBeli = $('#field_id_beli').val();
          // ajax adding data to database
          $('#btnSave').text('saving...'); //change button text
          $('#btnSave').attr('disabled',true); //set button disable 
          $.ajax({
             type: "POST",
             enctype: 'multipart/form-data',
-            url: "<?php echo site_url('confirm_penjualan_adm/konfirmasi_penjualan/'); ?>"+idBeli,
+            url: "<?php echo site_url('confirm_penjualan_adm/konfirmasi_penjualan/'); ?>",
             data: data,
             dataType: "JSON",
             processData: false, // false, it prevent jQuery form transforming the data into a query string

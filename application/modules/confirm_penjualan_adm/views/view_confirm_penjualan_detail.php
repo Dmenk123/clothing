@@ -89,7 +89,7 @@
 
                     <?php $id = $this->uri->segment(3); ?>
                     <?php $link_cetak = site_url('confirm_penjualan_adm/cetak_nota_penjualan/').$id; ?>
-                    <?php echo '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Confirm" onclick="editConfirmPenjualan('."'".$id."'".')"><i class="glyphicon glyphicon-check"></i> Confirm</a>';?>
+                    <?php echo '<a class="btn btn-sm btn-primary" href="javascript:void(0)" title="Confirm" onclick="confirmPenjualan('."'".$id."'".')"><i class="glyphicon glyphicon-check"></i> Confirm</a>';?>
                     <!-- <?php echo '<a class="btn btn-sm btn-success" href="'.$link_cetak.'" title="Print Nota" id="btn_print_surat_beli" target="_blank"><i class="glyphicon glyphicon-print"></i> Cetak Nota</a>';?> -->
                   </div>
               </div>  

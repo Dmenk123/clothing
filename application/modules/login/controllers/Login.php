@@ -79,8 +79,8 @@ class Login extends CI_Controller {
 				'logged_in' => false,
 			];
 
-			$data_log = json_encode($arr_userdata);
-			$this->lib_fungsi->catat_log_aktifitas('LOGOUT', null, $data_log);
+			// $data_log = json_encode($arr_userdata);
+			// $this->lib_fungsi->catat_log_aktifitas('LOGOUT', null, $data_log);
 
 			//$this->session->sess_destroy();
 			$this->session->unset_userdata('username');
@@ -90,7 +90,10 @@ class Login extends CI_Controller {
 			$this->session->set_userdata(array('logged_in' => false));
 		}
 		
-		return redirect('home');
+		// return redirect('home');
+		echo json_encode([
+			'pesan' => 'berhasil log out',
+		]);
 	}
 
 	public function lihat_pass($username)

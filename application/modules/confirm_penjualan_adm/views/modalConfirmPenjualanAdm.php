@@ -10,36 +10,47 @@
          <div class="modal-body form">
             <form id="form_confirm_jual" name="formConfirmJual">
                <div class="form-row">
-                  <div class="form-group col-md-6">
-                     <label class="lbl-modal">ID Pembelian : </label>
-                     <input type="text" class="form-control" id="field_id_beli" name="fieldIdBeli" readonly="">
-                     <input type="hidden" class="form-control" id="field_email_customer" name="fieldEmailCustomer">
+                  <div class="form-group col-6">
+                     <label class="lbl-modal">Order ID : </label>
+                     <input type="text" class="form-control" id="field_order_id" name="fieldOrderId" readonly="">
+							<span class="help-block"></span>
                   </div>
                </div>
                <div class="form-row">
-                  <div class="form-group col-md-6">
-                     <label class="lbl-modal">User : </label>
-                     <input type="text" class="form-control" id="form_user" name="fieldUser" value="<?php echo $this->session->userdata('fname_user')." ".$this->session->userdata('lname_user');?>" readonly>
-                     <input type="hidden" class="form-control" id="form_id_user" name="fieldIdUser" value="<?php echo $this->session->userdata('id_user');?>" readonly>
+                  <div class="form-group col-6">
+                     <label class="lbl-modal">Customer : </label>
+                     <input type="text" class="form-control" id="field_nama" name="fieldNama" value="" readonly>
+							<span class="help-block"></span>
                   </div>
                </div>
                <div class="form-row">
-                  <div class="form-group col-md-12">
-                     <label for="lblGambar" class="lblGambarErr">Bukti Gambar Konfirmasi Administrasi</label>
-                     <br>
-                     <label>
-                        <span id="txt_wajib_det1" style="color: red;font-weight: bold">Wajib Diisi !!</span>
-                        <input type="file" id="bukti_confirm" name="buktiConfirm" accept=".png, .jpg, .jpeg">
-                     </label>
-                     <span style="font-weight: normal; font-style: italic;" class="txtBuktiConfirm"></span>
+						<div class="col-12 form-group">
+							<label class="control-label col-12">Email Tujuan</label>
+                    	<input type="text" class="form-control" id="field_email" value="" name="fieldEmail" readonly>
+                    	<span class="help-block"></span>
                   </div>
-               </div>
+					</div>
+					<div class="form-row">
+						<div class="col-12 form-group">
+							<label class="control-label col-12">Subjek Email</label>
+                    	<input type="text" class="form-control" value="Pembayaran Telah Dikonfirmasi" id="subjek_email" name="subjekEmail">
+                    	<span class="help-block"></span>
+                  </div>
+					</div>
+					<div class="form-row">
+						<div class="col-12">
+                  	<label class="control-label col-12">Pesan : </label>
+                    	<textarea class="form-control" id="pesan_email" rows="10" name="pesanEmail"></textarea>
+                    <span class="help-block"></span>
+                  </div>
+                </div>
                <div class="form-row">
                   <div class="form-group col-md-12">
                      <input type="checkbox" class="form-check-input" id="cfrm_check" name="cfrmCheck" value="agree"> 
                      <label class="form-check-label" for="checkConfirm">Saya telah memastikan data telah valid.</label>
                   </div>
                </div>
+					<div id="toni"></div>
             </form> <!-- form -->
          </div> <!-- modal body -->
          <div class="modal-footer">
