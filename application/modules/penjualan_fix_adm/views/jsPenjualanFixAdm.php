@@ -1,0 +1,188 @@
+<script type="text/javascript">
+	let save_method; //for save method string
+	let table;
+   let baseUrl = '<?php echo base_url(); ?>';
+
+$(document).ready(function() {
+   //force integer input in textfield
+   $('input.numberinput').bind('keypress', function (e) {
+      return (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57) && e.which != 46) ? false : true;
+   });
+
+   $(document).on('click', '.btn_remove', function(){
+      let button_id = $(this).attr('id');
+      $('#row'+button_id+'').remove();
+   });
+
+   // select class modal apabila bs.modal hidden
+   $("#modal_confirm_jual").on("hidden.bs.modal", function(){
+      $('#form_confirm_jual')[0].reset();
+      //clear tr append in modal
+      $('tr').remove('.tbl_modal_row');
+      $('option').remove('.appendOpt');
+   });
+
+   //datatables  
+   // tabel trans masuk
+	table = $('#tableConfirmJual').DataTable({
+		
+		"processing": true, 
+		"serverSide": true, 
+		//"order":[[ 2, 'desc' ]],
+      "order":[], //initial no order 
+		//load data for table content from ajax source
+		"ajax": {
+			"url": "<?php echo site_url('penjualan_fix_adm/list_penjualan_fix') ?>",
+			"type": "POST" 
+		},
+
+		"columnDefs": [
+			{
+				"targets": [-1], //last column
+				"orderable": false, //set not orderable
+			},
+		],
+	});
+
+   //modal gambar transfer detail
+   $('.modalGbrTransfer').click(function() {
+      let nmGbr = $(this).data("id");
+      $('#imgGbrDetail').attr('src', baseUrl+nmGbr);
+      $('.txtJudul').text('Gambar Bukti Transfer');
+      $('#modal_gambar_detail').modal('show');
+   });
+
+   //modal gambar konfirmasi detail
+   $('.modalGbrKonfirmasi').click(function() {
+      let nmGbr = $(this).data("id");
+      $('#imgGbrDetail').attr('src', baseUrl+'assets/img/bukti_konfirmasi/'+nmGbr);
+      $('.txtJudul').text('Gambar Bukti Konfirmasi Pembelian');
+      $('#modal_gambar_detail').modal('show');
+   });
+  
+   //jquery validate
+   //validasi form master produk
+   $("[name='formConfirmJual']").validate({
+      // Specify validation rules
+      errorElement: 'span',
+      /*errorLabelContainer: '.errMsg',*/
+      errorPlacement: function(error, element) {
+         if (element.attr("name") == "buktiConfirm") {
+            error.insertAfter(".lblGambarErr");
+         }else {
+            error.insertAfter(element);
+         }
+      },
+      rules:{
+         buktiConfirm: "required"
+      },
+      // Specify validation error messages
+      messages: {
+         buktiConfirm: " (Harus diisi !!)"
+      },
+      submitHandler: function(form) {
+         form.submit();
+      }
+   });
+
+//end jquery
+});	
+
+function randString(angka) 
+{
+   let text = "";
+   let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+   for (let i = 0; i < angka; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+   return text;
+}
+
+function bukaFormEmail(id)
+{
+   save_method = 'update';
+   $('#form_confirm_jual')[0].reset(); // reset form on modals
+   $('#modal_confirm_jual').modal('show'); // show bootstrap modal when complete loaded
+   $('.modal-title').text('Konfirmasi Penjualan');
+   $.ajax({
+      url : "<?php echo site_url('penjualan_fix_adm/get_konfirmasi_penjualan/')?>" + id,
+      type: "GET",
+      dataType: "JSON",
+      success: function(data)
+      {
+         $('[name="fieldOrderId"]').val(data.data_header.order_id);
+			$('[name="fieldNama"]').val(data.data_header.nama);
+			$('[name="fieldEmail"]').val(data.data_header.email);
+			// $("#pesan_email").html(data.data_header.email);
+			// $("#toni").html(data.txt_email);
+      },
+      error: function (e) {
+         console.log("ERROR : ", e);
+      }
+   });
+}
+
+function reload_table()
+{
+    table.ajax.reload(null,false); //reload datatable ajax 
+}
+
+function kirimEmail()
+{
+   let IsValid = $("form[name='formConfirmJual']").valid();
+   if(IsValid)
+   {
+      // Get form
+      let form = $('#form_confirm_jual')[0];
+      let data = new FormData(form);
+      // ajax adding data to database
+      $('#btnSave').text('saving...'); //change button text
+      $('#btnSave').attr('disabled',true); //set button disable 
+      $.ajax({
+         type: "POST",
+         enctype: 'multipart/form-data',
+         url: "<?php echo site_url('penjualan_fix_adm/aksi_kirim_email/'); ?>",
+         data: data,
+         dataType: "JSON",
+         processData: false, // false, it prevent jQuery form transforming the data into a query string
+         contentType: false, 
+         cache: false,
+         timeout: 600000,
+         success: function (data) {
+            if (data.status) {
+               alert(data.pesan);
+               $("#btnSave").attr("disabled", false);
+               window.location.href = "<?php echo site_url('penjualan_fix_adm'); ?>";
+            }
+         },
+         error: function (e) {
+            console.log("ERROR : ", e);
+            $("#btnSave").prop("disabled", false);
+         }
+      });
+   }
+}
+
+//change status pembelian (aktif/batal)
+function batalkanKonfirmasi(id) {
+   if(confirm('Apakah anda yakin ubah status Penjualan ini ?'))
+   {
+      $.ajax({
+         url : "<?php echo site_url('penjualan_fix_adm/batalkan_status_penjualan')?>",
+         type: "POST",
+         dataType: "JSON",
+         data : {id : id},
+         success: function(data)
+         {
+            alert(data.pesan);
+            window.location.href = "<?php echo site_url('penjualan_fix_adm'); ?>";
+         },
+         error: function (jqXHR, textStatus, errorThrown)
+         {
+            alert('Error remove data');
+         }
+      });
+   }   
+};
+</script>	

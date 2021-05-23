@@ -75,7 +75,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
               </li>
-							<li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+							<li class="<?php if ($this->uri->segment('1') == 'penjualan_fix_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('penjualan_fix_adm');?>"><i class="fa fa-plus-square"></i> Penjualan Fix</a>
               </li>
             </ul>
@@ -210,7 +210,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
               </li>
-							<li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+							<li class="<?php if ($this->uri->segment('1') == 'penjualan_fix_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('penjualan_fix_adm');?>"><i class="fa fa-plus-square"></i> Penjualan Fix</a>
               </li>
             </ul>
