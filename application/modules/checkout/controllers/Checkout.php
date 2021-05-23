@@ -94,8 +94,9 @@ class Checkout extends CI_Controller {
 		}
 	}
 
-	private function refresh_checkout($id_checkout)
+	private function refresh_checkout($data_checkout)
 	{
+		$id_checkout = $data_checkout->id_checkout;
 		$obj_date = new DateTime();
 		$date = $obj_date->format('Y-m-d');
 		$timestamp = $obj_date->format('Y-m-d H:i:s');
@@ -125,6 +126,10 @@ class Checkout extends CI_Controller {
 			}
 
 			$arr_data = [
+				'jasa_ekspedisi' => null,
+				'pilihan_paket' => null,
+				'estimasi_datang' => null,
+				'ongkos_kirim' => null,
 				'harga_total_produk' => $harga_total,
 				'berat_total' => $berat_total,
 				'updated_at' => $timestamp
@@ -240,12 +245,11 @@ class Checkout extends CI_Controller {
 		$id_user = $this->session->userdata('id_user');
 		$data_cart = null;
 		$cek_token = $this->check_token_session();
-		
 		if($cek_token['status']) {
 			// updating tabel checkout dan detail berdasarkan isian cart e
 			// disini ga maen deleted at, langsung hapus kolom detail checkout
 			// klo maen deleted at, sakno tabel e full
-			$this->refresh_checkout($cek_token['data']->id_checkout);
+			$this->refresh_checkout($cek_token['data']);
 			
 			$cek_tbl = $this->m_ckt->get_db_cart($cek_token['token']);
 
@@ -772,6 +776,7 @@ class Checkout extends CI_Controller {
 	public function get_data_kurir_terpilih()
 	{
 		$cek_sesi = $this->check_token_session();
+		
 		if($cek_sesi && $cek_sesi['data']->jasa_ekspedisi) {
 			$data = [
 				'kurir' => $cek_sesi['data']->jasa_ekspedisi,

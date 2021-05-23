@@ -60,6 +60,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="
              <?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {
                 echo 'active treeview';  
+              }else if ($this->uri->segment('1') == 'penjualan_fix_adm') {
+                echo 'active treeview';
               }?>">
             <a href="#">
               <i class="fa fa-exchange"></i>
@@ -70,11 +72,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </a>
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <!-- <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('tambah_stok_adm');?>"><i class="fa fa-plus-square"></i> Tambah Stok</a>
-              </li> -->
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
+              </li>
+							<li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+                <a href="<?php echo site_url('penjualan_fix_adm');?>"><i class="fa fa-plus-square"></i> Penjualan Fix</a>
               </li>
             </ul>
           </li>
@@ -83,11 +85,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <!-- laporan treeview -->
           <!-- tentukan attribute active class -->
           <li class="
-             <?php if ($this->uri->segment('1') == 'laporan_stok') {
+             <?php if ($this->uri->segment('1') == 'laporan_keuangan') {
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'laporan_penjualan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_mutasi') {
                 echo 'active treeview';
               } ?>">
             <a href="#">
@@ -99,14 +99,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </a>
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_stok') {echo 'active';} ;?>">
-                <a href="<?php echo site_url('laporan_stok');?>"> Laporan Stok Produk</a>
+              <li class="<?php if ($this->uri->segment('1') == 'laporan_keuangan') {echo 'active';} ;?>">
+                <a href="<?php echo site_url('laporan_keuangan');?>"> Laporan Keuangan</a>
               </li>
               <li class="<?php if ($this->uri->segment('1') == 'laporan_penjualan') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_penjualan');?>"> Laporan Penjualan</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_mutasi') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_mutasi');?>"> Laporan Mutasi</a>
               </li>
             </ul>
           </li>
@@ -196,6 +193,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <li class="
              <?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {
                 echo 'active treeview';
+              }else if ($this->uri->segment('1') == 'penjualan_fix_adm') {
+                echo 'active treeview';
               } ?>">
 
             <a href="#">
@@ -208,11 +207,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <!-- <li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
-                <a href="<?php echo site_url('tambah_stok_adm');?>"><i class="fa fa-plus-square"></i> Tambah Stok</a>
-              </li> -->
               <li class="<?php if ($this->uri->segment('1') == 'confirm_penjualan_adm') {echo 'active';} ?>">
                 <a href="<?php echo site_url('confirm_penjualan_adm');?>"><i class="fa fa-check"></i> Konfirmasi Penjualan</a>
+              </li>
+							<li class="<?php if ($this->uri->segment('1') == 'tambah_stok_adm') {echo 'active';} ?>">
+                <a href="<?php echo site_url('penjualan_fix_adm');?>"><i class="fa fa-plus-square"></i> Penjualan Fix</a>
               </li>
             </ul>
           </li>
@@ -221,11 +220,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
           <!-- laporan treeview -->
           <!-- tentukan attribute active class -->
           <li class="
-             <?php if ($this->uri->segment('1') == 'laporan_stok') {
+             <?php if ($this->uri->segment('1') == 'laporan_keuangan') {
                 echo 'active treeview';
               }elseif ($this->uri->segment('1') == 'laporan_penjualan') {
-                echo 'active treeview';
-              }elseif ($this->uri->segment('1') == 'laporan_mutasi') {
                 echo 'active treeview';
               } ?>">
 
@@ -239,14 +236,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
             <!-- tentukan attribute active class -->
             <ul class="treeview-menu">
-              <li class="<?php if ($this->uri->segment('1') == 'laporan_stok') {echo 'active';} ;?>">
-                <a href="<?php echo site_url('laporan_stok');?>"> Laporan Stok Produk</a>
+              <li class="<?php if ($this->uri->segment('1') == 'laporan_keuangan') {echo 'active';} ;?>">
+                <a href="<?php echo site_url('laporan_keuangan');?>"> Laporan Keuangan</a>
               </li>
               <li class="<?php if ($this->uri->segment('1') == 'laporan_penjualan') {echo 'active';} ?>">
                 <a href="<?php echo site_url('laporan_penjualan');?>"> Laporan Penjualan</a>
-              </li>
-               <li class="<?php if ($this->uri->segment('1') == 'laporan_mutasi') {echo 'active';} ?>">
-                <a href="<?php echo site_url('laporan_mutasi');?>"> Laporan Mutasi</a>
               </li>
             </ul>
           </li>
