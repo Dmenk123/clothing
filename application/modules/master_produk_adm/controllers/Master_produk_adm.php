@@ -147,7 +147,7 @@ class Master_produk_adm extends CI_Controller {
 		$data = array(
 			'content'=>'view_list_detail_produk',
 			'modal'=>'modalDetailProdukAdm',
-			'js'=>'MasterProdukAdmJs',
+			'js'=>'masterProdukAdmJs',
 			'data_user' => $data_user,
 			'qty_notif' => $jumlah_notif,
 			'isi_notif' => $notif,

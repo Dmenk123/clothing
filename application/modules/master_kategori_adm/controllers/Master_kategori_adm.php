@@ -198,7 +198,7 @@ class Master_kategori_adm extends CI_Controller {
 		$data = array(
 			'content'=>'view_detail_master_kategori',
 			'modal'=>'modalDetailKategoriAdm',
-			'js'=>'MasterKategoriAdmJs',
+			'js'=>'masterKategoriAdmJs',
 			'data_user' => $data_user,
 			'qty_notif' => $jumlah_notif,
 			'isi_notif' => $notif,
